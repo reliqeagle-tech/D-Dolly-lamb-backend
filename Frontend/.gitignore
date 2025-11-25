@@ -1,0 +1,60 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Production
+*.local
+
+# Local env files
+.env
+.env.production
+.env.local
+.env.development
+.env.test
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+# Optional cache directories
+.cache/
+.temp/
+.tmp/
+temp/
+tmp/
+
+# Vite cache
+vite.config.ts.timestamp*
+vite.config.js.timestamp*
+.vite/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Mac / Linux / Windows system files
+.DS_Store
+Thumbs.db
+
+# Local coverage reports
+coverage/
+
+# Local environment files (optional)
+.env.*
+!.env.example

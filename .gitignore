@@ -1,0 +1,59 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# dotenv environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build and cache
+
+.cache/
+.next/
+out/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Dependency directories
+jspm_packages/
+
+# Temporary files
+tmp/
+temp/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# IDE / Editor folders
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+
+# Optional: Docker and PM2 files
+docker-compose.override.yml
+pm2.log
