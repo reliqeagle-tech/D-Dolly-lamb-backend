@@ -104,7 +104,9 @@ import LeatherLoverLogo from './leatherlovers_Logo.png'
 import Accessories from './Accessories.jpg'
 import Pillows from './pillows.png'
 import Pillow_banner from './D_DOLLY_PILLOW.png'
-
+import men from './men.jpg'
+import women from './women.jpg'
+import pillow from './pillow.jpg'
 
 export const assets = {
     logo,
@@ -155,8 +157,10 @@ export const assets = {
     LeatherLoverLogo,
     Accessories,
     Pillows,
-    Pillow_banner
-    
+    Pillow_banner,
+    men,
+    women,
+    pillow
 }
 
 export const products = [
