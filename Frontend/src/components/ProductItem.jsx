@@ -8,7 +8,7 @@ const ProductItem = ({ id, image, name, price }) => {
   return (
     <Link
       onClick={() => window.scrollTo(0, 0)}
-      className="cursor-pointer block group shadow-2xl pb-5 my-5 bg-[#674c47]"
+      className="cursor-pointer block group shadow-lg rounded-lg pb-2 my-5 bg-[#674c47]"
       to={`/product/${id}`}
     >
       {/* Image Card */}
@@ -19,6 +19,7 @@ const ProductItem = ({ id, image, name, price }) => {
           aspect-[4/3] 
           overflow-hidden
           flex items-center justify-center
+          rounded-tl-md rounded-tr-md
         "
       >
         <img
@@ -41,7 +42,7 @@ const ProductItem = ({ id, image, name, price }) => {
       </div>
 
       {/* Product Name */}
-      <p className="mt-2 text-xs md:text-sm md:font-normal sm:text-base font-light text-[#faf0e6] text-left pl-5">
+      <p className="mt-2 text-xs md:text-[13px] md:font-normal  font-light text-[#faf0e6] text-left px-4 text-justify">
         {name}
       </p>
 

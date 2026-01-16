@@ -116,10 +116,10 @@ const NewsletterBox = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center text-center bg-gray-50 py-16 px-6 rounded-2xl">
+    <section className="flex flex-col items-center justify-center text-center bg-white py-16 px-6 rounded-2xl">
       {/* Title */}
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-700 prata-regular">
-        Subscribe now & get <span className="text-gray-700 prata-regular">20% off</span>
+      <h2 className="text-2xl md:text-3xl !font-medium text-gray-800 prata-regular">
+        Subscribe now & get <span className="text-gray-800 !font-medium prata-regular">20% off</span>
       </h2>
 
       {/* Subtitle */}
@@ -144,7 +144,7 @@ const NewsletterBox = () => {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 w-[40%] py-3 bg-black text-white text-sm font-medium hover:bg-indigo-500 transition   rounded-md"
+          className="px-6 w-[40%] py-3 bg-black text-white text-sm font-medium hover:bg-[#674c47] transition   rounded-md"
         >
           {loading ? "Sending..." : "SUBSCRIBE"}
         </button>

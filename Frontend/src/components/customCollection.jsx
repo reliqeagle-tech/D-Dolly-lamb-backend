@@ -21,12 +21,12 @@ const CustomCollection = () => {
     <Title text1={"OUR"} text2={"COLLECTION"}/>
   </div>
 
-  <div className="flex flex-col md:flex-row gap-8 justify-center " style={{height: 'calc(100vh - 280px)'}}>
+  <div className="flex flex-col md:flex-row gap-8 justify-center !overflow-hidden" style={{height: 'calc(100vh - 280px)'}}>
 
     {/* LEFT LARGE IMAGE */}
-    <Link className="relative w-full md:w-1/2 h-full transition-transform duration-500 ease-out group hover:scale-105">
+    <Link className="relative w-full md:w-1/2 h-full rounded-lg overflow-hidden group ">
       <img
-        className="w-full h-full object-cover rounded-lg "
+        className="w-full h-full  object-cover transition-transform duration-500 ease-out group-hover:scale-105 "
         src={assets.Emma}
         alt=""
       />
@@ -39,13 +39,14 @@ const CustomCollection = () => {
       </h1>
     </Link>
 
+
     {/* RIGHT STACKED IMAGES */}
-    <div className="flex flex-col w-full md:w-1/2 h-full gap-8">
+    <div className="flex flex-col w-full md:w-1/2 h-full gap-8 overflow-hidden rounded-lg">
 
       {/* TOP IMAGE */}
-      <Link className="relative flex-1 group overflow-hidden  transition-transform duration-500 ease-out group hover:scale-105">
+      <Link className="relative flex-1 overflow-hidden rounded-lg group">
         <img
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           src={assets.James}
           alt=""
         />
@@ -59,9 +60,9 @@ const CustomCollection = () => {
       </Link>
 
       {/* BOTTOM IMAGE */}
-      <Link className="relative flex-1 group overflow-hidden  transition-transform duration-500 ease-out group hover:scale-105">
+      <Link className="relative flex-1 overflow-hidden rounded-lg group">
         <img
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           src={assets.Accessories}
           alt=""
         />
@@ -75,7 +76,12 @@ const CustomCollection = () => {
       </Link>
 
     </div>
-  </div>
+
+
+
+
+  </div>  
+
 </div>
 
   );

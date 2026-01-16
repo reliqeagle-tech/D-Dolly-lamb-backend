@@ -101,71 +101,59 @@ const Navbar = () => {
                         category: "Topwear",
                         gender: "Men",
                       },
-                      {
-                        label: "Blazers",
-                        category: "Topwear",
-                        gender: "Men",
-                      },
-                      {
-                        label: "Celebrity",
-                        category: "Topwear",
-                        gender: "Men",
-                      },
-                      {
-                        label: "Suits",
-                        category: "Topwear",
-                        gender: "Men",
-                      },
-                      {
-                        label: "Boys",
-                        category: "Topwear",
-                        gender: "Men",
-                      },
+           
                     ]}
                   />
 
-                  <MegaColumn
-                    title="BOTTOMS"
-                    items={[
-                      {
-                        label: "Pants",
+       {/*         <MegaColumn
+                   title="BOTTOMS"
+                  items={[
+                     {
+                       label: "Pants",
                         category: "Bottomwear",
-                        gender: "Men",
-                      },
+                       gender: "Men",
+                    },
+                     {
+                      label: "Shorts",
+                       category: "Bottomwear",
+                       gender: "Men",
+                     },
                       {
-                        label: "Shorts",
-                        category: "Bottomwear",
+                       label: "Chaps",
+                       category: "Bottomwear",
                         gender: "Men",
-                      },
-                      {
-                        label: "Chaps",
-                        category: "Bottomwear",
-                        gender: "Men",
-                      },
-                    ]}
-                  />
+                     },
+                  ]}
+                 />  
+           */}
+
 
                   <MegaColumn
-                    title="ACCESSORIES"
+                    title="OTHERS"
                     items={[
                       {
-                        label: "Belt",
-                        category: "Accessories",
+                        label: "Pillow Covers",
+                        category: "Others",
                         gender: "Men",
                       },
                       {
-                        label: "Cap",
-                        category: "Accessories",
+                        label: "Cushion Cover",
+                        category: "Others",
                         gender: "Men",
                       },
                       {
-                        label: "Wristband",
-                        category: "Accessories",
+                        label: "Aprons",
+                        category: "Others",
                         gender: "Men",
                       },
                       {
-                        label: "Hood",
-                        category: "Accessories",
+                        label: "Desk Mat",
+                        category: "Others",
+                        gender: "Men",
+                      },
+                      {
+                        label: "Recliner Chair Headrest Cover",
+                        category: "Others",
                         gender: "Men",
                       },
                     ]}
@@ -206,32 +194,37 @@ const Navbar = () => {
     <MegaColumn
       title="TOPS"
       items={[
-        { label: "Jackets", category: "Topwear", gender: "Women" },
-        { label: "Jackets", category: "Topwear", gender: "Women" },
-        { label: "Coats", category: "Topwear", gender: "Women" },
-        { label: "Dresses", category: "Topwear", gender: "Women" },
-        { label: "Tops", category: "Topwear", gender: "Women" },
-      ]}
+                      { label: "Jackets", category: "Topwear", gender: "Women" },
+                      { label: "Bomber Biker Jacket", category: "Topwear", gender: "Women" },
+                      { label: "Moto Biker Jacket", category: "Topwear", gender: "Women" },
+                      { label: "Racing Coat", category: "Topwear", gender: "Women" },
+                      { label: "Women Winter Wear", category: "Topwear", gender: "Women" },
+                      { label: "Women Night Dress", category: "Topwear", gender: "Women" },
+                    ]}
     />
 
     {/* BOTTOMS */}
     <MegaColumn
       title="BOTTOMS"
       items={[
-        { label: "Pants", category: "Bottomwear", gender: "Women" },
-        { label: "Skirts", category: "Bottomwear", gender: "Women" },
-        { label: "Shorts", category: "Bottomwear", gender: "Women" },
-      ]}
+                      { label: "Leather Pencil Skirt", category: "Bottomwear", gender: "Women" },
+                      { label: "Leather Full Skirt", category: "Bottomwear", gender: "Women" }, 
+                      { label: "Slim Bodycon Skirt", category: "Bottomwear", gender: "Women" },
+                    ]}
     />
 
     {/* ACCESSORIES */}
     <MegaColumn
-      title="ACCESSORIES"
+      title="OTHERS"
       items={[
-        { label: "Bags", category: "Accessories", gender: "Women" },
-        { label: "Wallets", category: "Accessories", gender: "Women" },
-        { label: "Hats", category: "Accessories", gender: "Women" },
-      ]}
+                      { label: "Pillow Covers", category: "Others", gender: "Women" },
+                      { label: "Cushion Cover", category: "Others", gender: "Women" },
+                      { label: "Aprons", category: "Others", gender: "Women" },
+                      { label: "Desk Mat", category: "Others", gender: "Women" },
+                      { label: "Recliner Chair Headrest Cover", category: "Others", gender: "Women" },
+                      // { label: "Wallets", category: "Others", gender: "Women" },
+                      // { label: "Hats", category: "Others", gender: "Women" },
+                    ]}
     />
 
     {/* IMAGE */}
@@ -257,7 +250,7 @@ const Navbar = () => {
             <FontAwesomeIcon
               onClick={() => {
                 setShowSearch(true);
-                navigate("/collection");
+               navigate("/collection");
               }}
               className="cursor-pointer text-2xl"
               icon={faMagnifyingGlass}
@@ -340,46 +333,24 @@ const Navbar = () => {
               sections={{
                 TOPS: [
                   {
-                    label: "Leather Jackets",
+                    label: "Jackets",
                     category: "Topwear",
                     gender: "Men",
                   },
                   { label: "Leather Coats", category: "Topwear", gender: "Men" },
-                  {
-                    label: "Leather Blazers",
-                    category: "blazers",
-                    gender: "men",
-                  },
-                  {
-                    label: "Celebrity Jackets",
-                    category: "celebrity-Topwear",
-                    gender: "men",
-                  },
-                  { label: "Leather Suits", category: "Topwear", gender: "Men" },
-                  {
-                    label: "Boys Leather Jackets",
-                    category: "Topwear",
-                    gender: "boys",
-                  },
+                  
                 ],
-                BOTTOMS: [
-                  { label: "Leather Pants", category: "Bottomwear", gender: "Men" },
+ 
+                OTHERS: [
+                  { label: "Pillow Covers", category: "Others", gender: "Men" },
+                  { label: "Cushion Cover", category: "Others", gender: "Men" },
                   {
-                    label: "Leather Shorts",
-                    category: "Bottomwear",
+                    label: "Aprons",
+                    category: "Others",
                     gender: "men",
                   },
-                  { label: "Leather Chaps", category: "Bottomwear", gender: "Men" },
-                ],
-                ACCESSORIES: [
-                  { label: "Leather Belt", category: "Accessories", gender: "Men" },
-                  { label: "Leather Cap", category: "Accessories", gender: "Men" },
-                  {
-                    label: "Leather Wristband",
-                    category: "Accessories",
-                    gender: "men",
-                  },
-                  { label: "Leather Hood", category: "Accessories", gender: "Men" },
+                  { label: "Desk Mat", category: "Others", gender: "Men" },
+                  { label: "Recliner Chair Headrest Cover", category: "Others", gender: "Men" },
                 ],
               }}
 
@@ -394,48 +365,59 @@ const Navbar = () => {
               sections={{
                 TOPS: [
                   {
-                    label: "Leather Jackets",
+                    label: "Jackets",
                     category: "Topwear",
                     gender: "Women",
                   },
                   {
-                    label: "Celebrity Jackets",
+                    label: "Bomber Biker Jacket",
                     category: "Topwear",
                     gender: "Women",
                   },
                   {
-                    label: "Leather Long Coats",
+                    label: "Moto Biker Jacket",
                     category: "Topwear",
                     gender: "Women",
                   },
-                  { label: "Dresses", category: "Topwear", gender: "Women" },
-                  { label: "Tops", category: "Topwear", gender: "Women" },
+                  { label: "Racing Coat", category: "Topwear", gender: "Women" },
+                  { label: "Women Winter Wear", category: "Topwear", gender: "Women" },
+                  { label: "Women Night Dress", category: "Topwear", gender: "Women" },
                 ],
 
                 BOTTOMS: [
-                  { label: "Pants", category: "Bottomwear", gender: "Women" },
-                  { label: "Skirts", category: "Bottomwear", gender: "Women" },
+                  { label: "Leather Pencil Skirt", category: "Bottomwear", gender: "Women" },
+                  { label: "Leather Full Skirt", category: "Bottomwear", gender: "Women" },
                   {
-                    label: "Leather Shorts",
+                    label: "Slim Bodycon Skirt",
                     category: "Bottomwear",
                     gender: "Women",
                   },
                 ],
 
-                ACCESSORIES: [
+                OTHERS: [
                   {
-                    label: "Leather Bags",
-                    category: "Accessories",
+                    label: "Pillow Covers",
+                    category: "Others",
                     gender: "Women",
                   },
                   {
-                    label: "Leather Wallets",
-                    category: "Accessories",
+                    label: "Cushion Cover",
+                    category: "Others",
                     gender: "Women",
                   },
                   {
-                    label: "Leather Hats",
-                    category: "Accessories",
+                    label: "Aprons",
+                    category: "Others",
+                    gender: "Women",
+                  },
+                  {
+                    label: "Desk Mat",
+                    category: "Others",
+                    gender: "Women",
+                  },
+                  {
+                    label: "Recliner Chair Headrest Cover",
+                    category: "Others",
                     gender: "Women",
                   },
                 ],

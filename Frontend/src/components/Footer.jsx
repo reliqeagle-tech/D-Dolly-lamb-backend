@@ -38,7 +38,7 @@ const Footer = () => {
     };
   return (
     <footer className="bg-black text-white py-12 px-4">
-  <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-10">
+  <div className="w-[95%] mx-auto px-4 sm:px-6 lg:px-10">
 
     {/* Main Grid */}
     <div className="
@@ -58,12 +58,12 @@ const Footer = () => {
           <li><Link to="/about" className="hover:text-white">About Us</Link></li>
           <li><Link to="/orders" className="hover:text-white">Shipping & Returns</Link></li>
           <li><Link to="/about" className="hover:text-white">Our Quality</Link></li>
-          <li><Link to="" className="hover:text-white">Customer Gallery</Link></li>
-          <li><Link to="/CmInchConverter" className="hover:text-white">Cm to Inch Converter</Link></li>
+          {/* <li><Link to="" className="hover:text-white">Customer Gallery</Link></li>
+          <li><Link to="/CmInchConverter" className="hover:text-white">Cm to Inch Converter</Link></li> */}
           <li><Link to="" className="hover:text-white">Leather Waxing</Link></li>
           <li><Link to="" className="hover:text-white">Sizing Chart</Link></li>
           <li><Link to="" className="hover:text-white">Best Sellers</Link></li>
-          <li><Link to="" className="hover:text-white">Testimonials</Link></li>
+          {/* <li><Link to="" className="hover:text-white">Testimonials</Link></li> */}
         </ul>
       </div>
 
@@ -72,12 +72,13 @@ const Footer = () => {
         <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Women's Collection</h4>
         <ul className="space-y-2 text-sm text-gray-400">
           <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Leather Jackets</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Leather Skirts</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Women Leather Pants</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Leather Tops</Link></li>
-          <li><Link to="/collection?category=Women" className="hover:text-white">Leather Dresses</Link></li>
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Leather Long Coats</Link></li>
-          <li><Link to="/collection?category=Women&sub=Celebrity" className="hover:text-white">Women's Celebrity Leather Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Bomber Biker Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Moto Biker Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Women Winter Wear</Link></li>
+          <li><Link to="/collection?category=Women" className="hover:text-white">Women Night Dress</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Leather Pencil Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Celebrity" className="hover:text-white">Leather Full Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Celebrity" className="hover:text-white">Slim Bodycon Skirt</Link></li>
         </ul>
       </div>
 
@@ -85,29 +86,29 @@ const Footer = () => {
       <div className="space-y-4 text-center sm:text-left">
         <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Men's Collection</h4>
         <ul className="space-y-2 text-sm text-gray-400">
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Jackets</Link></li>
-          <li><Link to="/collection?category=Men&sub=Bottomwear" className="hover:text-white">Leather Pants</Link></li>
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Vests</Link></li>
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Long Coats</Link></li>
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Men Leather Jackets</Link></li>
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Coats</Link></li>
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Bomber Biker Jacket</Link></li>
+          {/* <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Long Coats</Link></li>
           <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Suits</Link></li>
           <li><Link to="/collection?category=Men&sub=Bottomwear" className="hover:text-white">Leather Shorts</Link></li>
           <li><Link to="/collection?category=Men&sub=Celebrity" className="hover:text-white">Celebrity Leather Jackets</Link></li>
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Blazers</Link></li>
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Blazers</Link></li> */}
         </ul>
       </div>
 
       {/* Column 4 - Accessories */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Leather Accessories</h4>
+        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Others</h4>
         <ul className="space-y-2 text-sm text-gray-400">
-          <li><a href="#" className="hover:text-white">Leather Tie</a></li>
-          <li><a href="#" className="hover:text-white">Leather Bow</a></li>
-          <li><a href="#" className="hover:text-white">Leather Wristband</a></li>
-          <li><a href="#" className="hover:text-white">Leather Pocket Square</a></li>
-          <li><a href="#" className="hover:text-white">Leather Cap</a></li>
-          <li><a href="#" className="hover:text-white">Leather Hood</a></li>
+          <li><Link to="/collection?category=Others&sub=Pillow" className="hover:text-white">Pillow Covers</Link></li>
+          <li><Link to="/collection?category=Others&sub=Cushion Cover" className="hover:text-white">Cushion Cover</Link></li>
+          <li><Link to="/collection?category=Others&sub=Aprons" className="hover:text-white">Aprons</Link></li>
+          <li><Link to="/collection?category=Others&sub=Desk Mat" className="hover:text-white">Desk Mat</Link></li>
+          <li><Link to="/collection?category=Others&sub=Recliner Chair Headrest Cover" className="hover:text-white">Recliner Chair Headrest Cover</Link></li>
+          {/* <li><a href="#" className="hover:text-white">Leather Hood</a></li>
           <li><a href="#" className="hover:text-white">Leather Belt</a></li>
-          <li><a href="#" className="hover:text-white">Pillow Cover</a></li>
+          <li><a href="#" className="hover:text-white">Pillow Cover</a></li> */}
         </ul>
       </div>
 
@@ -124,7 +125,7 @@ const Footer = () => {
       <div className="space-y-4 text-center sm:text-left">
         <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Newsletter</h4>
         <p className="text-sm text-gray-400">
-          Join the clothsy mailing list for the latest arrivals, events, collections, and offers.
+          Join the D Dolly Lamb mailing list for the latest arrivals, events, collections, and offers.
         </p>
 
         <form onSubmit={onSubmitHandler} className="relative">
@@ -154,7 +155,7 @@ const Footer = () => {
 
     {/* Bottom copyright */}
     <div className="border-t border-gray-700 pt-6 text-center text-xs text-gray-500">
-      COPYRIGHT © 2025 leatherlovers.com — All Rights Reserved — Privacy Policy
+      COPYRIGHT © 2025 ddollylamb.com — All Rights Reserved — Privacy Policy
     </div>
   </div>
 </footer>

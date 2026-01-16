@@ -14,7 +14,7 @@ const LatestCollection = () => {
   }, [products]);
 
   return (
-    <div className="my-5 ">
+    <div className="px-2 sm:px-6 md:px-10  ">
       <div className="text-center py-8 text-3xl">
         <Title text1={"LATEST"} text2={"COLLECTIONS"} />
         <p className="w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600">
@@ -24,7 +24,7 @@ const LatestCollection = () => {
       </div>
 
       {/* Rendering Products */}
-      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-10 ">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-6 ">
         {latestProducts.map((item, index) => (
           <ProductItem
             key={index}

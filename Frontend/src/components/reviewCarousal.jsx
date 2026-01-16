@@ -36,7 +36,7 @@ const TeamCarousel = () => {
   const loopCards = [...cards, ...cards];
 
   return (
-    <div className="w-full h-[80vh] overflow-hidden p-10 bg-[#674c47]">
+    <div className="w-full h-[60vh] overflow-hidden p-10 bg-[#674c47]">
       <div
         className="flex gap-6 animate-scroll whitespace-nowrap h-full"
         style={{ width: "max-content" }}
@@ -45,7 +45,7 @@ const TeamCarousel = () => {
           <div
             key={card.id + "-" + index}
             className="
-              min-w-[500px] 
+              min-w-[400px] 
               h-full 
               bg-white 
               rounded-2xl 

@@ -14,7 +14,7 @@ const BestSeller = () => {
     },[products])
 
   return (
-    <div className=" px-4 sm:px-6 md:px-10">
+    <div className=" px-2 sm:px-6 md:px-10">
   {/* Heading Section */}
   <div className="text-center text-2xl sm:text-3xl py-6">
     <Title text1={"BEST"} text2={"SELLERS"} />
@@ -25,7 +25,7 @@ const BestSeller = () => {
   </div>
 
   {/* Product Grid */}
-  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mt-6">
+  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-5">
     {bestSeller.map((item, index) => (
       <ProductItem
         key={index}

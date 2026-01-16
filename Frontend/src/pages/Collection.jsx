@@ -5,6 +5,7 @@ import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 import PromoBanner from '../components/PromoBanner';
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 
 const Collection = () => {
 
@@ -18,56 +19,65 @@ const Collection = () => {
   const productsPerPage = 12; // New: Items per page (adjustable)
   const [searchParams] = useSearchParams();
 
-useEffect(() => {
-  const rawCategory = searchParams.get("category");
-  const rawSub = searchParams.get("sub");
+  useEffect(() => {
+    const rawCategory = searchParams.get("category");
+    const rawSub = searchParams.get("sub");
 
-  if (rawCategory) {
-    setCategory([decodeURIComponent(rawCategory)]);
-  }
+    if (rawCategory) {
+      setCategory([decodeURIComponent(rawCategory)]);
+    }
 
-  if (rawSub) {
-    setSubCategory([decodeURIComponent(rawSub)]);
-  }
-}, [searchParams]);
-
-
+    if (rawSub) {
+      setSubCategory([decodeURIComponent(rawSub)]);
+    }
+  }, [searchParams]);
 
 
-  // useEffect(() => {
-  //   const preCategory = searchParams.get("category");
 
-  //   if (preCategory) {
-  //     setCategory([preCategory]);
-  //   }
-  // }, [searchParams]);
+  /* --------------------------------------------------------
+       🟦 CATEGORY → DYNAMIC SUBCATEGORY SYSTEM
+    -------------------------------------------------------- */
+  const subCategoriesMap = {
+    Men: ["Topwear", "Bottomwear", "Winterwear"],
+    Women: ["Topwear", "Bottomwear", "Winterwear"],
+    // Kids: ["Topwear", "Bottomwear", "Winterwear"],
+    Others: ["Recliner Chair Headrest Cover", "Cushion Cover", "Aprons", "Desk Mat", "Pillow"]
+  };
 
 
-  // Run filter AFTER category actually updates
   useEffect(() => {
     applyFilter();
   }, [category, subCategory, search, showSearch, products]);
 
+  /* --------------------------------------------------------
+    🟦 Category Toggler
+ -------------------------------------------------------- */
   const toggleCategory = (e) => {
+    const value = e.target.value;
 
-    if (category.includes(e.target.value)) {
-      setCategory(prev => prev.filter(item => item !== e.target.value))
+    if (category.includes(value)) {
+      setCategory(prev => prev.filter(item => item !== value));
+      setSubCategory(prev =>
+        prev.filter(s => !subCategoriesMap[value].includes(s))
+      );
+    } else {
+      setCategory(prev => [...prev, value]);
     }
-    else {
-      setCategory(prev => [...prev, e.target.value])
-    }
+  };
 
-  }
 
+  /* --------------------------------------------------------
+     🟦 SubCategory Toggler
+  -------------------------------------------------------- */
   const toggleSubCategory = (e) => {
+    const value = e.target.value;
 
-    if (subCategory.includes(e.target.value)) {
-      setSubCategory(prev => prev.filter(item => item !== e.target.value))
+    if (subCategory.includes(value)) {
+      setSubCategory(prev => prev.filter(item => item !== value))
+    } else {
+      setSubCategory(prev => [...prev, value])
     }
-    else {
-      setSubCategory(prev => [...prev, e.target.value])
-    }
-  }
+  };
 
   const applyFilter = () => {
 
@@ -183,7 +193,7 @@ useEffect(() => {
             key={page}
             onClick={() => onPageChange(page)}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${page === currentPage
-              ? 'bg-indigo-500 text-white' // Active page styling (customize to your theme)
+              ? 'bg-[#674c47] text-white' // Active page styling (customize to your theme)
               : 'bg-white border border-gray-300 hover:bg-indigo-100 text-gray-700'
               }`}
           >
@@ -218,42 +228,52 @@ useEffect(() => {
 
   return (
     <div>
+        <Helmet>
+          <title> D Dolly Lamb</title>
+          <meta name="description" content="Collection page" />
+	</Helmet>
+
       <PromoBanner />
-      <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t px-10'>
+      <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t sm:px-10 px-2 bg-[#faf0e6] overflow-hidden'>
 
         {/* Filter Options */}
         <div className='min-w-60 md:sticky md:top-4 self-start pt-20'>
-          <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS
+          <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer font-semibold text-gray-700 gap-2'>FILTERS
             <img className={`h-3 sm:hidden ${showFilter ? 'rotate-90' : ''}`} src={assets.dropdown_icon} alt="" />
           </p>
-          {/* Category Filter */}
-          <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
-            <p className='mb-3 text-sm font-medium'>CATEGORIES</p>
-            <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-              <p className='flex gap-2'>
-                <input className='w-3' type="checkbox" value={'Men'} onChange={toggleCategory} /> Men
-              </p>
-              <p className='flex gap-2'>
-                <input className='w-3' type="checkbox" value={'Women'} onChange={toggleCategory} /> Women
-              </p>
-              <p className='flex gap-2'>
-                <input className='w-3' type="checkbox" value={'Kids'} onChange={toggleCategory} /> kids
-              </p>
+          {/* CATEGORY */}
+          <div className={`border border-gray-500 pl-5 py-3 mt-6 rounded-md ${showFilter ? '' : 'hidden'} sm:block`}>
+            <p className='mb-3 text-sm font-semibold text-gray-700'>CATEGORIES</p>
+
+            <div className='flex flex-col gap-2 text-sm text-gray-600 font-medium'>
+              {Object.keys(subCategoriesMap).map(cat => (
+                <label key={cat} className='flex gap-2'>
+                  <input type="checkbox" value={cat} onChange={toggleCategory} />
+                  {cat}
+                </label>
+              ))}
             </div>
           </div>
-          {/* SubCategory Filter */}
-          <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
-            <p className='mb-3 text-sm font-medium'>TYPE</p>
-            <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-              <p className='flex gap-2'>
-                <input className='w-3' type="checkbox" value={'Topwear'} onChange={toggleSubCategory} /> Topwear
-              </p>
-              <p className='flex gap-2'>
-                <input className='w-3' type="checkbox" value={'Bottomwear'} onChange={toggleSubCategory} /> Bottomwear
-              </p>
-              <p className='flex gap-2'>
-                <input className='w-3' type="checkbox" value={'Winterwear'} onChange={toggleSubCategory} /> Winterwear
-              </p>
+          {/* SUBCATEGORY */}
+          <div className={`border border-gray-500 pl-5 py-3 my-5 rounded-md ${showFilter ? '' : 'hidden'} sm:block`}>
+            <p className='mb-3 text-sm font-semibold text-gray-700'>TYPE</p>
+
+            <div className='flex flex-col gap-2 text-sm text-gray-600 font-medium'>
+              {category.length === 0 && (
+                <p className="text-xs text-gray-500">Select category first</p>
+              )}
+
+              {[...new Set(category.flatMap(cat => subCategoriesMap[cat]))].map(sub => (
+                <label key={sub} className='flex gap-2'>
+                  <input
+                    type="checkbox"
+                    value={sub}
+                    checked={subCategory.includes(sub)}
+                    onChange={toggleSubCategory}
+                  />
+                  {sub}
+                </label>
+              ))}
             </div>
           </div>
         </div>
@@ -263,29 +283,29 @@ useEffect(() => {
 
           <div className="flex flex-col sm:flex-row sm:justify-between gap-3 mb-4 text-lg sm:text-2xl">
 
-  <div className="text-center sm:text-left w-full sm:w-auto">
-    <Title text1={"ALL"} text2={"COLLECTIONS"} />
-  </div>
+            <div className="text-center sm:text-left w-full sm:w-auto">
+              <Title text1={"ALL"} text2={"COLLECTIONS"} />
+            </div>
 
-  {/* Product Sort */}
-  <select
-    onChange={(e) => setSortType(e.target.value)}
-    className="border-2 border-gray-300 text-sm px-3 py-1 rounded-md w-full sm:w-auto mb-4"
-  >
-    <option value="relavent">Sort by: Relevant</option>
-    <option value="low-high">Sort by: Low to High</option>
-    <option value="high-low">Sort by: High to Low</option>
-  </select>
+            {/* Product Sort */}
+            <select
+              onChange={(e) => setSortType(e.target.value)}
+              className="border-2 border-gray-300 text-sm px-3 py-1 rounded-md w-full sm:w-auto mb-4"
+            >
+              <option value="relavent">Sort by: Relevant</option>
+              <option value="low-high">Sort by: Low to High</option>
+              <option value="high-low">Sort by: High to Low</option>
+            </select>
 
-</div>
+          </div>
 
 
 
           {/* Map Products - Updated to use paginatedProducts */}
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 sm:gap-y-6 mb-8'>
             {
               paginatedProducts.map((item, index) => (
-                <ProductItem key={index} name={item.name} id={item._id} price={item.price} image={item.image} />
+                <ProductItem key={index} name={item.name} id={item._id} price={item.price} image={item.image} discountPrice={item.discountPrice} />
               ))
             }
           </div>
