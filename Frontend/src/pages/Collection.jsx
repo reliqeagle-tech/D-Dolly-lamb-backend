@@ -41,7 +41,7 @@ const Collection = () => {
     Men: ["Topwear", "Bottomwear", "Winterwear"],
     Women: ["Topwear", "Bottomwear", "Winterwear"],
     // Kids: ["Topwear", "Bottomwear", "Winterwear"],
-    Others: ["Recliner Chair Headrest Cover", "Cushion Cover", "Aprons", "Desk Mat", "Pillow"]
+    Others: ["Cushion Cover", "Aprons", "Desk Mat", "Pillow" , "Chair Cover"]
   };
 
 

@@ -16,14 +16,14 @@ const Home = () => {
     <div className='px-0 bg-[#faf0e6]'>
       {/* <Hero /> */}
       <Hero1 />
-      <CustomCollection />
-      <PillowAds/>
       <BestSeller/>
+      <CustomCollection />
+      <LatestCollection/>
       <ReviewCarousal />
+      <PillowAds/>
       {/* <PromoBanner /> */}
       {/* <TrustWorthy/> */}
       {/* <NewsletterBox/> */}
-      <LatestCollection/>
       <OurPolicy/>
     </div>
   )

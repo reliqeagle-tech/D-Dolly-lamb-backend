@@ -3,8 +3,8 @@ import { assets } from "../assets/assets"
 
 const PillowAds = () =>{
     return(
-        <div className="w-full h-[100vh] bg-[#674c47]">
-            <img className=" h-full w-full" src={assets.Pillow_banner} alt="#" />
+        <div className="w-full m-auto bg-[#faf0e6] mt-6">
+            <img className="h-[60vh] md:h-full w-full md:w-[90%] m-auto" src={assets.pillowBanner} alt="#" />
 
         </div>
     )

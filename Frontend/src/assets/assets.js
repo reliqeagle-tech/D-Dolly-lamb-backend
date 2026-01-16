@@ -107,6 +107,9 @@ import Pillow_banner from './D_DOLLY_PILLOW.png'
 import men from './men.jpg'
 import women from './women.jpg'
 import pillow from './pillow.jpg'
+import aboutImg from './aboutImg.jpg'
+import pillowBanner from './pillowBanner.jpg'
+
 
 export const assets = {
     logo,
@@ -160,7 +163,9 @@ export const assets = {
     Pillow_banner,
     men,
     women,
-    pillow
+    pillow,
+    aboutImg,
+    pillowBanner,
 }
 
 export const products = [
