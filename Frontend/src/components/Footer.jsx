@@ -62,7 +62,7 @@ const Footer = () => {
           <li><Link to="/CmInchConverter" className="hover:text-white">Cm to Inch Converter</Link></li> */}
           <li><Link to="" className="hover:text-white">Leather Waxing</Link></li>
           <li><Link to="" className="hover:text-white">Sizing Chart</Link></li>
-          <li><Link to="" className="hover:text-white">Best Sellers</Link></li>
+          <li><Link to="/bestseller" className="hover:text-white">Best Sellers</Link></li>
           {/* <li><Link to="" className="hover:text-white">Testimonials</Link></li> */}
         </ul>
       </div>
@@ -72,13 +72,13 @@ const Footer = () => {
         <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Women's Collection</h4>
         <ul className="space-y-2 text-sm text-gray-400">
           <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Leather Jackets</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Bomber Biker Jacket</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Moto Biker Jacket</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Women Winter Wear</Link></li>
-          <li><Link to="/collection?category=Women" className="hover:text-white">Women Night Dress</Link></li>
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Leather Pencil Skirt</Link></li>
-          <li><Link to="/collection?category=Women&sub=Celebrity" className="hover:text-white">Leather Full Skirt</Link></li>
-          <li><Link to="/collection?category=Women&sub=Celebrity" className="hover:text-white">Slim Bodycon Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Bomber Biker Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Moto Biker Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Winter Wear</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Night Dress</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Leather Pencil Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Leather Full Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Slim Bodycon Skirt</Link></li>
         </ul>
       </div>
 
@@ -105,7 +105,7 @@ const Footer = () => {
           <li><Link to="/collection?category=Others&sub=Cushion Cover" className="hover:text-white">Cushion Cover</Link></li>
           <li><Link to="/collection?category=Others&sub=Aprons" className="hover:text-white">Aprons</Link></li>
           <li><Link to="/collection?category=Others&sub=Desk Mat" className="hover:text-white">Desk Mat</Link></li>
-          <li><Link to="/collection?category=Others&sub=Recliner Chair Headrest Cover" className="hover:text-white">Recliner Chair Headrest Cover</Link></li>
+          <li><Link to="/collection?category=Others&sub=Chair Cover" className="hover:text-white">Recliner Chair Headrest Cover</Link></li>
           {/* <li><a href="#" className="hover:text-white">Leather Hood</a></li>
           <li><a href="#" className="hover:text-white">Leather Belt</a></li>
           <li><a href="#" className="hover:text-white">Pillow Cover</a></li> */}

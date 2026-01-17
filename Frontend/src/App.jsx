@@ -22,6 +22,7 @@ import CartDrawer from './components/CartDrawer'
 import ScrollToTop from './components/scrollToTop'
 import OurPolicy from './components/OurPolicy'
 import CmInchConverter from './pages/cmToInch'
+import BestSeller from './components/BestSeller'
 
 
 const App = () => {
@@ -57,6 +58,7 @@ const App = () => {
         <Route path='/cartcontent' element={ <CartContents />} />
         <Route path='/privacy&policy' element={<OurPolicy/>}/>
         <Route path='/CmInchConverter' element={<CmInchConverter/>}/>
+        <Route path='/bestseller' element={<BestSeller />}/>
 
       </Routes>
       <Footer />

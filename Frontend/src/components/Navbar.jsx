@@ -51,7 +51,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="pb-[2px] sticky top-0 z-[99] bg-gradient-to-r from-indigo-500 via-indigo-500 to-black ">
+    <div className="pb-[2px] sticky top-0 z-[99] bg-gradient-to-r from-[#800000] via-[#800000] to-black ">
       <div className="sticky top-0 z-[9999] bg-black w-full shadow-sm bg-blend-saturation">
         {/* ------------------- TOP NAV ------------------- */}
         <div className="flex items-center justify-between py-5 font-medium max-w-7xl mx-auto px-4">
@@ -132,7 +132,7 @@ const Navbar = () => {
                     title="OTHERS"
                     items={[
                       {
-                        label: "Pillow Covers",
+                        label: "Pillow",
                         category: "Others",
                         gender: "Men",
                       },
@@ -152,7 +152,7 @@ const Navbar = () => {
                         gender: "Men",
                       },
                       {
-                        label: "Recliner Chair Headrest Cover",
+                        label: "Chair Cover",
                         category: "Others",
                         gender: "Men",
                       },
@@ -161,8 +161,8 @@ const Navbar = () => {
 
                   <div className="flex-shrink-0 w-[250px] self-start">
                     <img
-                      src={assets.leatherModel2}
-                      className="rounded-lg shadow-md w-full h-[300px] object-cover"
+                      src={assets.men_nav}
+                      className="rounded-lg w-full h-[300px] object-cover"
                       alt="preview"
                     />
                   </div>
@@ -217,11 +217,11 @@ const Navbar = () => {
     <MegaColumn
       title="OTHERS"
       items={[
-                      { label: "Pillow Covers", category: "Others", gender: "Women" },
+                      { label: "Pillow", category: "Others", gender: "Women" },
                       { label: "Cushion Cover", category: "Others", gender: "Women" },
                       { label: "Aprons", category: "Others", gender: "Women" },
                       { label: "Desk Mat", category: "Others", gender: "Women" },
-                      { label: "Recliner Chair Headrest Cover", category: "Others", gender: "Women" },
+                      { label: "Chair Cover", category: "Others", gender: "Women" },
                       // { label: "Wallets", category: "Others", gender: "Women" },
                       // { label: "Hats", category: "Others", gender: "Women" },
                     ]}
@@ -230,8 +230,8 @@ const Navbar = () => {
     {/* IMAGE */}
     <div className="flex-shrink-0 w-[250px] self-start">
       <img
-        src={assets.hero_img_3}
-        className="rounded-lg shadow-md w-full h-[300px] object-cover"
+        src={assets.women_nav}
+        className="rounded-lg w-full h-[300px] object-cover"
         alt=""
       />
     </div>
@@ -342,7 +342,7 @@ const Navbar = () => {
                 ],
  
                 OTHERS: [
-                  { label: "Pillow Covers", category: "Others", gender: "Men" },
+                  { label: "Pillow", category: "Others", gender: "Men" },
                   { label: "Cushion Cover", category: "Others", gender: "Men" },
                   {
                     label: "Aprons",
@@ -350,7 +350,7 @@ const Navbar = () => {
                     gender: "men",
                   },
                   { label: "Desk Mat", category: "Others", gender: "Men" },
-                  { label: "Recliner Chair Headrest Cover", category: "Others", gender: "Men" },
+                  { label: "Chair Cover", category: "Others", gender: "Men" },
                 ],
               }}
 
@@ -396,7 +396,7 @@ const Navbar = () => {
 
                 OTHERS: [
                   {
-                    label: "Pillow Covers",
+                    label: "Pillow",
                     category: "Others",
                     gender: "Women",
                   },
@@ -416,7 +416,7 @@ const Navbar = () => {
                     gender: "Women",
                   },
                   {
-                    label: "Recliner Chair Headrest Cover",
+                    label: "Chair Cover",
                     category: "Others",
                     gender: "Women",
                   },
@@ -451,7 +451,7 @@ const MegaMenu = ({ children, showMenu, hideMenu }) => (
   <div
     onMouseEnter={showMenu}
     onMouseLeave={hideMenu}
-    className="fixed inset-x-0 top-[80px] bg-black/95 p-8 z-[9999] shadow-2xl border-t-4 border-indigo-600"
+    className="fixed inset-x-0 top-[80px] bg-[#faf0e6] p-8 z-[9999] shadow-2xl border-t-4 border-[#800000]"
   >
     <div className="max-w-7xl mx-auto flex flex-wrap gap-8 px-4 items-start">
       {children}
@@ -462,15 +462,30 @@ const MegaMenu = ({ children, showMenu, hideMenu }) => (
 const MegaColumn = ({ title, items }) => {
   return (
     <div className="flex-1 min-w-[150px]">
-      <h3 className="font-semibold mb-3 text-white text-xl border-b-2 w-1/2 border-indigo-600">
+      <h3 className="font-bold mb-3 text-[#800000] text-xl border-b-2 w-1/3 border-[#800000]">
         {title}
       </h3>
 
-      <ul className="space-y-2 text-white">
+      <ul className="space-y-2 text-[#800000]">
         {items.map((item, index) => {
-          const toURL = `/collection?category=${encodeURIComponent(
-            item.gender
-          )}&sub=${encodeURIComponent(item.category)}`;
+          // const toURL = `/collection?category=${encodeURIComponent(
+          //   item.gender
+          // )}&sub=${encodeURIComponent(item.category)}`;
+
+  //  const toURL =
+  // item.category === "Others"
+  //   ? `/collection?category=Others`
+  //   : `/collection?category=${encodeURIComponent(
+  //       item.gender
+  //     )}&sub=${encodeURIComponent(item.category)}`;
+
+
+          const toURL =
+  item.category === "Others"
+    ? `/collection?category=Others&sub=${encodeURIComponent(item.label)}`
+    : `/collection?category=${encodeURIComponent(item.gender)}&sub=${encodeURIComponent(item.category)}`;
+
+
 
           console.log("Generated URL:", toURL); // Debug
 
@@ -478,7 +493,7 @@ const MegaColumn = ({ title, items }) => {
             <li key={index}>
               <Link
                 to={toURL}
-                className="hover:text-indigo-400 transition"
+                className="hover:text-gray-700 transition"
               >
                 {item.label}
               </Link>
