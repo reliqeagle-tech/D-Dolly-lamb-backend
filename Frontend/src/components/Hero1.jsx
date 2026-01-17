@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const Hero1 = () => {
   return (
-    <div className="px-0 flex flex-col sm:flex-row min-h-[100vh] rounded-lg">
-  <div className="px-0 w-full flex flex-row justify-center py-0 bg-gradient-to-r from-[#800000] via-black to-black relative overflow-hidden min-h-[100vh]">
+    <div className="px-0 flex flex-col sm:flex-row min-h-[90vh] rounded-lg">
+  <div className="px-0 w-full flex flex-row justify-center py-0 bg-gradient-to-r from-[#800000] via-black to-black relative overflow-hidden h-[90vh]">
 
     {/* TEXT SECTION */}
     <div className="w-full flex flex-col items-center justify-center text-center z-[20] px-4 py-10 sm:py-0">

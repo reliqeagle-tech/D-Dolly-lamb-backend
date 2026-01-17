@@ -156,9 +156,9 @@ const CustomCollection = () => {
           {/* ACCESSORIES IMAGE */}
           <Link
             to={"/collection?category=Others"}
-            className="relative w-full h-52 sm:h-64 md:h-[240px] group overflow-hidden rounded-lg shadow-lg bg-white"
+            className="relative w-full h-52 sm:h-64 md:h-[240px] group overflow-hidden rounded-lg shadow-lg bg-white flex items-center"
           >
-            <div className="flex items-center justify-center ">
+            <div className="flex !items-center justify-center ">
             <img
             className="w-[60%] h-full flex justify-center items-center transition-all duration-300 group-hover:scale-105"
             src={assets.pillow}
