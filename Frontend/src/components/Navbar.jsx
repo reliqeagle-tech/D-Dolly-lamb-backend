@@ -51,8 +51,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="pb-[2px] sticky top-0 z-[99] bg-gradient-to-r from-[#800000] via-[#800000] to-black ">
-      <div className="sticky top-0 z-[9999] bg-black w-full shadow-sm bg-blend-saturation">
+    <div className="pb-[2px] sticky top-0 z-[99] border-b bg-gradient-to-r from-[#800000] via-[#800000] to-black ">
+      <div className="sticky top-0 z-[9999]  w-full shadow-sm bg-blend-saturation">
         {/* ------------------- TOP NAV ------------------- */}
         <div className="flex items-center justify-between py-5 font-medium max-w-7xl mx-auto px-4">
           <Link to="/">
@@ -60,10 +60,10 @@ const Navbar = () => {
           </Link>
 
           {/* ------------------- DESKTOP LINKS ------------------- */}
-          <ul className="hidden sm:flex md:gap-8 sm:gap-5 md:text-sm text-xs text-white">
+          <ul className="hidden sm:flex md:gap-8 sm:gap-5 md:text-sm text-xs text-white  className">
             <NavLink
               to="/"
-              className="flex flex-col items-center gap-1 pt-[2px]"
+              className="flex flex-col items-center gap-1 pt-[2px] hover:text-[#f7c568]"
             >
               <p>HOME</p>
             </NavLink>
@@ -74,8 +74,8 @@ const Navbar = () => {
               onMouseLeave={hideMenu}
               className="relative cursor-pointer"
             >
-              <div className="flex items-center">
-                <p className="hover:text-gray-300">MEN</p>
+              <div className="flex items-center hover:text-[#f7c568]">
+                <p className="hover:text-[#f7c568]">MEN</p>
                 <RiArrowDropDownLine
                   className={`text-2xl transition-transform duration-300 ${
                     activeMenu === "men" ? "rotate-180" : "rotate-0"
@@ -176,8 +176,8 @@ const Navbar = () => {
               onMouseLeave={hideMenu}
               className="relative cursor-pointer"
             >
-              <div className="flex items-center">
-                <p className="hover:text-gray-300">WOMEN</p>
+              <div className="flex items-center hover:text-[#f7c568]">
+                <p className="hover:text-[#f7c568]">WOMEN</p>
                 <RiArrowDropDownLine
                   className={`text-2xl transition-transform duration-300 ${
                     activeMenu === "women" ? "rotate-180" : "rotate-0"
@@ -240,9 +240,9 @@ const Navbar = () => {
 
             </li>
 
-            <NavLink to="/collection">COLLECTION</NavLink>
-            <NavLink to="/about">ABOUT</NavLink>
-            <NavLink to="/contact">CONTACT</NavLink>
+            <NavLink className='hover:text-[#f7c568]' to="/collection">COLLECTION</NavLink>
+            <NavLink className='hover:text-[#f7c568]' to="/about">ABOUT</NavLink>
+            <NavLink className='hover:text-[#f7c568]' to="/contact">CONTACT</NavLink>
           </ul>
 
           {/* ------------------- RIGHT ICONS ------------------- */}

@@ -37,7 +37,7 @@ const Footer = () => {
       }
     };
   return (
-    <footer className="bg-black text-white py-12 px-4">
+    <footer className="bg-gradient-to-r from-[#340000] via-[#340000] to-black text-white py-12 px-4">
   <div className="w-[95%] mx-auto px-4 sm:px-6 lg:px-10">
 
     {/* Main Grid */}
@@ -52,43 +52,43 @@ const Footer = () => {
     ">
       {/* Column 1 - INFO */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">INFO</h4>
-        <ul className="space-y-2 text-sm text-gray-400">
-          <li><Link to="/contact" className="hover:text-white">Contact Us</Link></li>
-          <li><Link to="/about" className="hover:text-white">About Us</Link></li>
-          <li><Link to="/orders" className="hover:text-white">Shipping & Returns</Link></li>
-          <li><Link to="/about" className="hover:text-white">Our Quality</Link></li>
+        <h4 className="text-lg font-semibold text-white uppercase tracking-wide">INFO</h4>
+        <ul className="space-y-2 text-sm text-gray-300">
+          <li><Link to="/contact" className="hover:text-[#f7c568]">Contact Us</Link></li>
+          <li><Link to="/about" className="hover:text-[#f7c568]">About Us</Link></li>
+          <li><Link to="/orders" className="hover:text-[#f7c568]">Shipping & Returns</Link></li>
+          <li><Link to="/about" className="hover:text-[#f7c568]">Our Quality</Link></li>
           {/* <li><Link to="" className="hover:text-white">Customer Gallery</Link></li>
           <li><Link to="/CmInchConverter" className="hover:text-white">Cm to Inch Converter</Link></li> */}
-          <li><Link to="" className="hover:text-white">Leather Waxing</Link></li>
-          <li><Link to="" className="hover:text-white">Sizing Chart</Link></li>
-          <li><Link to="/bestseller" className="hover:text-white">Best Sellers</Link></li>
+          <li><Link to="" className="hover:text-[#f7c568]">Leather Waxing</Link></li>
+          <li><Link to="" className="hover:text-[#f7c568]">Sizing Chart</Link></li>
+          <li><Link to="/bestseller" className="hover:text-[#f7c568]">Best Sellers</Link></li>
           {/* <li><Link to="" className="hover:text-white">Testimonials</Link></li> */}
         </ul>
       </div>
 
       {/* Column 2 - Women */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Women's Collection</h4>
-        <ul className="space-y-2 text-sm text-gray-400">
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Leather Jackets</Link></li>
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Bomber Biker Jacket</Link></li>
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Moto Biker Jacket</Link></li>
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Winter Wear</Link></li>
-          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-white">Women Night Dress</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Leather Pencil Skirt</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Leather Full Skirt</Link></li>
-          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-white">Slim Bodycon Skirt</Link></li>
+        <h4 className="text-lg font-semibold text-white uppercase tracking-wide">Women's Collection</h4>
+        <ul className="space-y-2 text-sm text-gray-300">
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-[#f7c568]">Women Leather Jackets</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-[#f7c568]">Bomber Biker Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-[#f7c568]">Moto Biker Jacket</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-[#f7c568]">Women Winter Wear</Link></li>
+          <li><Link to="/collection?category=Women&sub=Topwear" className="hover:text-[#f7c568]">Women Night Dress</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-[#f7c568]">Leather Pencil Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-[#f7c568]">Leather Full Skirt</Link></li>
+          <li><Link to="/collection?category=Women&sub=Bottomwear" className="hover:text-[#f7c568]">Slim Bodycon Skirt</Link></li>
         </ul>
       </div>
 
       {/* Column 3 - Men */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Men's Collection</h4>
-        <ul className="space-y-2 text-sm text-gray-400">
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Men Leather Jackets</Link></li>
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Coats</Link></li>
-          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Bomber Biker Jacket</Link></li>
+        <h4 className="text-lg font-semibold text-white uppercase tracking-wide">Men's Collection</h4>
+        <ul className="space-y-2 text-sm text-gray-300">
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-[#f7c568]">Men Leather Jackets</Link></li>
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-[#f7c568]">Coats</Link></li>
+          <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-[#f7c568]">Bomber Biker Jacket</Link></li>
           {/* <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Long Coats</Link></li>
           <li><Link to="/collection?category=Men&sub=Topwear" className="hover:text-white">Leather Suits</Link></li>
           <li><Link to="/collection?category=Men&sub=Bottomwear" className="hover:text-white">Leather Shorts</Link></li>
@@ -99,32 +99,31 @@ const Footer = () => {
 
       {/* Column 4 - Accessories */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Others</h4>
-        <ul className="space-y-2 text-sm text-gray-400">
-          <li><Link to="/collection?category=Others&sub=Pillow" className="hover:text-white">Pillow Covers</Link></li>
-          <li><Link to="/collection?category=Others&sub=Cushion Cover" className="hover:text-white">Cushion Cover</Link></li>
-          <li><Link to="/collection?category=Others&sub=Aprons" className="hover:text-white">Aprons</Link></li>
-          <li><Link to="/collection?category=Others&sub=Desk Mat" className="hover:text-white">Desk Mat</Link></li>
-          <li><Link to="/collection?category=Others&sub=Chair Cover" className="hover:text-white">Recliner Chair Headrest Cover</Link></li>
+        <h4 className="text-lg font-semibold text-white uppercase tracking-wide">Others</h4>
+        <ul className="space-y-2 text-sm text-gray-300">
+          <li><Link to="/collection?category=Others&sub=Pillow" className="hover:text-[#f7c568]">Pillow Covers</Link></li>
+          <li><Link to="/collection?category=Others&sub=Cushion Cover" className="hover:text-[#f7c568]">Cushion Cover</Link></li>
+          <li><Link to="/collection?category=Others&sub=Aprons" className="hover:text-[#f7c568]">Aprons</Link></li>
+          <li><Link to="/collection?category=Others&sub=Desk Mat" className="hover:text-[#f7c568]">Desk Mat</Link></li>
+          <li><Link to="/collection?category=Others&sub=Chair Cover" className="hover:text-[#f7c568]">Recliner Chair Headrest Cover</Link></li>
           {/* <li><a href="#" className="hover:text-white">Leather Hood</a></li>
           <li><a href="#" className="hover:text-white">Leather Belt</a></li>
           <li><a href="#" className="hover:text-white">Pillow Cover</a></li> */}
         </ul>
       </div>
-
       {/* Column 5 - New Arrivals */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">New Arrivals</h4>
-        <ul className="space-y-2 text-sm text-gray-400">
-          <li><a href="#" className="hover:text-white">Men's New Arrivals</a></li>
-          <li><a href="#" className="hover:text-white">Women's New Arrivals</a></li>
+        <h4 className="text-lg font-semibold text-white uppercase tracking-wide">New Arrivals</h4>
+        <ul className="space-y-2 text-sm text-gray-300">
+          <li><a href="#" className="hover:text-[#f7c568]">Men's New Arrivals</a></li>
+          <li><a href="#" className="hover:text-[#f7c568]">Women's New Arrivals</a></li>
         </ul>
       </div>
 
       {/* Column 6 - Newsletter */}
       <div className="space-y-4 text-center sm:text-left">
-        <h4 className="text-lg font-semibold text-gray-200 uppercase tracking-wide">Newsletter</h4>
-        <p className="text-sm text-gray-400">
+        <h4 className="text-lg font-semibold text-white uppercase tracking-wide">Newsletter</h4>
+        <p className="text-sm text-gray-300">
           Join the D Dolly Lamb mailing list for the latest arrivals, events, collections, and offers.
         </p>
 
@@ -133,7 +132,7 @@ const Footer = () => {
             type="email"
             name="email"
             placeholder="Email address"
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 bg-black border border-gray-700 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-white"
           />
           <button 
             type="submit" 
@@ -145,16 +144,16 @@ const Footer = () => {
         </form>
 
         <div className="flex justify-center sm:justify-start space-x-4 pt-2">
-          <FaEnvelope size={16} className="text-gray-400 hover:text-white" />
-          <FaFacebookF size={16} className="text-gray-400 hover:text-white" />
-          <FaInstagram size={16} className="text-gray-400 hover:text-white" />
-          <FaTwitter size={16} className="text-gray-400 hover:text-white" />
+          <FaEnvelope size={16} className="text-white hover:text-[#f7c568]" />
+          <FaFacebookF size={16} className="text-white hover:text-[#f7c568]" />
+          <FaInstagram size={16} className="text-white hover:text-[#f7c568]" />
+          <FaTwitter size={16} className="text-white hover:text-[#f7c568]" />
         </div>
       </div>
     </div>
 
     {/* Bottom copyright */}
-    <div className="border-t border-gray-700 pt-6 text-center text-xs text-gray-500">
+    <div className="border-t border-gray-200 pt-6 text-center text-xs text-white">
       COPYRIGHT © 2025 ddollylamb.com — All Rights Reserved — Privacy Policy
     </div>
   </div>

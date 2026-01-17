@@ -22,7 +22,7 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     window.scrollTo({
-      top: 400,
+      top: 0,
       left: 0,
       behavior: "smooth", // ya "auto"
     });
