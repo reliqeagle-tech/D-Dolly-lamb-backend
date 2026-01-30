@@ -1731,11 +1731,11 @@ const Product = () => {
       <div className="flex gap-10 sm:gap-12 flex-col sm:flex-row">
         {/* ---------- Product Images ------------- */}
         <div className="flex flex-col-reverse gap-3 sm:flex-row md:sticky md:top-28 self-start w-full lg:w-[40%]">
-          <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] lg:w-[10%] lg:h-[10%] w-full lg:mr-5 gap-1">
+          <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] lg:w-[10%] lg:h-[10%] w-full lg:mr-10 gap-1">
             {productData.image.map((item, index) => (
               <div
                 key={index}
-                className={`flex-shrink-0 cursor-pointer transition-all duration-200 w-[70px] h-[60px] sm:w-full  rounded-md 
+                className={`flex-shrink-0 cursor-pointer transition-all duration-200 w-[70px] h-[50px] sm:w-full  rounded-md 
                 ${index === selectedIndex ? 'border-2 border-blue-500' : 'border-2 border-transparent'}`}
                 onClick={() => {
                   setImage(item);
@@ -1861,7 +1861,7 @@ const Product = () => {
                 toggleCartDrawer();
               }}
               disabled={isButtonDisabled || !size || !selectedColor}
-              className="w-[90%] bg-gray-500 text-white font-semibold py-2.5 rounded-md hover:bg-indigo-500 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed md:sticky md:top-4 self-start z-999"
+              className="w-[90%] bg-[#800000] text-white font-semibold py-2.5 rounded-md hover:bg-[#500000] transition-colors disabled:bg-[#900000] disabled:cursor-not-allowed md:sticky md:top-4 self-start "
             >
               ADD TO CART
             </button>

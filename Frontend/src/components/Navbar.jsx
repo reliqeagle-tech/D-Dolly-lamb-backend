@@ -51,7 +51,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="pb-[2px] sticky top-0 z-[99] border-b bg-gradient-to-r from-[#800000] via-[#800000] to-black ">
+    <div className="pb-[2px] sticky top-0 z-[9999] border-b bg-gradient-to-r from-[#800000] via-[#800000] to-black ">
       <div className="sticky top-0 z-[9999]  w-full shadow-sm bg-blend-saturation">
         {/* ------------------- TOP NAV ------------------- */}
         <div className="flex items-center justify-between py-5 font-medium max-w-7xl mx-auto px-4">
