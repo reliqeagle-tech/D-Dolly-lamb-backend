@@ -113,6 +113,7 @@ import L_img_4 from './L_img_4-2.jpg'
 import men_nav from './men_nav.png'
 import women_nav_1 from './women_nav_1.png'
 import women_nav from './women_nav.png'
+import collectionImg from './collectionImg.jpg'
 
 export const assets = {
     logo,
@@ -173,6 +174,7 @@ export const assets = {
     men_nav,
     women_nav,
     women_nav_1,
+    collectionImg
 }
 
 export const products = [

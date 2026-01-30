@@ -115,8 +115,8 @@ const Footer = () => {
       <div className="space-y-4 text-center sm:text-left">
         <h4 className="text-lg font-semibold text-white uppercase tracking-wide">New Arrivals</h4>
         <ul className="space-y-2 text-sm text-gray-300">
-          <li><a href="#" className="hover:text-[#f7c568]">Men's New Arrivals</a></li>
-          <li><a href="#" className="hover:text-[#f7c568]">Women's New Arrivals</a></li>
+          <li><a href="/collection?category=Men&sub=Topwear" className="hover:text-[#f7c568]">Men's New Arrivals</a></li>
+          <li><a href="/collection?category=Women&sub=Topwear" className="hover:text-[#f7c568]">Women's New Arrivals</a></li>
         </ul>
       </div>
 

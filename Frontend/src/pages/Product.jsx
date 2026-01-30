@@ -1726,16 +1726,16 @@ const Product = () => {
   const customBreakdown = displayPrice > productData.price ? ` (incl. +${currency}${(displayPrice - productData.price).toFixed(2)} customization)` : '';
 
   return (
-    <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 px-10">
+    <div className="border-t-2 pt-4 transition-opacity ease-in duration-500 opacity-100 px-10">
       {/* -------- Product Layout ---------- */}
       <div className="flex gap-10 sm:gap-12 flex-col sm:flex-row">
         {/* ---------- Product Images ------------- */}
-        <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row md:sticky md:top-28 self-start ">
-          <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] lg:w-[10%] lg:h-[10%] w-full lg:mr-12">
+        <div className="flex flex-col-reverse gap-3 sm:flex-row md:sticky md:top-28 self-start w-full lg:w-[40%]">
+          <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] lg:w-[10%] lg:h-[10%] w-full lg:mr-5 gap-1">
             {productData.image.map((item, index) => (
               <div
                 key={index}
-                className={`flex-shrink-0 cursor-pointer transition-all duration-200 w-[70px] h-[90px] sm:w-full sm:h-auto rounded-md 
+                className={`flex-shrink-0 cursor-pointer transition-all duration-200 w-[70px] h-[60px] sm:w-full  rounded-md 
                 ${index === selectedIndex ? 'border-2 border-blue-500' : 'border-2 border-transparent'}`}
                 onClick={() => {
                   setImage(item);
@@ -1747,16 +1747,16 @@ const Product = () => {
             ))}
           </div>
 
-          <div className="w-full sm:w-[80%] lg:w-[60%] flex justify-center items-center">
-            <div className="w-full max-h-[600px] aspect-[3/4] overflow-hidden rounded-lg bg-white flex items-center justify-center shadow-sm">
+          <div className="w-full sm:w-[80%] lg:w-[70%] flex justify-center items-center">
+            <div className="w-full max-h-[400px] aspect-[3/4] overflow-hidden rounded-lg bg-white flex items-center justify-center shadow-sm">
               <img className="w-full h-full object-contain" src={image} alt={productData.name} />
             </div>
           </div>
         </div>
 
         {/* ---------- Product Info ------------- */}
-        <div className="flex-1">
-          <h1 className="font-medium text-2xl mt-2">{productData.name}</h1>
+        <div className="w-full lg:w-[60%]">
+          <h1 className="lg:font-[400] text-gray-900 lg:text-[22px] mt-4 lg:mt-0 lg:mr-12 leading-8">{productData.name}</h1>
           <div className="flex items-center gap-1 mt-2">
             <img src={assets.star_icon} alt="" className="w-3.5" />
             <img src={assets.star_icon} alt="" className="w-3.5" />

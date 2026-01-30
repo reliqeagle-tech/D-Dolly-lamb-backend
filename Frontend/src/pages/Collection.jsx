@@ -233,7 +233,10 @@ const Collection = () => {
           <meta name="description" content="Collection page" />
 	</Helmet>
 
-      <PromoBanner />
+      {/* <PromoBanner /> */}
+      <div >
+        <img className='h-[60vh] w-full m-auto' src={assets.aboutImg} />
+      </div>
       <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t sm:px-10 px-2 bg-[#faf0e6] overflow-hidden'>
 
         {/* Filter Options */}

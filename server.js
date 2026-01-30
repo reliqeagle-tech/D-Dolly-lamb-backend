@@ -25,6 +25,7 @@ connectCloudinary();
 // Allowed origins for CORS
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:5174",
   "http://ddollylamb.com",
   "https://www.ddollylamb.com",
 	"https://68.178.169.128",
