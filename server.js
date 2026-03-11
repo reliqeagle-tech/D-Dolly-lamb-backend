@@ -9,6 +9,8 @@ import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import wishlistRouter from './routes/wishlistRoute.js';
+import reviewRouter from './routes/reviewRoute.js';
 
 // ES Modules __dirname fix
 const __filename = fileURLToPath(import.meta.url);
@@ -28,8 +30,8 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://ddollylamb.com",
   "https://www.ddollylamb.com",
-	"https://68.178.169.128",
-	"http://68.178.169.128",
+  "https://68.178.169.128",
+  "http://68.178.169.128",
 ];
 
 // Middlewares
@@ -45,7 +47,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],	
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
 app.options("*", cors());
@@ -54,6 +56,8 @@ app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
+app.use('/api/wishlist', wishlistRouter)
+app.use('/api/review', reviewRouter)
 
 // Log environment
 console.log("STARTING APP, NODE_ENV =", process.env.NODE_ENV);
@@ -66,8 +70,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/',(req,res)=>{
-    res.send("API Working")
+app.get('/', (req, res) => {
+  res.send("API Working")
 })
 
 // Start server

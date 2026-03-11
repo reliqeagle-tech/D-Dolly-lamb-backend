@@ -10,21 +10,23 @@ import CustomCollection from '../components/customCollection'
 import ReviewCarousal from '../components/reviewCarousal'
 import TrustWorthy from '../components/trustWorthy'
 import PillowAds from '../components/PillowAds'
+import ActiveSlider from '../components/ActiveSlider'
 
 const Home = () => {
   return (
     <div className='px-0 bg-[#faf0e6]'>
       {/* <Hero /> */}
       <Hero1 />
-      <BestSeller/>
-      <CustomCollection />
-      <LatestCollection/>
+      <BestSeller />
+      {/* <CustomCollection /> */}
+      <LatestCollection />
+      <ActiveSlider />
       <ReviewCarousal />
-      <PillowAds/>
+      {/* <PillowAds /> */}
       {/* <PromoBanner /> */}
       {/* <TrustWorthy/> */}
       {/* <NewsletterBox/> */}
-      <OurPolicy/>
+      <OurPolicy />
     </div>
   )
 }

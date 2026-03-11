@@ -24,7 +24,7 @@ a.active hr{
   
   @media (max-width:640px) {
     a.active{
-        background-color: black;
+        /* background-color: black; */
         color: white;
     }
   }
@@ -40,4 +40,29 @@ a.active hr{
 
 .animate-scroll {
   animation: scroll 12s linear infinite;
+}
+
+.myAccountTabs li a {
+  position: relative;
+  display: block;
+}
+.myAccountTabs li a::before{
+  content: '';
+  top: 50%;
+  left: 0px;
+  position: absolute;
+  width: 3px;
+  height: 50%;
+  background: #3872fa;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+}
+.myAccountTabs li a.active::before{
+  height: 100%;
+  opacity: 1;
+  top: 0px;
+}
+.myAccountTabs li a.active button svg{
+  color: #3872fa !important;
+  opacity: 1 !important;
 }
