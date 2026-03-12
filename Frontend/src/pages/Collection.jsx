@@ -2206,7 +2206,7 @@ const Collection = () => {
           background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
         }
         .mobile-drawer {
-          position: fixed; top: 0; left: 0; bottom: 0;
+          position: fixed; top: 68px; left: 0; bottom: 0;
           width: min(340px, 90vw); z-index: 1000;
           background: #120a05;
           border-right: 1px solid rgba(200,151,58,0.2);
@@ -2391,7 +2391,7 @@ const Collection = () => {
         )}
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 px-4 sm:px-6 py-6">
+        <main className="flex-1 px-2 sm:px-6 py-6">
 
           {/* Toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-5"
@@ -2449,7 +2449,7 @@ const Collection = () => {
 
           {/* Products Grid — accumulates as user loads more */}
           {shownProducts.length > 0 ? (
-            <div ref={gridRef} className={`grid ${gridClass} gap-4 sm:gap-5`}>
+            <div ref={gridRef} className={`grid ${gridClass} gap-2 sm:gap-5`}>
               {shownProducts.map((item, index) => (
                 <div
                   key={item._id}

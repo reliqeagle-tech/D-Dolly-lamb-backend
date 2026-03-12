@@ -231,7 +231,7 @@ const Contact = () => {
       {/* ── INFO CARDS ── */}
       <div className="max-w-5xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <InfoCard icon={<IconPin />} label="OUR ATELIER" lines={["Lahore, Pakistan", "By appointment only"]} delay="0.05s" />
+          <InfoCard icon={<IconPin />} label="OUR ATELIER" lines={["Delhi, India", "By appointment only"]} delay="0.05s" />
           <InfoCard icon={<IconPhone />} label="TELEPHONE" lines={["(415) 555-0132", "Mon–Sat, 10am–7pm"]} delay="0.12s" />
           <InfoCard icon={<IconMail />} label="EMAIL" lines={["admin@ddollylamb.com", "Reply within 24 hrs"]} delay="0.19s" />
           <InfoCard icon={<IconClock />} label="HOURS" lines={["Mon–Fri: 10am–7pm", "Sat: 11am–5pm"]} delay="0.26s" />
