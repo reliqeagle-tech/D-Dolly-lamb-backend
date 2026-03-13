@@ -513,7 +513,7 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
     .ddl-body { padding: 16px 18px 20px; }
 
     .ddl-name {
-      font-family: 'Georgia', serif;
+      font-family: 'Montserrat', serif;
       font-size: 13px; font-weight: 400;
       color: #f5ede0; line-height: 1.45;
       margin-bottom: 8px; letter-spacing: .02em;
@@ -534,16 +534,16 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
 
     .ddl-price-row { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
     .ddl-price-main {
-      font-family: 'Georgia', serif;
+      font-family: 'Montserrat', serif;
       font-size: 16px; font-weight: 700; color: #f7c568;
     }
     .ddl-price-old {
       font-size: 11px; color: #5a4030;
-      text-decoration: line-through; font-family: 'Georgia', serif;
+      text-decoration: line-through; font-family: 'Montserrat', serif;
     }
     .ddl-save-tag {
       font-size: 9px; color: #c8973a; letter-spacing: .18em; font-weight: 700;
-      font-family: 'Georgia', serif;
+      font-family: 'Montserrat', serif;
       background: rgba(200,151,58,0.1);
       padding: 2px 6px; border: 1px solid rgba(200,151,58,0.25); border-radius: 2px;
     }

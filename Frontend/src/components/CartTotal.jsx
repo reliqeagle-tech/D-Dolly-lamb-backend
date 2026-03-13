@@ -637,24 +637,23 @@ const STYLES = `
   .ct-lbl {
     font-size: 13px;
     color: #c4a060;
-    font-style: italic;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Montserrat', Georgia, serif;
     font-weight: 400;
   }
 
   /* ── Normal value (right side) ── */
   .ct-val {
-    font-size: 14px;
+    font-size: 12px;
     color: #f0ddc0;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Montserrat', Georgia, serif;
     font-weight: 500;
   }
 
   /* ── Discount value — green ── */
   .ct-val-disc {
-    font-size: 14px;
+    font-size: 12px;
     color: #4ade80;
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Montserrat', Georgia, serif;
     font-weight: 500;
   }
 
@@ -737,8 +736,8 @@ const CartTotal = () => {
           }}>
             <span style={{ color: "#4ade80", fontSize: 11 }}>✦</span>
             <span style={{
-              fontSize: 13, color: "#4ade80",
-              fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+              fontSize: 12, color: "#4ade80",
+              fontFamily: "'Montserrat', serif",
             }}>
               You saved {fmt(discount)} today
             </span>
@@ -784,12 +783,12 @@ const CartTotal = () => {
             }}>Total Due</p>
             <p style={{
               fontSize: 11, color: "#7a5c2a",
-              fontStyle: "italic", fontFamily: "Georgia, serif",
+              fontFamily: "Montserrat, serif",
             }}>All taxes included</p>
           </div>
           <p style={{
-            fontSize: 28, color: "#f7c568", letterSpacing: "0.02em",
-            fontFamily: "'Cormorant Garamond', serif", fontWeight: 600,
+            fontSize: 20, color: "#f7c568", letterSpacing: "0.02em",
+            fontFamily: "'Montserrat', serif", fontWeight: 600,
             lineHeight: 1,
           }}>
             {fmt(total)}

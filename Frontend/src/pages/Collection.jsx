@@ -2022,10 +2022,35 @@ const Collection = () => {
   const [searchParams] = useSearchParams()
   const gridRef = useRef(null)
 
+  // const subCategoriesMap = {
+  //   Men: ["Topwear", "Bottomwear", "Winterwear"],
+  //   Women: ["Topwear", "Bottomwear", "Winterwear"],
+  //   Others: ["Cushion Cover", "Aprons", "Desk Mat", "Pillow", "Chair Cover"]
+  // }
+
   const subCategoriesMap = {
-    Men: ["Topwear", "Bottomwear", "Winterwear"],
-    Women: ["Topwear", "Bottomwear", "Winterwear"],
-    Others: ["Cushion Cover", "Aprons", "Desk Mat", "Pillow", "Chair Cover"]
+    Men: [
+      "Biker Jacket",
+      "Bomber Biker Jacket",
+      "Moto Biker Jacket",
+    ],
+
+    Women: [
+      // "Jackets",
+      "Bomber Biker Jacket",
+      "Moto Biker Jacket",
+      "Racing Coat",
+      "Women Winter Wear",
+      "Women Night Dress"
+    ],
+
+    Others: [
+      "Cushion Cover",
+      "Aprons",
+      "Desk Mat",
+      "Pillow",
+      "Chair Cover"
+    ]
   }
 
   useEffect(() => {
@@ -2078,7 +2103,15 @@ const Collection = () => {
       copy = copy.filter(i => i.name.toLowerCase().includes(q.toLowerCase()))
     }
     if (category.length > 0) copy = copy.filter(i => category.includes(i.category))
-    if (subCategory.length > 0) copy = copy.filter(i => subCategory.includes(i.subCategory))
+    // if (subCategory.length > 0) copy = copy.filter(i => subCategory.includes(i.subCategory))
+    if (subCategory.length > 0) {
+      copy = copy.filter(p =>
+        subCategory.some(sub =>
+          p.subCategory === sub ||
+          p.name.toLowerCase().includes(sub.toLowerCase())
+        )
+      )
+    }
     copy = copy.filter(i => i.price >= priceRange[0] && i.price <= priceRange[1])
     if (onlyDiscounted) copy = copy.filter(i => i.discountPrice > 0)
     if (onlyBestseller) copy = copy.filter(i => i.bestseller)
@@ -2087,7 +2120,20 @@ const Collection = () => {
   }, [category, subCategory, search, showSearch, products, priceRange, onlyDiscounted, onlyBestseller, productSearch])
 
   useEffect(() => {
+    // let copy = filterProducts.slice()
     let copy = filterProducts.slice()
+    if (subCategory.length > 0) {
+      const sub = subCategory[0].toLowerCase()
+
+      copy.sort((a, b) => {
+        const aMatch = a.name.toLowerCase().includes(sub)
+        const bMatch = b.name.toLowerCase().includes(sub)
+
+        if (aMatch && !bMatch) return -1
+        if (!aMatch && bMatch) return 1
+        return 0
+      })
+    }
     if (sortType === 'low-high') copy.sort((a, b) => a.price - b.price)
     else if (sortType === 'high-low') copy.sort((a, b) => b.price - a.price)
     else if (sortType === 'newest') copy = products.filter(p => filterProducts.find(f => f._id === p._id))
@@ -2273,8 +2319,8 @@ const Collection = () => {
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(200,151,58,0.18)",
                 borderRadius: "2px", color: "#f5ede0",
-                fontSize: "11px", fontFamily: "Georgia,serif",
-                fontStyle: "italic", outline: "none",
+                fontSize: "11px", fontFamily: "Montserrat,serif",
+                outline: "none",
                 transition: "border-color 0.2s",
               }}
               onFocus={e => e.target.style.borderColor = "#c8973a"}
