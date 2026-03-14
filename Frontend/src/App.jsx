@@ -25,6 +25,7 @@ import CmInchConverter from './pages/cmToInch'
 import BestSeller from './components/BestSeller'
 import Wishlist from './pages/Wishlist'
 import PageNotFound from './pages/PageNotFound'
+import ResetPassword from './pages/ResetPassword'
 
 
 const App = () => {
@@ -66,6 +67,8 @@ const App = () => {
         <Route path='/CmInchConverter' element={<CmInchConverter />} />
         <Route path='/bestseller' element={<BestSeller />} />
         <Route path='/wishlist' element={<Wishlist />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+
         {/* 404 Route */}
         <Route path='*' element={<PageNotFound />} />
       </Routes>

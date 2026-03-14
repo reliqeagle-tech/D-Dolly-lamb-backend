@@ -114,6 +114,7 @@ import men_nav from './men_nav.png'
 import women_nav_1 from './women_nav_1.png'
 import women_nav from './women_nav.png'
 import collectionImg from './collectionImg.jpg'
+import ddl_logo from './ddl_logo.png'
 
 export const assets = {
     logo,
@@ -174,7 +175,8 @@ export const assets = {
     men_nav,
     women_nav,
     women_nav_1,
-    collectionImg
+    collectionImg,
+    ddl_logo,
 }
 
 export const products = [
@@ -195,7 +197,7 @@ export const products = [
         name: "Men Round Neck Pure Cotton T-shirt",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 200,
-        image: [p_img2_1,p_img2_2,p_img2_3,p_img2_4],
+        image: [p_img2_1, p_img2_2, p_img2_3, p_img2_4],
         category: "Men",
         subCategory: "Topwear",
         sizes: ["M", "L", "XL"],

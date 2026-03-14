@@ -732,7 +732,7 @@ const STYLES = `
     background:rgba(255,255,255,0.05);
     border:1px solid rgba(200,151,58,0.25);
     color:#f5ede0; font-size:13px;
-    font-family:Georgia,serif;
+    font-family:Montserrat,serif;
     outline:none; border-radius:2px;
     transition:border-color 0.2s, background 0.2s;
     width:100%;
@@ -808,6 +808,7 @@ const MyAccount = () => {
     const { backendUrl } = useContext(ShopContext);
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false);
+    const [userId, setUserId] = useState(null);
 
     const [form, setForm] = useState({
         firstName: "", lastName: "", email: "", phone: "",
@@ -824,12 +825,13 @@ const MyAccount = () => {
                 });
                 if (data.success) {
                     const u = data.user;
+                    setUserId(u._id); // ✅ save userId
                     const parts = (u.name || "").split(" ");
                     setForm({
                         firstName: parts[0] || "",
                         lastName: parts.slice(1).join(" ") || "",
                         email: u.email || "",
-                        phone: u.phone || "",
+                        phone: u.mobile || "",
                     });
                 }
             } catch (err) { console.error(err); }
@@ -844,9 +846,9 @@ const MyAccount = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
-            const { data } = await axios.put(`${backendUrl}/api/user/profile`, {
+            const { data } = await axios.put(`${backendUrl}/api/user/${userId}`, {
                 name: `${form.firstName} ${form.lastName}`.trim(),
-                phone: form.phone,
+                mobile: form.phone,
             }, { headers: { Authorization: `Bearer ${token}` } });
 
             if (data.success) {

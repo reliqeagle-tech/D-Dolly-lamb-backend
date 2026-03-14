@@ -101,7 +101,7 @@ const updateCart = async (req, res) => {
 
 const getUserCart = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId } = req.userId;
 
         if (!userId) {
             return res.json({ success: false, message: "userId is required" });

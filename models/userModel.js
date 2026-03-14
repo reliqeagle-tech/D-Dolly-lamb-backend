@@ -4,10 +4,33 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    cartData: { type: Object, default: {} }
+    cartData: { type: Object, default: {} },
+    avatar: {
+        type: String,
+        default: "",
+    },
+    mobile: {
+        type: Number,
+        default: null,
+    },
+    verify_email: {
+        type: Boolean,
+        default: false,
+    },
+    otp: {
+        type: String
+    },
+    otpExpires: {
+        type: Date
+    },
+    role: {
+        type: String,
+        enum: ['Admin', 'User'],
+        default: 'User'
+    },
 }, { minimize: false })
 
-const userModel = mongoose.models.user || mongoose.model('user',userSchema);
+const userModel = mongoose.models.user || mongoose.model('user', userSchema);
 
 export default userModel
 
