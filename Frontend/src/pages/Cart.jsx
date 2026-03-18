@@ -1,666 +1,3 @@
-
-// import React, { useContext, useEffect, useState } from 'react'
-// import { ShopContext } from '../context/ShopContext'
-// import Title from '../components/Title';
-// import { assets } from '../assets/assets';
-// import CartTotal from '../components/CartTotal';
-
-// const Cart = () => {
-
-//   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
-//   const [cartData, setCartData] = useState([]);
-
-//   useEffect(() => {
-//     if (products.length > 0) {
-//       const tempData = [];
-//       for (const items in cartItems) {
-//         for (const item in cartItems[items]) {
-//           if (cartItems[items][item] > 0) {
-//             tempData.push({
-//               _id: items,
-//               size: item,
-//               quantity: cartItems[items][item],
-//             });
-//           }
-//         }
-//       }
-//       setCartData(tempData);
-//     }
-//   }, [cartItems, products]);
-
-//   // 🧠 Check if cart is empty
-//   const isCartEmpty = cartData.length === 0;
-
-//   return (
-//     <div className='border-t pt-14'>
-
-//       <div className='text-2xl mb-3'>
-//         <Title text1={'YOUR'} text2={'CART'} />
-//       </div>
-
-//       {/* 🛒 If cart is empty, show a friendly message */}
-//       {isCartEmpty ? (
-//         <div className="text-center py-20 text-gray-500">
-//           <p>Your cart is empty.</p>
-//           <button
-//             onClick={() => navigate('/collection')}
-//             className="mt-6 px-6 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-800 transition-all"
-//           >
-//             Continue Shopping
-//           </button>
-//         </div>
-//       ) : (
-//         <>
-//           {/* Cart Items */}
-//           <div>
-//             {cartData.map((item, index) => {
-//               const productData = products.find((product) => product._id === item._id);
-
-//               return (
-//                 <div
-//                   key={index}
-//                   className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
-//                 >
-//                   <div className="flex items-start gap-6">
-//                     <img className="w-16 sm:w-20" src={productData.image[0]} alt="" />
-//                     <div>
-//                       <p className="text-xs sm:text-lg font-medium">{productData.name}</p>
-//                       <div className="flex items-center gap-5 mt-2">
-//                         <p>{currency}{productData.price}</p>
-//                         <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.size}</p>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <input
-//                     onChange={(e) =>
-//                       e.target.value === '' || e.target.value === '0'
-//                         ? null
-//                         : updateQuantity(item._id, item.size, Number(e.target.value))
-//                     }
-//                     className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
-//                     type="number"
-//                     min={1}
-//                     defaultValue={item.quantity}
-//                   />
-//                   <img
-//                     onClick={() => updateQuantity(item._id, item.size, 0)}
-//                     className="w-4 mr-4 sm:w-5 cursor-pointer"
-//                     src={assets.bin_icon}
-//                     alt=""
-//                   />
-//                 </div>
-//               );
-//             })}
-//           </div>
-
-//           {/* Cart Totals Section */}
-//           <div className="flex justify-end my-20">
-//             <div className="w-full sm:w-[450px]">
-//               <CartTotal />
-
-//               <div className="w-full text-end">
-//                 <button
-//                   onClick={() => navigate('/place-order')}
-//                   disabled={isCartEmpty}
-//                   className={`text-sm my-8 px-8 py-3 rounded-md font-semibold transition-all
-//                     ${isCartEmpty
-//                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-//                       : 'bg-black text-white hover:bg-gray-900'
-//                     }`}
-//                 >
-//                   PROCEED TO CHECKOUT
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Cart;
-
-
-
-// import { useContext, useEffect, useState } from 'react'
-// import { ShopContext } from '../context/ShopContext'
-// import Title from '../components/Title';
-// import { assets } from '../assets/assets';
-// import CartTotal from '../components/CartTotal';
-
-// const Cart = () => {
-
-//   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
-//   const [cartData, setCartData] = useState([]);
-
-//   useEffect(() => {
-//     if (products.length > 0 && Object.keys(cartItems).length > 0) {
-//       const tempData = [];
-//       for (const items in cartItems) {
-//         for (const item in cartItems[items]) {
-//           if (cartItems[items][item] > 0) {
-//             tempData.push({
-//               _id: items,
-//               size: item,
-//               quantity: cartItems[items][item],
-//             });
-//           }
-//         }
-//       }
-//       setCartData(tempData);
-//     } else {
-//       setCartData([]); // Reset if products or cart are empty
-//     }
-//   }, [cartItems, products]);
-
-// //   useEffect(() => {
-// //   if (products.length > 0 && Object.keys(cartItems).length > 0) {
-// //     const tempData = [];
-// //     for (const items in cartItems) {
-// //       for (const item in cartItems[items]) {
-// //         const entry = cartItems[items][item];
-// //         if (entry?.quantity > 0) {
-// //           tempData.push({
-// //             _id: items,
-// //             size: item,
-// //             quantity: entry.quantity,
-// //             price: entry.price, // ✅ include dynamic price
-// //           });
-// //         }
-// //       }
-// //     }
-// //     setCartData(tempData);
-// //   } else {
-// //     setCartData([]);
-// //   }
-// // }, [cartItems, products]);
-
-
-//   const isCartEmpty = cartData.length === 0;
-
-//   return (
-//     <div className='border-t pt-14'>
-//       <div className='text-2xl mb-3'>
-//         <Title text1={'YOUR'} text2={'CART'} />
-//       </div>
-
-//       {/* 🛒 Empty Cart Message */}
-//       {isCartEmpty ? (
-//         <div className="text-center py-20 text-gray-500">
-//           <p>Your cart is empty.</p>
-//           <button
-//             onClick={() => navigate('/collection')}
-//             className="mt-6 px-6 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-800 transition-all"
-//           >
-//             Continue Shopping
-//           </button>
-//         </div>
-//       ) : (
-//         <>
-//           {/* 🛍️ Cart Items */}
-//           <div>
-//             {cartData.map((item, index) => {
-//               const productData = products.find((product) => product._id === item._id);
-
-//               // 🚨 Handle missing or deleted products safely
-//               if (!productData) {
-//                 // console.warn(`⚠️ Product not found for id: ${item._id}`);
-//                 return null;
-//               }
-
-
-//               // 🧠 Safely extract image (Cloudinary or array fallback)
-//               const imageSrc = Array.isArray(productData.image)
-//                 ? productData.image[0]
-//                 : productData.image || assets.placeholder_image;
-
-//               return (
-//                 <div
-//                   key={index}
-//                   className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr]
-//                   sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
-//                 >
-//                   <div className="flex items-start gap-6">
-//                     <img
-//                       className="w-16 sm:w-20 object-cover rounded"
-//                       src={imageSrc}
-//                       alt={productData.name || "Product"}
-//                       onError={(e) => { e.target.src = assets.placeholder_image; }}
-//                     />
-//                     <div>
-//                       <p className="text-xs sm:text-lg font-medium">{productData.name}</p>
-//                       <div className="flex items-center gap-5 mt-2">
-//                         <p>{currency}{productData.price}</p>
-//                         <p>{currency}{item.price}</p>  {/* ✅ shows actual customized price */}
-
-//                         <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.size}</p>
-//                         {/* <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.color}</p> */}
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   <input
-//                     onChange={(e) =>
-//                       e.target.value === '' || e.target.value === '0'
-//                         ? null
-//                         : updateQuantity(item._id, item.size, Number(e.target.value))
-//                     }
-//                     className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
-//                     type="number"
-//                     min={1}
-//                     defaultValue={item.quantity}
-//                   />
-
-//                   <img
-//                     onClick={() => updateQuantity(item._id, item.size, 0)}
-//                     className="w-4 mr-4 sm:w-5 cursor-pointer"
-//                     src={assets.bin_icon}
-//                     alt="Delete"
-//                   />
-//                 </div>
-//               );
-//             })}
-//           </div>
-
-//           {/* 💰 Cart Totals */}
-//           <div className="flex justify-end my-20">
-//             <div className="w-full sm:w-[450px]">
-//               <CartTotal />
-
-//               <div className="w-full text-end">
-//                 <button
-//                   onClick={() => navigate('/place-order')}
-//                   disabled={isCartEmpty}
-//                   className={`text-sm my-8 px-8 py-3 rounded-md font-semibold transition-all
-//                     ${isCartEmpty
-//                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-//                       : 'bg-black text-white hover:bg-gray-900'
-//                     }`}
-//                 >
-//                   PROCEED TO CHECKOUT
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Cart;
-
-
-// import { useContext, useEffect, useState } from 'react';
-// import { ShopContext } from '../context/ShopContext';
-// import Title from '../components/Title';
-// import { assets } from '../assets/assets';
-// import CartTotal from '../components/CartTotal';
-
-// const Cart = () => {
-//   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
-//   const [cartData, setCartData] = useState([]);
-
-//   // useEffect(() => {
-//   //   if (products.length > 0 && Object.keys(cartItems).length > 0) {
-//   //     const tempData = [];
-//   //     for (const items in cartItems) {
-//   //       for (const itemKey in cartItems[items]) {
-//   //         if (cartItems[items][itemKey] > 0) {
-//   //           // Split combined key: "S-Tobacco" -> size: "S", color: "Tobacco"
-//   //           const [size, color] = itemKey.includes('-') ? itemKey.split('-') : [itemKey, '']; // Fallback if no color (old data)
-
-//   //           tempData.push({
-//   //             _id: items,
-//   //             size,
-//   //             color,
-//   //             quantity: cartItems[items][itemKey],
-//   //           });
-//   //         }
-//   //       }
-//   //     }
-//   //     setCartData(tempData);
-//   //   } else {
-//   //     setCartData([]);
-//   //   }
-//   // }, [cartItems, products]);
-
-//   useEffect(() => {
-//   if (products.length > 0 && Object.keys(cartItems).length > 0) {
-//     const tempData = [];
-//     for (const items in cartItems) {
-//       for (const itemKey in cartItems[items]) {
-//         const raw = cartItems[items][itemKey];
-
-//         // normalize old and new shapes
-//         const quantity = typeof raw === 'number' ? raw : (raw?.quantity || 0);
-//         const customPrice = typeof raw === 'number' ? 0 : (raw?.customPrice || 0);
-
-//         if (quantity > 0) {
-//           const [size, color] = itemKey.includes('-') ? itemKey.split('-') : [itemKey, ''];
-
-//           tempData.push({
-//             _id: items,
-//             size,
-//             color,
-//             quantity,
-//             customPrice
-//           });
-//         }
-//       }
-//     }
-//     setCartData(tempData);
-//   } else {
-//     setCartData([]);
-//   }
-// }, [cartItems, products]);
-
-
-//   const isCartEmpty = cartData.length === 0;
-
-//   return (
-//     <div className='border-t pt-14'>
-//       <div className='text-2xl mb-3'>
-//         <Title text1={'YOUR'} text2={'CART'} />
-//       </div>
-
-//       {/* 🛒 Empty Cart Message */}
-//       {isCartEmpty ? (
-//         <div className="text-center py-20 text-gray-500">
-//           <p>Your cart is empty.</p>
-//           <button
-//             onClick={() => navigate('/collection')}
-//             className="mt-6 px-6 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-800 transition-all"
-//           >
-//             Continue Shopping
-//           </button>
-//         </div>
-//       ) : (
-//         <>
-//           {/* 🛍️ Cart Items */}
-//           <div>
-//             {cartData.map((item, index) => {
-//               const productData = products.find((product) => product._id === item._id);
-
-//               // 🚨 Handle missing or deleted products safely
-//               if (!productData) {
-//                 console.warn(`⚠️ Product not found for id: ${item._id}`);
-//                 return null;
-//               }
-
-//               // 🧠 Safely extract image (Cloudinary or array fallback)
-//               const imageSrc = Array.isArray(productData.image)
-//                 ? productData.image[0]
-//                 : productData.image || assets.placeholder_image;
-
-//               return (
-//                 <div
-//                   key={`${item._id}-${item.size}-${item.color}-${index}`} // Better unique key
-//                   className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr]
-//                   sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
-//                 >
-//                   <div className="flex items-start gap-6">
-//                     <img
-//                       className="w-16 sm:w-20 object-cover rounded"
-//                       src={imageSrc}
-//                       alt={productData.name || "Product"}
-//                       onError={(e) => { e.target.src = assets.placeholder_image; }}
-//                     />
-//                     <div>
-//                       <p className="text-xs sm:text-lg font-medium">{productData.name}</p>
-//                       <div className="flex items-center gap-5 mt-2 flex-wrap">
-//                         <p>{currency}{productData.price + (item.customPrice || 0)}</p> Only product price, no duplicate
-
-//                         <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.size}</p>
-//                         {item.color && ( // Show only if color exists
-//                           <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50 text-xs sm:text-sm">
-//                             {item.color}
-//                           </p>
-//                         )}
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   <input
-//                     onChange={(e) =>
-//                       updateQuantity(
-//                         item._id,
-//                         item.size,
-//                         item.color, // ✅ Pass color
-//                         Number(e.target.value) || 0 // Handle empty input
-//                       )
-//                     }
-//                     className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
-//                     type="number"
-//                     min={1}
-//                     value={item.quantity} // Use value for controlled input (better than defaultValue)
-//                   />
-
-//                   <img
-//                     onClick={() => updateQuantity(item._id, item.size, item.color, 0)} // ✅ Pass color for delete
-//                     className="w-4 mr-4 sm:w-5 cursor-pointer"
-//                     src={assets.bin_icon}
-//                     alt="Delete"
-//                   />
-//                 </div>
-//               );
-//             })}
-//           </div>
-
-//           {/* 💰 Cart Totals */}
-//           <div className="flex justify-end my-20">
-//             <div className="w-full sm:w-[450px]">
-//               <CartTotal />
-
-//               <div className="w-full text-end">
-//                 <button
-//                   onClick={() => navigate('/place-order')}
-//                   disabled={isCartEmpty}
-//                   className={`text-sm my-8 px-8 py-3 rounded-md font-semibold transition-all
-//                     ${isCartEmpty
-//                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-//                       : 'bg-black text-white hover:bg-gray-900'
-//                     }`}
-//                 >
-//                   PROCEED TO CHECKOUT
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Cart;
-
-
-// import { useContext, useEffect, useState } from 'react';
-// import { ShopContext } from '../context/ShopContext';
-// import Title from '../components/Title';
-// import { assets } from '../assets/assets';
-// import CartTotal from '../components/CartTotal';
-
-// const Cart = () => {
-//   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
-//   const [cartData, setCartData] = useState([]);
-
-//   useEffect(() => {
-//     if (products.length > 0 && Object.keys(cartItems).length > 0) {
-//       const tempData = [];
-//       for (const items in cartItems) {
-//         for (const itemKey in cartItems[items]) {
-//           const raw = cartItems[items][itemKey];
-//           const quantity = typeof raw === 'number' ? raw : (raw?.quantity || 0);
-//           const customPrice = typeof raw === 'number' ? 0 : (raw?.customPrice || 0);
-
-//           if (quantity > 0) {
-//             const [size, color] = itemKey.includes('-') ? itemKey.split('-') : [itemKey, ''];
-
-//             tempData.push({
-//               _id: items,
-//               size,
-//               color,
-//               quantity,
-//               customPrice
-//             });
-//           }
-//         }
-//       }
-//       setCartData(tempData);
-//     } else {
-//       setCartData([]);
-//     }
-//   }, [cartItems, products]);
-
-//   const isCartEmpty = cartData.length === 0;
-
-//   return (
-//     <div className='border-t pt-14 p-24'>
-//       <div className='text-2xl mb-3'>
-//         <Title text1={'YOUR'} text2={'CART'} />
-//       </div>
-
-//       {isCartEmpty ? (
-//         <div className="text-center py-20 text-gray-500">
-//           <p>Your cart is empty.</p>
-//           <button
-//             onClick={() => navigate('/collection')}
-//             className="mt-6 px-6 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-800 transition-all"
-//           >
-//             Continue Shopping
-//           </button>
-//         </div>
-//       ) : (
-//         <>
-//           <div>
-//             {cartData.map((item, index) => {
-//               const productData = products.find((product) => product._id === item._id);
-//               if (!productData) {
-//                 console.warn(`⚠️ Product not found for id: ${item._id}`);
-//                 return null;
-//               }
-
-//               const imageSrc = Array.isArray(productData.image)
-//                 ? productData.image[0]
-//                 : productData.image || assets.placeholder_image;
-
-//               // const unitPrice = productData.price + item.customPrice;  // ✅ Base + Custom
-//               // const lineTotal = unitPrice * item.quantity;
-
-//               const originalPrice = Number(productData.price);
-//               const discountPercent = Number(productData.discountPrice) || 0;
-
-//               const discountAmount =
-//                 discountPercent > 0 && discountPercent < 100
-//                   ? (originalPrice * discountPercent) / 100
-//                   : 0;
-
-//               const salePrice = originalPrice - discountAmount;
-
-//               const unitPrice = salePrice + item.customPrice;
-
-//               const lineTotal = unitPrice * item.quantity;
-
-//               return (
-//                 <div
-//                   key={`${item._id}-${item.size}-${item.color}-${index}`}
-//                   className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
-//                 >
-//                   <div className="flex items-start gap-6">
-//                     <img
-//                       className="w-16 sm:w-20 object-cover rounded"
-//                       src={imageSrc}
-//                       alt={productData.name || "Product"}
-//                       onError={(e) => { e.target.src = assets.placeholder_image; }}
-//                     />
-//                     <div>
-//                       <p className="text-xs sm:text-lg font-medium">{productData.name}</p>
-//                       <div className="flex items-center gap-5 mt-2 flex-wrap">
-//                         <div className="flex flex-col">
-//                           {/* <p className="font-semibold">{currency}{unitPrice.toFixed(2)}</p>  ✅ $209.98 */}
-//                           <div className="flex flex-col">
-
-//                           {discountPercent > 0 && (
-//                             <p className="text-xs text-gray-400 line-through">
-//                               {currency}{originalPrice.toFixed(2)}
-//                             </p>
-//                           )}
-
-//                           <p className="font-semibold text-lg text-black">
-//                             {currency}{salePrice.toFixed(2)}
-//                           </p>
-
-//                           {discountPercent > 0 && (
-//                             <p className="text-xs text-green-600">
-//                               Save {currency}{discountAmount.toFixed(2)} ({discountPercent}% OFF)
-//                             </p>
-//                           )}
-
-//                         </div>
-//                           {item.customPrice > 0 && (
-//                             <p className="text-xs text-green-600">Base: {currency}{productData.price.toFixed(2)} + Lining: {currency}{item.customPrice.toFixed(2)}</p>
-//                           )}
-//                           <p className="text-sm text-gray-600">Qty: {item.quantity} | Line Total: {currency}{lineTotal.toFixed(2)}</p>
-//                         </div>
-
-//                         <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.size}</p>
-//                         {item.color && (
-//                           <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50 text-xs sm:text-sm">
-//                             {item.color}
-//                           </p>
-//                         )}
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   <input
-//                     onChange={(e) => updateQuantity(item._id, item.size, item.color, Number(e.target.value) || 0)}
-//                     className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
-//                     type="number"
-//                     min={1}
-//                     value={item.quantity}
-//                   />
-
-//                   <img
-//                     onClick={() => updateQuantity(item._id, item.size, item.color, 0)}
-//                     className="w-4 mr-4 sm:w-5 cursor-pointer"
-//                     src={assets.bin_icon}
-//                     alt="Delete"
-//                   />
-//                 </div>
-//               );
-//             })}
-//           </div>
-
-//           <div className="flex justify-end my-20">
-//             <div className="w-full sm:w-[450px]">
-//               <CartTotal />  {/* Assumes it uses getCartAmount() — now with custom */}
-
-//               <div className="w-full text-end">
-//                 <button
-//                   onClick={() => navigate('/place-order')}
-//                   disabled={isCartEmpty}
-//                   className={`text-sm my-8 px-8 py-3 rounded-md font-semibold transition-all
-//                     ${isCartEmpty ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-black text-white hover:bg-gray-900'}`}
-//                 >
-//                   PROCEED TO CHECKOUT
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Cart;
-
-
-
 // import { useContext, useEffect, useState } from 'react';
 // import { ShopContext } from '../context/ShopContext';
 // import { assets } from '../assets/assets';
@@ -1234,6 +571,546 @@
 
 
 
+// import { useContext, useEffect, useState } from 'react';
+// import { ShopContext } from '../context/ShopContext';
+// import { assets } from '../assets/assets';
+// import CartTotal from '../components/CartTotal';
+
+// /* ── Icons ── */
+// const IcoMinus = () => (
+//   <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+//     <path d="M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+//   </svg>
+// );
+// const IcoPlus = () => (
+//   <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+//     <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+//   </svg>
+// );
+// const IcoTrash = () => (
+//   <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+//     <polyline points="3 6 5 6 21 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+//     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+//     <path d="M10 11v6M14 11v6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+//     <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" strokeWidth="1.6" />
+//   </svg>
+// );
+// const IcoArrow = () => (
+//   <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+//     <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+//   </svg>
+// );
+// const IcoBack = () => (
+//   <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+//     <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+//   </svg>
+// );
+// const IcoBag = () => (
+//   <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+//     <path d="M6 2L3 7v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-3-5z" stroke="rgba(200,151,58,0.3)" strokeWidth="0.7" strokeLinejoin="round" />
+//     <path d="M3 7h18" stroke="rgba(200,151,58,0.3)" strokeWidth="0.7" strokeLinecap="round" />
+//     <path d="M16 10a4 4 0 0 1-8 0" stroke="rgba(200,151,58,0.3)" strokeWidth="0.7" strokeLinecap="round" />
+//   </svg>
+// );
+// const IcoShield = () => (
+//   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+//     <path d="M12 2L4 6v6c0 5 3.6 9.7 8 11 4.4-1.3 8-6 8-11V6l-8-4z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+//     <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+//   </svg>
+// );
+// const IcoPin = () => (
+//   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+//     <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="1.4" />
+//     <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="1.4" />
+//   </svg>
+// );
+// const IcoReturn = () => (
+//   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+//     <polyline points="1 4 1 10 7 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+//     <path d="M3.51 15a9 9 0 1 0 .49-4.95" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+//   </svg>
+// );
+
+// /* ── Gold accent top bar ── */
+// const GoldBar = () => (
+//   <div
+//     className="h-0.5 w-full"
+//     style={{ background: 'linear-gradient(to right,transparent,#c8973a 30%,#f7c568 50%,#c8973a 70%,transparent)', opacity: 0.65 }}
+//   />
+// );
+
+// const Cart = () => {
+//   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
+//   const [cartData, setCartData] = useState([]);
+
+//   useEffect(() => {
+//     if (products.length > 0 && Object.keys(cartItems).length > 0) {
+//       const tempData = [];
+//       for (const items in cartItems) {
+//         for (const itemKey in cartItems[items]) {
+//           const raw = cartItems[items][itemKey];
+//           const quantity = typeof raw === 'number' ? raw : (raw?.quantity || 0);
+//           const customPrice = typeof raw === 'number' ? 0 : (raw?.customPrice || 0);
+//           if (quantity > 0) {
+//             const [size, color] = itemKey.includes('-') ? itemKey.split('-') : [itemKey, ''];
+//             tempData.push({ _id: items, size, color, quantity, customPrice });
+//           }
+//         }
+//       }
+//       setCartData(tempData);
+//     } else {
+//       setCartData([]);
+//     }
+//   }, [cartItems, products]);
+
+//   const isCartEmpty = cartData.length === 0;
+//   const totalItems = cartData.reduce((s, i) => s + i.quantity, 0);
+
+//   return (
+//     <>
+//       <style>{`
+//         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
+//         @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+//         @keyframes fadeIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+//         @keyframes shimmer { 0%{background-position:-600px 0} 100%{background-position:600px 0} }
+//         .cart-page  { animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+//         .cart-item  { animation: fadeIn 0.42s cubic-bezier(0.16,1,0.3,1) both; }
+//         .cart-panel { animation: fadeUp 0.55s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+//         .cta-btn::after {
+//           content:''; position:absolute; inset:0;
+//           background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);
+//           background-size:600px 100%;
+//           animation:shimmer 2.6s infinite; opacity:0; transition:opacity 0.3s;
+//         }
+//         .cta-btn:hover::after { opacity:1; }
+//         input[type=number]::-webkit-inner-spin-button,
+//         input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+//       `}</style>
+
+//       <div
+//         className="cart-page min-h-screen px-4 sm:px-8 lg:px-16 pt-10 pb-24"
+//         style={{ background: '#120b06', color: '#f5ede0', fontFamily: 'Georgia, serif' }}
+//       >
+
+//         {/* ═══ PAGE HEADER ═══ */}
+//         <div className="mb-9">
+//           <p
+//             className="text-[8px] tracking-[0.48em] font-bold mb-2 uppercase"
+//             style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
+//           >
+//             D DOLLY LAMB
+//           </p>
+
+//           <div className="flex items-end justify-between flex-wrap gap-3">
+//             <div>
+//               <h1
+//                 className="text-4xl lg:text-5xl font-light tracking-[0.12em] leading-none m-0"
+//                 style={{ color: '#f7c568', fontFamily: "'Cormorant Garamond',serif" }}
+//               >
+//                 YOUR CART
+//               </h1>
+//               {!isCartEmpty && (
+//                 <p
+//                   className="text-[10px] tracking-[0.1em] mt-2 uppercase"
+//                   style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
+//                 >
+//                   {totalItems} {totalItems === 1 ? 'ITEM' : 'ITEMS'} IN YOUR BAG
+//                 </p>
+//               )}
+//             </div>
+//             <div className="flex items-center gap-2 pb-1">
+//               <div className="w-12 h-px" style={{ background: 'linear-gradient(to left,rgba(200,151,58,0.35),transparent)' }} />
+//               <div className="w-2 h-2 rotate-45 flex-shrink-0" style={{ background: '#c8973a' }} />
+//               <div className="w-12 h-px" style={{ background: 'linear-gradient(to right,rgba(200,151,58,0.35),transparent)' }} />
+//             </div>
+//           </div>
+
+//           <div className="h-px mt-5" style={{ background: 'linear-gradient(to right,transparent,rgba(200,151,58,0.2) 40%,rgba(200,151,58,0.2) 60%,transparent)' }} />
+//         </div>
+
+//         {/* ═══ EMPTY STATE ═══ */}
+//         {isCartEmpty ? (
+//           <div
+//             className="rounded-xl p-16 text-center max-w-md mx-auto"
+//             style={{ background: 'linear-gradient(160deg,#1a100a,#1f1209)', border: '1px solid rgba(200,151,58,0.15)' }}
+//           >
+//             <div className="mb-5 opacity-50 flex justify-center"><IcoBag /></div>
+//             <h2
+//               className="text-2xl italic font-normal mb-3"
+//               style={{ color: '#f7c568', fontFamily: "'Cormorant Garamond',serif" }}
+//             >
+//               Your bag is empty
+//             </h2>
+//             <p
+//               className="text-[10px] tracking-[0.1em] mb-8 uppercase"
+//               style={{ color: '#8a6830', fontFamily: 'Montserrat,sans-serif' }}
+//             >
+//               DISCOVER OUR ARTISAN LEATHER COLLECTION
+//             </p>
+//             <button
+//               onClick={() => { navigate('/collection'); window.scrollTo(0, 0); }}
+//               className="cta-btn mx-auto flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-bold text-[10px] tracking-[0.28em] uppercase relative overflow-hidden transition-all duration-250 hover:-translate-y-0.5"
+//               style={{
+//                 background: 'linear-gradient(135deg,#c8973a,#f7c568)',
+//                 color: '#1a0f0a', border: 'none', fontFamily: 'Montserrat,sans-serif',
+//                 maxWidth: 260,
+//               }}
+//               onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 28px rgba(200,151,58,0.42)'}
+//               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+//             >
+//               EXPLORE COLLECTION <IcoArrow />
+//             </button>
+//           </div>
+
+//         ) : (
+//           /* ═══ TWO-COLUMN LAYOUT ═══ */
+//           <div className="flex gap-7 items-start flex-wrap lg:flex-nowrap">
+
+//             {/* ── LEFT: Cart items ── */}
+//             <div className="flex-1 min-w-0 flex flex-col gap-3" style={{ minWidth: '320px' }}>
+
+//               {cartData.map((item, index) => {
+//                 const productData = products.find((p) => p._id === item._id);
+//                 if (!productData) return null;
+
+//                 const imageSrc = Array.isArray(productData.image)
+//                   ? productData.image[0]
+//                   : productData.image || assets.placeholder_image;
+
+//                 const originalPrice = Number(productData.price);
+//                 const discountPercent = Number(productData.discountPrice) || 0;
+//                 const discountAmount = discountPercent > 0 && discountPercent < 100
+//                   ? (originalPrice * discountPercent) / 100 : 0;
+//                 const salePrice = originalPrice - discountAmount;
+//                 const unitPrice = salePrice + item.customPrice;
+//                 const lineTotal = unitPrice * item.quantity;
+
+//                 return (
+//                   <div
+//                     key={`${item._id}-${item.size}-${item.color}-${index}`}
+//                     className="cart-item relative flex items-stretch rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-px group"
+//                     style={{
+//                       animationDelay: `${index * 0.07}s`,
+//                       background: 'linear-gradient(135deg,#1a100a,#1f1209)',
+//                       border: '1px solid rgba(200,151,58,0.18)',
+//                     }}
+//                     onMouseEnter={e => {
+//                       e.currentTarget.style.borderColor = 'rgba(200,151,58,0.42)';
+//                       e.currentTarget.style.boxShadow = '0 14px 44px rgba(0,0,0,0.55)';
+//                     }}
+//                     onMouseLeave={e => {
+//                       e.currentTarget.style.borderColor = 'rgba(200,151,58,0.18)';
+//                       e.currentTarget.style.boxShadow = 'none';
+//                     }}
+//                   >
+//                     {/* Gold top line on hover */}
+//                     <div
+//                       className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-60 transition-opacity duration-300"
+//                       style={{ background: 'linear-gradient(to right,transparent,#c8973a 30%,#f7c568 50%,#c8973a 70%,transparent)' }}
+//                     />
+
+//                     {/* Product image */}
+//                     <div
+//                       // className="flex-shrink-0 w-28 sm:w-32 h-28 sm:h bg-white overflow-hidden"
+//                       className="flex-shrink-0 w-28 sm:w-32 h-28 sm:h-36 bg-white overflow-hidden"
+//                       style={{ borderRight: '1px solid rgba(200,151,58,0.1)', minHeight: 110 }}
+//                     >
+//                       <img
+//                         src={imageSrc}
+//                         alt={productData.name || 'Product'}
+//                         className="w-full h-full object-contain p-2.5 transition-transform duration-500 group-hover:scale-105"
+//                         style={{ display: 'block' }}
+//                         onError={(e) => { e.target.src = assets.placeholder_image; }}
+//                       />
+//                     </div>
+
+//                     {/* Card body */}
+//                     <div className="flex-1 flex flex-wrap items-center gap-3 p-4 sm:p-5 min-w-0">
+
+//                       {/* Name + meta */}
+//                       <div className="flex-1 min-w-[160px]">
+//                         <p
+//                           className="text-[9px] tracking-[0.3em] uppercase mb-1.5 font-semibold"
+//                           style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
+//                         >
+//                           LAMBSKIN LEATHER
+//                         </p>
+//                         <p
+//                           className="text-sm font-medium leading-snug mb-2.5 line-clamp-2"
+//                           style={{ color: '#f0ddc0', fontFamily: 'Montserrat,sans-serif' }}
+//                         >
+//                           {productData.name}
+//                         </p>
+//                         <div className="flex gap-1.5 flex-wrap">
+//                           {item.size && (
+//                             <span
+//                               className="px-2.5 py-1 rounded text-[9px] tracking-[0.18em] font-semibold uppercase"
+//                               style={{ color: '#f7c568', background: 'rgba(200,151,58,0.12)', border: '1px solid rgba(200,151,58,0.28)', fontFamily: 'Montserrat,sans-serif' }}
+//                             >
+//                               SIZE: {item.size}
+//                             </span>
+//                           )}
+//                           {item.color && (
+//                             <span
+//                               className="px-2.5 py-1 rounded text-[9px] tracking-[0.14em] uppercase"
+//                               style={{ color: '#d4b896', background: 'rgba(200,151,58,0.06)', border: '1px solid rgba(200,151,58,0.15)', fontFamily: 'Montserrat,sans-serif' }}
+//                             >
+//                               {item.color}
+//                             </span>
+//                           )}
+//                         </div>
+//                       </div>
+
+//                       {/* Unit price */}
+//                       <div className="flex flex-col gap-1 flex-shrink-0">
+//                         {discountPercent > 0 && (
+//                           <span
+//                             className="text-[11px] line-through"
+//                             style={{ color: 'rgba(240,220,190,0.4)', fontFamily: 'Montserrat,sans-serif' }}
+//                           >
+//                             {currency}{originalPrice.toFixed(2)}
+//                           </span>
+//                         )}
+//                         <span
+//                           className="text-base font-semibold leading-none"
+//                           style={{ color: '#f7c568', fontFamily: 'Montserrat,sans-serif' }}
+//                         >
+//                           {currency}{salePrice.toFixed(2)}
+//                         </span>
+//                         {discountPercent > 0 && (
+//                           <span
+//                             className="text-[8px] tracking-[0.1em] font-semibold"
+//                             style={{ color: '#4ade80', fontFamily: 'Montserrat,sans-serif' }}
+//                           >
+//                             SAVE {currency}{discountAmount.toFixed(2)} ({discountPercent}% OFF)
+//                           </span>
+//                         )}
+//                         {item.customPrice > 0 && (
+//                           <span
+//                             className="text-[9px] tracking-[0.08em]"
+//                             style={{ color: 'rgba(200,151,58,0.7)', fontFamily: 'Montserrat,sans-serif' }}
+//                           >
+//                             + Lining {currency}{item.customPrice.toFixed(2)}
+//                           </span>
+//                         )}
+//                       </div>
+
+//                       {/* Qty stepper */}
+//                       <div
+//                         className="flex items-center gap-2 rounded-full px-1.5 py-1"
+//                         style={{ background: 'rgba(200,151,58,0.06)', border: '1px solid rgba(200,151,58,0.2)' }}
+//                       >
+//                         <button
+//                           className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 outline-none flex-shrink-0 disabled:opacity-30 disabled:cursor-default"
+//                           style={{ background: 'rgba(200,151,58,0.08)', border: '1px solid rgba(200,151,58,0.22)', color: 'rgba(200,151,58,0.7)' }}
+//                           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.22)'; e.currentTarget.style.color = '#f7c568'; }}
+//                           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.08)'; e.currentTarget.style.color = 'rgba(200,151,58,0.7)'; }}
+//                           disabled={item.quantity <= 1}
+//                           onClick={() => updateQuantity(item._id, item.size, item.color, Math.max(1, item.quantity - 1))}
+//                         >
+//                           <IcoMinus />
+//                         </button>
+
+//                         <input
+//                           type="number"
+//                           min={1}
+//                           value={item.quantity}
+//                           onChange={(e) => updateQuantity(item._id, item.size, item.color, Number(e.target.value) || 1)}
+//                           className="w-8 text-center bg-transparent border-none outline-none text-sm font-semibold"
+//                           style={{ color: '#f0ddc0', fontFamily: "'Cormorant Garamond',serif" }}
+//                         />
+
+//                         <button
+//                           className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 outline-none flex-shrink-0"
+//                           style={{ background: 'rgba(200,151,58,0.08)', border: '1px solid rgba(200,151,58,0.22)', color: 'rgba(200,151,58,0.7)' }}
+//                           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.22)'; e.currentTarget.style.color = '#f7c568'; }}
+//                           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.08)'; e.currentTarget.style.color = 'rgba(200,151,58,0.7)'; }}
+//                           onClick={() => updateQuantity(item._id, item.size, item.color, item.quantity + 1)}
+//                         >
+//                           <IcoPlus />
+//                         </button>
+//                       </div>
+
+//                       {/* Line total + remove */}
+//                       <div className="flex flex-col items-end gap-2 flex-shrink-0">
+//                         <div className="text-right">
+//                           <p
+//                             className="text-[9px] tracking-[0.2em] uppercase mb-1 font-semibold"
+//                             style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
+//                           >
+//                             LINE TOTAL
+//                           </p>
+//                           <p
+//                             className="text-base font-semibold leading-none"
+//                             style={{ color: '#f7c568', fontFamily: 'Montserrat,sans-serif' }}
+//                           >
+//                             {currency}{lineTotal.toFixed(2)}
+//                           </p>
+//                         </div>
+
+//                         <button
+//                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[9px] tracking-[0.14em] font-semibold uppercase transition-all duration-200 outline-none"
+//                           style={{
+//                             background: 'rgba(16,2,2,0.85)',
+//                             border: '1.5px solid rgba(200,50,50,0.5)',
+//                             color: '#f87171',
+//                             fontFamily: 'Montserrat,sans-serif',
+//                           }}
+//                           onMouseEnter={e => {
+//                             e.currentTarget.style.background = 'rgba(90,8,8,0.95)';
+//                             e.currentTarget.style.borderColor = '#ff5555';
+//                             e.currentTarget.style.color = '#fff';
+//                             e.currentTarget.style.boxShadow = '0 3px 12px rgba(200,30,30,0.35)';
+//                           }}
+//                           onMouseLeave={e => {
+//                             e.currentTarget.style.background = 'rgba(16,2,2,0.85)';
+//                             e.currentTarget.style.borderColor = 'rgba(200,50,50,0.5)';
+//                             e.currentTarget.style.color = '#f87171';
+//                             e.currentTarget.style.boxShadow = 'none';
+//                           }}
+//                           onClick={() => updateQuantity(item._id, item.size, item.color, 0)}
+//                         >
+//                           <IcoTrash /> REMOVE
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 );
+//               })}
+
+//               {/* Item count footer */}
+//               <div className="flex justify-end pt-3 pr-1">
+//                 <p
+//                   className="text-[9px] tracking-[0.2em] uppercase"
+//                   style={{ color: 'rgba(200,151,58,0.4)', fontFamily: 'Montserrat,sans-serif' }}
+//                 >
+//                   {cartData.length} {cartData.length === 1 ? 'PRODUCT' : 'PRODUCTS'} · {totalItems} {totalItems === 1 ? 'UNIT' : 'UNITS'}
+//                 </p>
+//               </div>
+//             </div>
+
+//             {/* ── RIGHT: Summary panel ── */}
+//             <div
+//               className="cart-panel flex-shrink-0 rounded-xl overflow-hidden"
+//               style={{
+//                 width: 340,
+//                 minWidth: 280,
+//                 position: 'sticky',
+//                 top: 24,
+//                 alignSelf: 'flex-start',
+//                 background: 'linear-gradient(160deg,#1e120a,#150c05)',
+//                 border: '1px solid rgba(200,151,58,0.2)',
+//               }}
+//             >
+//               <GoldBar />
+
+//               <div className="p-6 flex flex-col gap-0">
+
+//                 {/* CartTotal */}
+//                 <CartTotal />
+
+//                 <div className="h-4" />
+
+//                 {/* Checkout CTA */}
+//                 <button
+//                   className="cta-btn w-full py-4 flex items-center justify-center gap-2.5 rounded-lg font-bold text-[10px] tracking-[0.28em] uppercase relative overflow-hidden transition-all duration-250 hover:-translate-y-px disabled:opacity-45 disabled:cursor-not-allowed"
+//                   style={{
+//                     background: 'linear-gradient(135deg,#c8973a,#f7c568)',
+//                     color: '#1a0f0a', border: 'none',
+//                     fontFamily: 'Montserrat,sans-serif',
+//                   }}
+//                   onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 28px rgba(200,151,58,0.42)'}
+//                   onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+//                   onClick={() => navigate('/place-order')}
+//                   disabled={isCartEmpty}
+//                 >
+//                   PROCEED TO CHECKOUT <IcoArrow />
+//                 </button>
+
+//                 <div className="h-2.5" />
+
+//                 {/* Continue shopping */}
+//                 <button
+//                   className="w-full py-3.5 flex items-center justify-center gap-2 rounded-lg text-[9px] tracking-[0.22em] font-semibold uppercase transition-all duration-200"
+//                   style={{
+//                     background: 'transparent',
+//                     color: 'rgba(200,151,58,0.65)',
+//                     border: '1px solid rgba(200,151,58,0.22)',
+//                     fontFamily: 'Montserrat,sans-serif',
+//                   }}
+//                   onMouseEnter={e => {
+//                     e.currentTarget.style.borderColor = 'rgba(200,151,58,0.5)';
+//                     e.currentTarget.style.color = '#f7c568';
+//                     e.currentTarget.style.background = 'rgba(200,151,58,0.06)';
+//                   }}
+//                   onMouseLeave={e => {
+//                     e.currentTarget.style.borderColor = 'rgba(200,151,58,0.22)';
+//                     e.currentTarget.style.color = 'rgba(200,151,58,0.65)';
+//                     e.currentTarget.style.background = 'transparent';
+//                   }}
+//                   onClick={() => { navigate('/collection'); window.scrollTo(0, 0); }}
+//                 >
+//                   <IcoBack /> CONTINUE SHOPPING
+//                 </button>
+
+//                 <div className="h-5" />
+
+//                 {/* Divider */}
+//                 <div className="h-px mb-5" style={{ background: 'linear-gradient(to right,transparent,rgba(200,151,58,0.15),transparent)' }} />
+
+//                 {/* Trust badges */}
+//                 <p
+//                   className="text-[8px] tracking-[0.32em] uppercase mb-3"
+//                   style={{ color: 'rgba(200,151,58,0.5)', fontFamily: 'Montserrat,sans-serif' }}
+//                 >
+//                   WHY SHOP WITH US
+//                 </p>
+
+//                 <div className="flex flex-col gap-3">
+//                   {[
+//                     { icon: <IcoShield />, label: 'SECURE CHECKOUT', sub: 'SSL encrypted payment' },
+//                     { icon: <IcoPin />, label: 'TRACKED SHIPPING', sub: 'Real-time order updates' },
+//                     { icon: <IcoReturn />, label: '7-DAY EASY RETURNS', sub: 'Hassle-free returns' },
+//                   ].map((b) => (
+//                     <div key={b.label} className="flex items-center gap-2.5" style={{ color: 'rgba(200,151,58,0.55)' }}>
+//                       <div
+//                         className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+//                         style={{ background: 'rgba(200,151,58,0.08)', border: '1px solid rgba(200,151,58,0.18)' }}
+//                       >
+//                         {b.icon}
+//                       </div>
+//                       <div>
+//                         <p
+//                           className="text-[9px] tracking-[0.18em] font-semibold uppercase"
+//                           style={{ color: 'rgba(200,151,58,0.75)', fontFamily: 'Montserrat,sans-serif' }}
+//                         >
+//                           {b.label}
+//                         </p>
+//                         <p
+//                           className="text-[9px] mt-0.5"
+//                           style={{ color: 'rgba(200,151,58,0.45)', fontFamily: 'Montserrat,sans-serif' }}
+//                         >
+//                           {b.sub}
+//                         </p>
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+
+//               </div>
+//             </div>
+
+//           </div>
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Cart;
+
+
+
 import { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
@@ -1294,14 +1171,6 @@ const IcoReturn = () => (
   </svg>
 );
 
-/* ── Gold accent top bar ── */
-const GoldBar = () => (
-  <div
-    className="h-0.5 w-full"
-    style={{ background: 'linear-gradient(to right,transparent,#c8973a 30%,#f7c568 50%,#c8973a 70%,transparent)', opacity: 0.65 }}
-  />
-);
-
 const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
@@ -1333,93 +1202,124 @@ const Cart = () => {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
-        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes shimmer { 0%{background-position:-600px 0} 100%{background-position:600px 0} }
+
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateX(-10px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes shimmer {
+          0%   { background-position: -600px 0; }
+          100% { background-position:  600px 0; }
+        }
+
         .cart-page  { animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
         .cart-item  { animation: fadeIn 0.42s cubic-bezier(0.16,1,0.3,1) both; }
         .cart-panel { animation: fadeUp 0.55s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+
+        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+
         .cta-btn::after {
-          content:''; position:absolute; inset:0;
-          background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);
-          background-size:600px 100%;
-          animation:shimmer 2.6s infinite; opacity:0; transition:opacity 0.3s;
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+          background-size: 600px 100%;
+          animation: shimmer 2.6s infinite;
+          opacity: 0;
+          transition: opacity 0.3s;
         }
-        .cta-btn:hover::after { opacity:1; }
+        .cta-btn:hover::after { opacity: 1; }
+
         input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+        .gold-bar {
+          height: 2px;
+          background: linear-gradient(to right, transparent, #c8973a 30%, #f7c568 50%, #c8973a 70%, transparent);
+          opacity: 0.65;
+        }
+        .gold-divider {
+          background: linear-gradient(to right, transparent, rgba(200,151,58,0.2) 40%, rgba(200,151,58,0.2) 60%, transparent);
+        }
+        .cart-item-border { border: 1px solid rgba(200,151,58,0.18); }
+        .cart-item-border:hover { border-color: rgba(200,151,58,0.42); }
+        .summary-panel { border: 1px solid rgba(200,151,58,0.2); }
+        .trust-badge-wrap { border: 1px solid rgba(200,151,58,0.18); }
+        .qty-wrap { border: 1px solid rgba(200,151,58,0.2); }
+        .qty-btn { border: 1px solid rgba(200,151,58,0.22); }
+        .size-tag { border: 1px solid rgba(200,151,58,0.28); }
+        .color-tag { border: 1px solid rgba(200,151,58,0.15); }
+        .remove-btn { border: 1.5px solid rgba(200,50,50,0.5); }
+        .remove-btn:hover {
+          background: rgba(90,8,8,0.95) !important;
+          border-color: #ff5555;
+          color: #fff !important;
+          box-shadow: 0 3px 12px rgba(200,30,30,0.35);
+        }
+        .continue-btn { border: 1px solid rgba(200,151,58,0.22); }
+        .continue-btn:hover {
+          border-color: rgba(200,151,58,0.5);
+          color: #f7c568;
+          background: rgba(200,151,58,0.06);
+        }
+        .cart-item:hover { box-shadow: 0 14px 44px rgba(0,0,0,0.55); }
+        .cta-btn:hover { box-shadow: 0 8px 28px rgba(200,151,58,0.42); }
+        .explore-btn:hover { box-shadow: 0 8px 28px rgba(200,151,58,0.42); }
       `}</style>
 
-      <div
-        className="cart-page min-h-screen px-4 sm:px-8 lg:px-16 pt-10 pb-24"
-        style={{ background: '#120b06', color: '#f5ede0', fontFamily: 'Georgia, serif' }}
-      >
+      {/* ═══ PAGE WRAPPER ═══ */}
+      <div className="cart-page min-h-screen px-4 sm:px-8 lg:px-16 pt-10 pb-24 bg-[#120b06] text-[#f5ede0]">
 
         {/* ═══ PAGE HEADER ═══ */}
         <div className="mb-9">
-          <p
-            className="text-[8px] tracking-[0.48em] font-bold mb-2 uppercase"
-            style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
-          >
+          <p className="font-montserrat text-[8px] tracking-[0.48em] font-bold mb-2 uppercase text-[#c8973a]">
             D DOLLY LAMB
           </p>
 
           <div className="flex items-end justify-between flex-wrap gap-3">
             <div>
-              <h1
-                className="text-4xl lg:text-5xl font-light tracking-[0.12em] leading-none m-0"
-                style={{ color: '#f7c568', fontFamily: "'Cormorant Garamond',serif" }}
-              >
+              <h1 className="font-cormorant text-4xl lg:text-5xl font-light tracking-[0.12em] leading-none text-[#f7c568]">
                 YOUR CART
               </h1>
               {!isCartEmpty && (
-                <p
-                  className="text-[10px] tracking-[0.1em] mt-2 uppercase"
-                  style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
-                >
+                <p className="font-montserrat text-[10px] tracking-[0.1em] mt-2 uppercase text-[#c8973a]">
                   {totalItems} {totalItems === 1 ? 'ITEM' : 'ITEMS'} IN YOUR BAG
                 </p>
               )}
             </div>
+
+            {/* Gold diamond divider */}
             <div className="flex items-center gap-2 pb-1">
-              <div className="w-12 h-px" style={{ background: 'linear-gradient(to left,rgba(200,151,58,0.35),transparent)' }} />
-              <div className="w-2 h-2 rotate-45 flex-shrink-0" style={{ background: '#c8973a' }} />
-              <div className="w-12 h-px" style={{ background: 'linear-gradient(to right,rgba(200,151,58,0.35),transparent)' }} />
+              <div className="w-12 h-px bg-gradient-to-l from-[rgba(200,151,58,0.35)] to-transparent" />
+              <div className="w-2 h-2 rotate-45 flex-shrink-0 bg-[#c8973a]" />
+              <div className="w-12 h-px bg-gradient-to-r from-[rgba(200,151,58,0.35)] to-transparent" />
             </div>
           </div>
 
-          <div className="h-px mt-5" style={{ background: 'linear-gradient(to right,transparent,rgba(200,151,58,0.2) 40%,rgba(200,151,58,0.2) 60%,transparent)' }} />
+          <div className="h-px mt-5 gold-divider" />
         </div>
 
         {/* ═══ EMPTY STATE ═══ */}
         {isCartEmpty ? (
-          <div
-            className="rounded-xl p-16 text-center max-w-md mx-auto"
-            style={{ background: 'linear-gradient(160deg,#1a100a,#1f1209)', border: '1px solid rgba(200,151,58,0.15)' }}
-          >
-            <div className="mb-5 opacity-50 flex justify-center"><IcoBag /></div>
-            <h2
-              className="text-2xl italic font-normal mb-3"
-              style={{ color: '#f7c568', fontFamily: "'Cormorant Garamond',serif" }}
-            >
+          <div className="rounded-xl p-16 text-center max-w-md mx-auto bg-gradient-to-br from-[#1a100a] to-[#1f1209] border border-[rgba(200,151,58,0.15)]">
+            <div className="mb-5 opacity-50 flex justify-center">
+              <IcoBag />
+            </div>
+            <h2 className="font-cormorant text-2xl italic font-normal mb-3 text-[#f7c568]">
               Your bag is empty
             </h2>
-            <p
-              className="text-[10px] tracking-[0.1em] mb-8 uppercase"
-              style={{ color: '#8a6830', fontFamily: 'Montserrat,sans-serif' }}
-            >
+            <p className="font-montserrat text-[10px] tracking-[0.1em] mb-8 uppercase text-[#8a6830]">
               DISCOVER OUR ARTISAN LEATHER COLLECTION
             </p>
             <button
               onClick={() => { navigate('/collection'); window.scrollTo(0, 0); }}
-              className="cta-btn mx-auto flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-bold text-[10px] tracking-[0.28em] uppercase relative overflow-hidden transition-all duration-250 hover:-translate-y-0.5"
-              style={{
-                background: 'linear-gradient(135deg,#c8973a,#f7c568)',
-                color: '#1a0f0a', border: 'none', fontFamily: 'Montserrat,sans-serif',
-                maxWidth: 260,
-              }}
-              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 28px rgba(200,151,58,0.42)'}
-              onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+              className="explore-btn cta-btn mx-auto flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-bold text-[10px] tracking-[0.28em] uppercase relative overflow-hidden transition-all duration-250 hover:-translate-y-0.5 font-montserrat bg-gradient-to-br from-[#c8973a] to-[#f7c568] text-[#1a0f0a] border-none"
+              style={{ maxWidth: 260 }}
             >
               EXPLORE COLLECTION <IcoArrow />
             </button>
@@ -1430,7 +1330,7 @@ const Cart = () => {
           <div className="flex gap-7 items-start flex-wrap lg:flex-nowrap">
 
             {/* ── LEFT: Cart items ── */}
-            <div className="flex-1 min-w-0 flex flex-col gap-3" style={{ minWidth: '320px' }}>
+            <div className="flex-1 min-w-[320px] flex flex-col gap-3">
 
               {cartData.map((item, index) => {
                 const productData = products.find((p) => p._id === item._id);
@@ -1451,37 +1351,18 @@ const Cart = () => {
                 return (
                   <div
                     key={`${item._id}-${item.size}-${item.color}-${index}`}
-                    className="cart-item relative flex items-stretch rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-px group"
-                    style={{
-                      animationDelay: `${index * 0.07}s`,
-                      background: 'linear-gradient(135deg,#1a100a,#1f1209)',
-                      border: '1px solid rgba(200,151,58,0.18)',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.borderColor = 'rgba(200,151,58,0.42)';
-                      e.currentTarget.style.boxShadow = '0 14px 44px rgba(0,0,0,0.55)';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.borderColor = 'rgba(200,151,58,0.18)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
+                    className="cart-item relative flex items-stretch rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-px group bg-gradient-to-br from-[#1a100a] to-[#1f1209] cart-item-border"
+                    style={{ animationDelay: `${index * 0.07}s` }}
                   >
-                    {/* Gold top line on hover */}
-                    <div
-                      className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-60 transition-opacity duration-300"
-                      style={{ background: 'linear-gradient(to right,transparent,#c8973a 30%,#f7c568 50%,#c8973a 70%,transparent)' }}
-                    />
+                    {/* Gold top shimmer on hover */}
+                    <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-60 transition-opacity duration-300 bg-gradient-to-r from-transparent via-[#f7c568] to-transparent" />
 
                     {/* Product image */}
-                    <div
-                      className="flex-shrink-0 w-28 sm:w-32 bg-white overflow-hidden"
-                      style={{ borderRight: '1px solid rgba(200,151,58,0.1)', minHeight: 110 }}
-                    >
+                    <div className="flex-shrink-0 w-28 sm:w-32 h-28 sm:h-36 bg-white overflow-hidden border-r border-[rgba(200,151,58,0.1)]" style={{ minHeight: 110 }}>
                       <img
                         src={imageSrc}
                         alt={productData.name || 'Product'}
-                        className="w-full h-full object-contain p-2.5 transition-transform duration-500 group-hover:scale-105"
-                        style={{ display: 'block' }}
+                        className="w-full h-full object-contain p-2.5 transition-transform duration-500 group-hover:scale-105 block"
                         onError={(e) => { e.target.src = assets.placeholder_image; }}
                       />
                     </div>
@@ -1491,32 +1372,20 @@ const Cart = () => {
 
                       {/* Name + meta */}
                       <div className="flex-1 min-w-[160px]">
-                        <p
-                          className="text-[9px] tracking-[0.3em] uppercase mb-1.5 font-semibold"
-                          style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
-                        >
+                        <p className="font-montserrat text-[9px] tracking-[0.3em] uppercase mb-1.5 font-semibold text-[#c8973a]">
                           LAMBSKIN LEATHER
                         </p>
-                        <p
-                          className="text-sm font-medium leading-snug mb-2.5 line-clamp-2"
-                          style={{ color: '#f0ddc0', fontFamily: 'Montserrat,sans-serif' }}
-                        >
+                        <p className="font-montserrat text-sm font-medium leading-snug mb-2.5 line-clamp-2 text-[#f0ddc0]">
                           {productData.name}
                         </p>
                         <div className="flex gap-1.5 flex-wrap">
                           {item.size && (
-                            <span
-                              className="px-2.5 py-1 rounded text-[9px] tracking-[0.18em] font-semibold uppercase"
-                              style={{ color: '#f7c568', background: 'rgba(200,151,58,0.12)', border: '1px solid rgba(200,151,58,0.28)', fontFamily: 'Montserrat,sans-serif' }}
-                            >
+                            <span className="font-montserrat px-2.5 py-1 rounded text-[9px] tracking-[0.18em] font-semibold uppercase text-[#f7c568] bg-[rgba(200,151,58,0.12)] size-tag">
                               SIZE: {item.size}
                             </span>
                           )}
                           {item.color && (
-                            <span
-                              className="px-2.5 py-1 rounded text-[9px] tracking-[0.14em] uppercase"
-                              style={{ color: '#d4b896', background: 'rgba(200,151,58,0.06)', border: '1px solid rgba(200,151,58,0.15)', fontFamily: 'Montserrat,sans-serif' }}
-                            >
+                            <span className="font-montserrat px-2.5 py-1 rounded text-[9px] tracking-[0.14em] uppercase text-[#d4b896] bg-[rgba(200,151,58,0.06)] color-tag">
                               {item.color}
                             </span>
                           )}
@@ -1526,47 +1395,29 @@ const Cart = () => {
                       {/* Unit price */}
                       <div className="flex flex-col gap-1 flex-shrink-0">
                         {discountPercent > 0 && (
-                          <span
-                            className="text-[11px] line-through"
-                            style={{ color: 'rgba(240,220,190,0.4)', fontFamily: 'Montserrat,sans-serif' }}
-                          >
+                          <span className="font-montserrat text-[11px] line-through text-[rgba(240,220,190,0.4)]">
                             {currency}{originalPrice.toFixed(2)}
                           </span>
                         )}
-                        <span
-                          className="text-base font-semibold leading-none"
-                          style={{ color: '#f7c568', fontFamily: 'Montserrat,sans-serif' }}
-                        >
+                        <span className="font-montserrat text-base font-semibold leading-none text-[#f7c568]">
                           {currency}{salePrice.toFixed(2)}
                         </span>
                         {discountPercent > 0 && (
-                          <span
-                            className="text-[8px] tracking-[0.1em] font-semibold"
-                            style={{ color: '#4ade80', fontFamily: 'Montserrat,sans-serif' }}
-                          >
+                          <span className="font-montserrat text-[8px] tracking-[0.1em] font-semibold text-green-400">
                             SAVE {currency}{discountAmount.toFixed(2)} ({discountPercent}% OFF)
                           </span>
                         )}
                         {item.customPrice > 0 && (
-                          <span
-                            className="text-[9px] tracking-[0.08em]"
-                            style={{ color: 'rgba(200,151,58,0.7)', fontFamily: 'Montserrat,sans-serif' }}
-                          >
+                          <span className="font-montserrat text-[9px] tracking-[0.08em] text-[rgba(200,151,58,0.7)]">
                             + Lining {currency}{item.customPrice.toFixed(2)}
                           </span>
                         )}
                       </div>
 
                       {/* Qty stepper */}
-                      <div
-                        className="flex items-center gap-2 rounded-full px-1.5 py-1"
-                        style={{ background: 'rgba(200,151,58,0.06)', border: '1px solid rgba(200,151,58,0.2)' }}
-                      >
+                      <div className="flex items-center gap-2 rounded-full px-1.5 py-1 bg-[rgba(200,151,58,0.06)] qty-wrap">
                         <button
-                          className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 outline-none flex-shrink-0 disabled:opacity-30 disabled:cursor-default"
-                          style={{ background: 'rgba(200,151,58,0.08)', border: '1px solid rgba(200,151,58,0.22)', color: 'rgba(200,151,58,0.7)' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.22)'; e.currentTarget.style.color = '#f7c568'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.08)'; e.currentTarget.style.color = 'rgba(200,151,58,0.7)'; }}
+                          className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 outline-none flex-shrink-0 disabled:opacity-30 disabled:cursor-default bg-[rgba(200,151,58,0.08)] qty-btn text-[rgba(200,151,58,0.7)] hover:bg-[rgba(200,151,58,0.22)] hover:text-[#f7c568]"
                           disabled={item.quantity <= 1}
                           onClick={() => updateQuantity(item._id, item.size, item.color, Math.max(1, item.quantity - 1))}
                         >
@@ -1578,15 +1429,11 @@ const Cart = () => {
                           min={1}
                           value={item.quantity}
                           onChange={(e) => updateQuantity(item._id, item.size, item.color, Number(e.target.value) || 1)}
-                          className="w-8 text-center bg-transparent border-none outline-none text-sm font-semibold"
-                          style={{ color: '#f0ddc0', fontFamily: "'Cormorant Garamond',serif" }}
+                          className="w-8 text-center bg-transparent border-none outline-none text-sm font-semibold text-[#f0ddc0] font-cormorant"
                         />
 
                         <button
-                          className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 outline-none flex-shrink-0"
-                          style={{ background: 'rgba(200,151,58,0.08)', border: '1px solid rgba(200,151,58,0.22)', color: 'rgba(200,151,58,0.7)' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.22)'; e.currentTarget.style.color = '#f7c568'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(200,151,58,0.08)'; e.currentTarget.style.color = 'rgba(200,151,58,0.7)'; }}
+                          className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 outline-none flex-shrink-0 bg-[rgba(200,151,58,0.08)] qty-btn text-[rgba(200,151,58,0.7)] hover:bg-[rgba(200,151,58,0.22)] hover:text-[#f7c568]"
                           onClick={() => updateQuantity(item._id, item.size, item.color, item.quantity + 1)}
                         >
                           <IcoPlus />
@@ -1596,45 +1443,22 @@ const Cart = () => {
                       {/* Line total + remove */}
                       <div className="flex flex-col items-end gap-2 flex-shrink-0">
                         <div className="text-right">
-                          <p
-                            className="text-[9px] tracking-[0.2em] uppercase mb-1 font-semibold"
-                            style={{ color: '#c8973a', fontFamily: 'Montserrat,sans-serif' }}
-                          >
+                          <p className="font-montserrat text-[9px] tracking-[0.2em] uppercase mb-1 font-semibold text-[#c8973a]">
                             LINE TOTAL
                           </p>
-                          <p
-                            className="text-base font-semibold leading-none"
-                            style={{ color: '#f7c568', fontFamily: 'Montserrat,sans-serif' }}
-                          >
+                          <p className="font-montserrat text-base font-semibold leading-none text-[#f7c568]">
                             {currency}{lineTotal.toFixed(2)}
                           </p>
                         </div>
 
                         <button
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[9px] tracking-[0.14em] font-semibold uppercase transition-all duration-200 outline-none"
-                          style={{
-                            background: 'rgba(16,2,2,0.85)',
-                            border: '1.5px solid rgba(200,50,50,0.5)',
-                            color: '#f87171',
-                            fontFamily: 'Montserrat,sans-serif',
-                          }}
-                          onMouseEnter={e => {
-                            e.currentTarget.style.background = 'rgba(90,8,8,0.95)';
-                            e.currentTarget.style.borderColor = '#ff5555';
-                            e.currentTarget.style.color = '#fff';
-                            e.currentTarget.style.boxShadow = '0 3px 12px rgba(200,30,30,0.35)';
-                          }}
-                          onMouseLeave={e => {
-                            e.currentTarget.style.background = 'rgba(16,2,2,0.85)';
-                            e.currentTarget.style.borderColor = 'rgba(200,50,50,0.5)';
-                            e.currentTarget.style.color = '#f87171';
-                            e.currentTarget.style.boxShadow = 'none';
-                          }}
+                          className="remove-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[9px] tracking-[0.14em] font-semibold uppercase transition-all duration-200 outline-none font-montserrat bg-[rgba(16,2,2,0.85)] text-[#f87171]"
                           onClick={() => updateQuantity(item._id, item.size, item.color, 0)}
                         >
                           <IcoTrash /> REMOVE
                         </button>
                       </div>
+
                     </div>
                   </div>
                 );
@@ -1642,10 +1466,7 @@ const Cart = () => {
 
               {/* Item count footer */}
               <div className="flex justify-end pt-3 pr-1">
-                <p
-                  className="text-[9px] tracking-[0.2em] uppercase"
-                  style={{ color: 'rgba(200,151,58,0.4)', fontFamily: 'Montserrat,sans-serif' }}
-                >
+                <p className="font-montserrat text-[9px] tracking-[0.2em] uppercase text-[rgba(200,151,58,0.4)]">
                   {cartData.length} {cartData.length === 1 ? 'PRODUCT' : 'PRODUCTS'} · {totalItems} {totalItems === 1 ? 'UNIT' : 'UNITS'}
                 </p>
               </div>
@@ -1653,36 +1474,21 @@ const Cart = () => {
 
             {/* ── RIGHT: Summary panel ── */}
             <div
-              className="cart-panel flex-shrink-0 rounded-xl overflow-hidden"
-              style={{
-                width: 340,
-                minWidth: 280,
-                position: 'sticky',
-                top: 24,
-                alignSelf: 'flex-start',
-                background: 'linear-gradient(160deg,#1e120a,#150c05)',
-                border: '1px solid rgba(200,151,58,0.2)',
-              }}
+              className="cart-panel flex-shrink-0 rounded-xl overflow-hidden summary-panel bg-gradient-to-br from-[#1e120a] to-[#150c05]"
+              style={{ width: 340, minWidth: 280, position: 'sticky', top: 24, alignSelf: 'flex-start' }}
             >
-              <GoldBar />
+              {/* Gold top bar */}
+              <div className="gold-bar w-full" />
 
               <div className="p-6 flex flex-col gap-0">
 
-                {/* CartTotal */}
                 <CartTotal />
 
                 <div className="h-4" />
 
                 {/* Checkout CTA */}
                 <button
-                  className="cta-btn w-full py-4 flex items-center justify-center gap-2.5 rounded-lg font-bold text-[10px] tracking-[0.28em] uppercase relative overflow-hidden transition-all duration-250 hover:-translate-y-px disabled:opacity-45 disabled:cursor-not-allowed"
-                  style={{
-                    background: 'linear-gradient(135deg,#c8973a,#f7c568)',
-                    color: '#1a0f0a', border: 'none',
-                    fontFamily: 'Montserrat,sans-serif',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 28px rgba(200,151,58,0.42)'}
-                  onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+                  className="cta-btn w-full py-4 flex items-center justify-center gap-2.5 rounded-lg font-bold text-[10px] tracking-[0.28em] uppercase relative overflow-hidden transition-all duration-250 hover:-translate-y-px disabled:opacity-45 disabled:cursor-not-allowed font-montserrat bg-gradient-to-br from-[#c8973a] to-[#f7c568] text-[#1a0f0a] border-none"
                   onClick={() => navigate('/place-order')}
                   disabled={isCartEmpty}
                 >
@@ -1693,23 +1499,7 @@ const Cart = () => {
 
                 {/* Continue shopping */}
                 <button
-                  className="w-full py-3.5 flex items-center justify-center gap-2 rounded-lg text-[9px] tracking-[0.22em] font-semibold uppercase transition-all duration-200"
-                  style={{
-                    background: 'transparent',
-                    color: 'rgba(200,151,58,0.65)',
-                    border: '1px solid rgba(200,151,58,0.22)',
-                    fontFamily: 'Montserrat,sans-serif',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'rgba(200,151,58,0.5)';
-                    e.currentTarget.style.color = '#f7c568';
-                    e.currentTarget.style.background = 'rgba(200,151,58,0.06)';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'rgba(200,151,58,0.22)';
-                    e.currentTarget.style.color = 'rgba(200,151,58,0.65)';
-                    e.currentTarget.style.background = 'transparent';
-                  }}
+                  className="continue-btn w-full py-3.5 flex items-center justify-center gap-2 rounded-lg text-[9px] tracking-[0.22em] font-semibold uppercase transition-all duration-200 font-montserrat bg-transparent text-[rgba(200,151,58,0.65)]"
                   onClick={() => { navigate('/collection'); window.scrollTo(0, 0); }}
                 >
                   <IcoBack /> CONTINUE SHOPPING
@@ -1718,13 +1508,10 @@ const Cart = () => {
                 <div className="h-5" />
 
                 {/* Divider */}
-                <div className="h-px mb-5" style={{ background: 'linear-gradient(to right,transparent,rgba(200,151,58,0.15),transparent)' }} />
+                <div className="h-px mb-5 bg-gradient-to-r from-transparent via-[rgba(200,151,58,0.15)] to-transparent" />
 
                 {/* Trust badges */}
-                <p
-                  className="text-[8px] tracking-[0.32em] uppercase mb-3"
-                  style={{ color: 'rgba(200,151,58,0.5)', fontFamily: 'Montserrat,sans-serif' }}
-                >
+                <p className="font-montserrat text-[8px] tracking-[0.32em] uppercase mb-3 text-[rgba(200,151,58,0.5)]">
                   WHY SHOP WITH US
                 </p>
 
@@ -1734,24 +1521,15 @@ const Cart = () => {
                     { icon: <IcoPin />, label: 'TRACKED SHIPPING', sub: 'Real-time order updates' },
                     { icon: <IcoReturn />, label: '7-DAY EASY RETURNS', sub: 'Hassle-free returns' },
                   ].map((b) => (
-                    <div key={b.label} className="flex items-center gap-2.5" style={{ color: 'rgba(200,151,58,0.55)' }}>
-                      <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{ background: 'rgba(200,151,58,0.08)', border: '1px solid rgba(200,151,58,0.18)' }}
-                      >
+                    <div key={b.label} className="flex items-center gap-2.5 text-[rgba(200,151,58,0.55)]">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[rgba(200,151,58,0.08)] trust-badge-wrap">
                         {b.icon}
                       </div>
                       <div>
-                        <p
-                          className="text-[9px] tracking-[0.18em] font-semibold uppercase"
-                          style={{ color: 'rgba(200,151,58,0.75)', fontFamily: 'Montserrat,sans-serif' }}
-                        >
+                        <p className="font-montserrat text-[9px] tracking-[0.18em] font-semibold uppercase text-[rgba(200,151,58,0.75)]">
                           {b.label}
                         </p>
-                        <p
-                          className="text-[9px] mt-0.5"
-                          style={{ color: 'rgba(200,151,58,0.45)', fontFamily: 'Montserrat,sans-serif' }}
-                        >
+                        <p className="font-montserrat text-[9px] mt-0.5 text-[rgba(200,151,58,0.45)]">
                           {b.sub}
                         </p>
                       </div>

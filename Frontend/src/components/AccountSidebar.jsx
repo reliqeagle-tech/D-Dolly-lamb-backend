@@ -1,5 +1,3 @@
-
-
 // import React, { useState, useEffect, useContext } from "react";
 // import { IoBagCheckOutline } from "react-icons/io5";
 // import { IoIosLogOut } from "react-icons/io";
@@ -197,6 +195,9 @@
 
 
 
+
+
+
 import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
@@ -243,69 +244,6 @@ const IconDiamond = () => (
     </svg>
 );
 
-const STYLES = `
-  @keyframes sbFadeUp {
-    from { opacity:0; transform:translateY(10px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-  .asb-wrap { animation: sbFadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
-
-  .asb-navlink {
-    display: flex; align-items: center; gap: 12px;
-    padding: 13px 20px;
-    font-size: 10px; letter-spacing: 0.22em;
-    font-family: Arial, sans-serif; font-weight: 600;
-    text-transform: uppercase; text-decoration: none;
-    color: rgba(240,220,190,0.55);
-    border-left: 2px solid transparent;
-    transition: all 0.22s;
-    position: relative;
-    cursor: pointer; background: none; border-right: none;
-    border-top: none; border-bottom: none; width: 100%;
-    text-align: left;
-  }
-  .asb-navlink:hover {
-    color: #f7c568;
-    background: rgba(200,151,58,0.06);
-    border-left-color: rgba(200,151,58,0.4);
-    padding-left: 26px;
-  }
-  .asb-navlink.active {
-    color: #f7c568;
-    background: rgba(200,151,58,0.1);
-    border-left-color: #c8973a;
-  }
-  .asb-navlink.active svg { color: #c8973a; }
-
-  .asb-logout:hover {
-    color: rgba(220,100,100,0.9) !important;
-    background: rgba(200,60,60,0.07) !important;
-    border-left-color: rgba(200,60,60,0.4) !important;
-  }
-
-  .asb-avatar-overlay {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,0.55);
-    border-radius: 50%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 4px;
-    opacity: 0;
-    transition: opacity 0.25s;
-    cursor: pointer;
-  }
-  .asb-avatar-wrap:hover .asb-avatar-overlay { opacity: 1; }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .asb-spinner {
-    width: 20px; height: 20px;
-    border: 2px solid rgba(200,151,58,0.3);
-    border-top-color: #c8973a;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-`;
-
 const AccountSidebar = () => {
     const { backendUrl } = useContext(ShopContext);
     const [user, setUser] = useState(null);
@@ -325,28 +263,6 @@ const AccountSidebar = () => {
         fetchUser();
     }, [backendUrl]);
 
-    // const handleImageUpload = async (e) => {
-    //     const file = e.target.files[0];
-    //     if (!file) return;
-    //     setPreviewImage(URL.createObjectURL(file));
-    //     const formData = new FormData();
-    //     formData.append("image", file);
-    //     try {
-    //         setUploading(true);
-    //         const token = localStorage.getItem("token");
-    //         const { data } = await axios.put(`${backendUrl}/api/user/user-avatar`, formData, {
-    //             headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
-    //         });
-    //         if (data.success) {
-    //             toast.success("Profile photo updated!");
-    //             setUser(prev => ({ ...prev, profilePhoto: data.imageUrl }));
-    //             setPreviewImage(null);
-    //         }
-    //     } catch { toast.error("Image upload failed"); }
-    //     finally { setUploading(false); }
-    // };
-
-
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -358,9 +274,7 @@ const AccountSidebar = () => {
 
         try {
             setUploading(true);
-
             const token = localStorage.getItem("token");
-
             const { data } = await axios.put(
                 `${backendUrl}/api/user/user-avatar`,
                 formData,
@@ -371,13 +285,11 @@ const AccountSidebar = () => {
                     },
                 }
             );
-
             if (data.success) {
                 toast.success("Profile photo updated!");
                 setUser(prev => ({ ...prev, avatar: data.imageUrl }));
                 setPreviewImage(null);
             }
-
         } catch (error) {
             console.error(error);
             toast.error("Image upload failed");
@@ -393,7 +305,6 @@ const AccountSidebar = () => {
 
     if (!user) return null;
 
-    // const imageSrc = previewImage || (user.profilePhoto ? `${backendUrl}${user.profilePhoto}` : assets.profileImg);
     const imageSrc = previewImage || user.avatar || assets.profileImg;
 
     const navItems = [
@@ -404,111 +315,183 @@ const AccountSidebar = () => {
 
     return (
         <>
-            <style>{STYLES}</style>
-            <div className="asb-wrap" style={{
-                background: "linear-gradient(160deg,#1e120a,#150c05)",
-                border: "1px solid rgba(200,151,58,0.18)",
-                borderRadius: 3,
-                overflow: "hidden",
-                position: "sticky",
-                top: 16,
-                fontFamily: "Georgia,serif",
-            }}>
+            {/* Keyframe animations injected once — Tailwind has no built-in for these custom ones */}
+            <style>{`
+                @keyframes sbFadeUp {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+                .asb-fade-up { animation: sbFadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                .asb-spin { animation: spin 0.7s linear infinite; }
+                .asb-avatar-overlay { opacity: 0; transition: opacity 0.25s; }
+                .asb-avatar-wrap:hover .asb-avatar-overlay { opacity: 1; }
+            `}</style>
+
+            <div
+                className="asb-fade-up sticky top-20 overflow-hidden rounded-sm font-serif"
+                style={{
+                    background: "linear-gradient(160deg,#1e120a,#150c05)",
+                    border: "1px solid rgba(200,151,58,0.18)",
+                }}
+            >
                 {/* Gold top accent */}
-                <div style={{ height: 2, background: "linear-gradient(to right,transparent,#c8973a 35%,#f7c568 50%,#c8973a 65%,transparent)", opacity: 0.7 }} />
+                <div
+                    className="h-0.5 opacity-70"
+                    style={{ background: "linear-gradient(to right,transparent,#c8973a 35%,#f7c568 50%,#c8973a 65%,transparent)" }}
+                />
 
                 {/* ── Avatar section ── */}
-                <div style={{ padding: "30px 20px 22px", textAlign: "center", borderBottom: "1px solid rgba(200,151,58,0.1)" }}>
-
-                    {/* Avatar */}
-                    <div style={{ position: "relative", display: "inline-block", marginBottom: 16 }}>
-                        <label className="asb-avatar-wrap" style={{ display: "block", cursor: "pointer", position: "relative" }}>
+                <div
+                    className="px-5 pt-8 pb-6 text-center"
+                    style={{ borderBottom: "1px solid rgba(200,151,58,0.1)" }}
+                >
+                    {/* Avatar with gold ring */}
+                    <div className="relative inline-block mb-4">
+                        <label className="asb-avatar-wrap block cursor-pointer relative">
                             {/* Gold ring */}
-                            <div style={{
-                                width: 92, height: 92, borderRadius: "50%", padding: 3,
-                                background: "linear-gradient(135deg,#c8973a,#f7c568,#c8973a)",
-                                display: "inline-block",
-                            }}>
-                                <div style={{ width: "100%", height: "100%", borderRadius: "50%", overflow: "hidden", background: "#1a0f0a" }}>
-                                    <img src={imageSrc} alt="Profile"
-                                        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: uploading ? 0.4 : 1, transition: "opacity 0.2s" }}
+                            <div
+                                className="inline-block rounded-full p-[3px]"
+                                style={{
+                                    width: 92,
+                                    height: 92,
+                                    background: "linear-gradient(135deg,#c8973a,#f7c568,#c8973a)",
+                                }}
+                            >
+                                <div
+                                    className="w-full h-full rounded-full overflow-hidden"
+                                    style={{ background: "#1a0f0a" }}
+                                >
+                                    <img
+                                        src={imageSrc}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover transition-opacity duration-200"
+                                        style={{ opacity: uploading ? 0.4 : 1 }}
                                     />
                                 </div>
                             </div>
 
                             {/* Hover overlay */}
-                            <div className="asb-avatar-overlay">
-                                {uploading
-                                    ? <div className="asb-spinner" />
-                                    : <>
+                            <div
+                                className="asb-avatar-overlay absolute inset-0 rounded-full flex flex-col items-center justify-center gap-1 cursor-pointer"
+                                style={{ background: "rgba(0,0,0,0.55)" }}
+                            >
+                                {uploading ? (
+                                    <div
+                                        className="asb-spin w-5 h-5 rounded-full border-2"
+                                        style={{
+                                            borderColor: "rgba(200,151,58,0.3)",
+                                            borderTopColor: "#c8973a",
+                                        }}
+                                    />
+                                ) : (
+                                    <>
                                         <IconCamera />
-                                        <span style={{ fontSize: 8, letterSpacing: "0.15em", color: "#f7c568", fontFamily: "Arial" }}>CHANGE</span>
+                                        <span
+                                            className="text-[8px] tracking-[0.15em] font-sans"
+                                            style={{ color: "#f7c568" }}
+                                        >
+                                            CHANGE
+                                        </span>
                                     </>
-                                }
+                                )}
                             </div>
 
                             <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                         </label>
 
                         {/* Online indicator */}
-                        <div style={{
-                            position: "absolute", bottom: 4, right: 4,
-                            width: 12, height: 12, borderRadius: "50%",
-                            background: "#4ade80",
-                            border: "2px solid #150c05",
-                        }} />
+                        <div
+                            className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-green-400"
+                            style={{ border: "2px solid #150c05" }}
+                        />
                     </div>
 
                     {/* Name */}
-                    <p style={{ fontSize: 14, color: "#f7c568", letterSpacing: "0.06em", marginBottom: 4, fontWeight: 400 }}>
+                    <p
+                        className="text-sm tracking-wide mb-1 font-normal"
+                        style={{ color: "#f7c568" }}
+                    >
                         {user.name}
                     </p>
 
                     {/* Email */}
-                    <p style={{ fontSize: 10, color: "#7a6040", letterSpacing: "0.08em", fontStyle: "italic", marginBottom: 12 }}>
+                    <p
+                        className="text-[10px] tracking-wider italic mb-3"
+                        style={{ color: "#7a6040" }}
+                    >
                         {user.email}
                     </p>
 
                     {/* Member badge */}
-                    <div style={{
-                        display: "inline-flex", alignItems: "center", gap: 6,
-                        padding: "4px 12px",
-                        background: "rgba(200,151,58,0.08)",
-                        border: "1px solid rgba(200,151,58,0.2)",
-                        borderRadius: 2,
-                    }}>
+                    <div
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm"
+                        style={{
+                            background: "rgba(200,151,58,0.08)",
+                            border: "1px solid rgba(200,151,58,0.2)",
+                        }}
+                    >
                         <IconDiamond />
-                        <span style={{ fontSize: 8, letterSpacing: "0.28em", color: "#c8973a", fontFamily: "Arial", fontWeight: 700 }}>
+                        <span
+                            className="text-[8px] tracking-[0.28em] font-bold font-sans"
+                            style={{ color: "#c8973a" }}
+                        >
                             MEMBER
                         </span>
                     </div>
                 </div>
 
                 {/* ── Nav links ── */}
-                <nav style={{ padding: "8px 0" }}>
+                <nav className="py-2">
                     {navItems.map((item) => (
                         <NavLink
                             key={item.to}
                             to={item.to}
-                            className={({ isActive }) => `asb-navlink${isActive ? " active" : ""}`}
+                            className={({ isActive }) =>
+                                [
+                                    "flex items-center gap-3 px-5 py-3 text-[10px] tracking-[0.22em] font-semibold font-sans uppercase no-underline",
+                                    "border-l-2 transition-all duration-200 cursor-pointer w-full text-left",
+                                    "hover:pl-6 hover:bg-[rgba(200,151,58,0.06)] hover:border-l-[rgba(200,151,58,0.4)]",
+                                    isActive
+                                        ? "text-[#f7c568] bg-[rgba(200,151,58,0.1)] border-l-[#c8973a]"
+                                        : "text-[rgba(240,220,190,0.55)] border-l-transparent",
+                                ].join(" ")
+                            }
+                            style={({ isActive }) =>
+                                isActive ? { color: "#f7c568" } : { color: "rgba(240,220,190,0.55)" }
+                            }
                         >
-                            <span style={{ opacity: 0.8 }}>{item.icon}</span>
+                            <span className="opacity-80">{item.icon}</span>
                             {item.label}
                         </NavLink>
                     ))}
 
                     {/* Divider */}
-                    <div style={{ height: 1, background: "linear-gradient(to right,transparent,rgba(200,151,58,0.12),transparent)", margin: "8px 0" }} />
+                    <div
+                        className="h-px my-2"
+                        style={{ background: "linear-gradient(to right,transparent,rgba(200,151,58,0.12),transparent)" }}
+                    />
 
                     {/* Logout */}
-                    <button className="asb-navlink asb-logout" onClick={handleLogout}>
-                        <span style={{ opacity: 0.8 }}><IconLogout /></span>
+                    <button
+                        onClick={handleLogout}
+                        className={[
+                            "flex items-center gap-3 px-5 py-3 text-[10px] tracking-[0.22em] font-semibold font-sans uppercase",
+                            "border-l-2 border-l-transparent transition-all duration-200 cursor-pointer w-full text-left bg-transparent",
+                            "text-[rgba(240,220,190,0.55)]",
+                            "hover:pl-6 hover:text-[rgba(220,100,100,0.9)] hover:bg-[rgba(200,60,60,0.07)] hover:border-l-[rgba(200,60,60,0.4)]",
+                        ].join(" ")}
+                    >
+                        <span className="opacity-80"><IconLogout /></span>
                         Logout
                     </button>
                 </nav>
 
                 {/* Bottom gold accent */}
-                <div style={{ height: 1, background: "linear-gradient(to right,transparent,rgba(200,151,58,0.15),transparent)" }} />
+                <div
+                    className="h-px"
+                    style={{ background: "linear-gradient(to right,transparent,rgba(200,151,58,0.15),transparent)" }}
+                />
             </div>
         </>
     );

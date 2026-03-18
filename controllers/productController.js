@@ -41,7 +41,9 @@ const addProduct = async (req, res) => {
             parsedSizes = parsedSizes.map(sizeObj => ({
                 size: sizeObj.size,
                 priceMultiplier: sizeObj.priceMultiplier || 1,
-                stock: sizeObj.stock || 0
+                stock: sizeObj.stock || 0,
+                customPrice: sizeObj.customPrice ?? 0,        // ✅ Add
+                useCustomPrice: sizeObj.useCustomPrice ?? false // ✅ Add
             }))
         } catch (e) {
             return res.json({ success: false, message: "Invalid sizes format. Expected: [{size:'S', priceMultiplier:1, stock:10}]" })
@@ -138,7 +140,9 @@ const singleProduct = async (req, res) => {
                     return {
                         size: sizeItem.size,
                         priceMultiplier: sizeItem.priceMultiplier || 1,
-                        stock: sizeItem.stock || 0
+                        stock: sizeItem.stock || 0,
+                        customPrice: sizeItem.customPrice ?? 0,        // ✅ Add
+                        useCustomPrice: sizeItem.useCustomPrice ?? false // ✅ Add
                     }
                 }
                 // If it's a string (old format), convert it
@@ -162,83 +166,275 @@ const singleProduct = async (req, res) => {
 
 
 // UPDATE PRODUCT
+// const updateProduct = async (req, res) => {
+//     try {
+//         const { productId } = req.body
+//         const product = await productModel.findById(productId)
+
+//         if (!product) {
+//             return res.json({ success: false, message: "Product not found" })
+//         }
+
+//         const {
+//             name,
+//             description,
+//             detailedDescription,
+//             price,
+//             category,
+//             discountPrice,
+//             subCategory,
+//             sizes,
+//             color,
+//             bestseller
+//         } = req.body
+
+//         // Handle images
+//         // const newImagesRaw = [
+//         //   req.files?.image1?.[0],
+//         //   req.files?.image2?.[0],
+//         //   req.files?.image3?.[0],
+//         //   req.files?.image4?.[0],
+//         //   req.files?.image5?.[0]
+//         // ].filter(Boolean)
+
+//         // let newImageUrls = []
+
+//         const newImagesRaw = req.files || [];
+
+//         if (newImagesRaw.length > 0) {
+//             newImageUrls = await Promise.all(
+//                 newImagesRaw.map(async (img) => {
+//                     const uploaded = await cloudinary.uploader.upload(img.path, {
+//                         resource_type: "image",
+//                     })
+//                     return uploaded.secure_url
+//                 })
+//             )
+//         }
+
+//         const updatedImages = newImagesRaw.length > 0 ? newImageUrls : product.image
+
+//         // Handle discount
+//         const numericDiscount =
+//             discountPrice !== undefined && discountPrice !== ""
+//                 ? Number(discountPrice)
+//                 : null
+
+//         const finalDiscountPrice =
+//             numericDiscount !== null ? numericDiscount : product.discountPrice
+
+//         const finalDiscountActive =
+//             numericDiscount !== null
+//                 ? numericDiscount > 0
+//                 : product.discountActive
+
+//         // ✅ PARSE SIZES WITH MULTIPLIERS
+//         let parsedSizes = product.sizes
+//         if (sizes) {
+//             try {
+//                 parsedSizes = JSON.parse(sizes)
+//                 parsedSizes = parsedSizes.map(sizeObj => ({
+//                     size: sizeObj.size,
+//                     priceMultiplier: sizeObj.priceMultiplier || 1,
+//                     stock: sizeObj.stock || 0
+//                 }))
+//             } catch (e) {
+//                 return res.json({ success: false, message: "Invalid sizes format" })
+//             }
+//         }
+
+//         const updatedData = {
+//             name: name ?? product.name,
+//             description: description ?? product.description,
+//             detailedDescription: detailedDescription ?? product.detailedDescription,
+//             price: price ? Number(price) : product.price,
+//             discountPrice: finalDiscountPrice,
+//             discountActive: finalDiscountActive,
+//             category: category ?? product.category,
+//             subCategory: subCategory ?? product.subCategory,
+//             bestseller: bestseller !== undefined ? bestseller === "true" : product.bestseller,
+//             image: updatedImages,
+//             sizes: parsedSizes, // ✅ UPDATE SIZES WITH MULTIPLIERS
+//             color: color ? JSON.parse(color) : product.color,
+//             updatedAt: Date.now(),
+//         }
+
+//         await productModel.findByIdAndUpdate(productId, updatedData, { new: true })
+
+//         res.json({ success: true, message: "Product updated successfully" })
+
+//     } catch (error) {
+//         console.log(error)
+//         res.json({ success: false, message: error.message })
+//     }
+// }
+
+
+
+// const updateProduct = async (req, res) => {
+//     try {
+//         const { productId } = req.body;
+//         const product = await productModel.findById(productId);
+
+//         if (!product) {
+//             return res.json({ success: false, message: "Product not found" });
+//         }
+
+//         const {
+//             name, description, detailedDescription,
+//             price, discountPrice, category, subCategory,
+//             sizes, color, bestseller
+//         } = req.body;
+
+//         // ✅ FIX 1 - newImageUrls properly declare karo
+//         const newImagesRaw = req.files || [];
+//         let newImageUrls = []; // ← ye missing tha!
+
+//         if (newImagesRaw.length > 0) {
+//             newImageUrls = await Promise.all(
+//                 newImagesRaw.map(async (img) => {
+//                     const uploaded = await cloudinary.uploader.upload(img.path, {
+//                         resource_type: "image",
+//                     });
+//                     return uploaded.secure_url;
+//                 })
+//             );
+//         }
+
+//         // ✅ FIX 2 - Existing images + new images merge karo
+//         // Agar new images aaye → existing ke saath append karo, replace mat karo
+//         let updatedImages;
+//         if (newImagesRaw.length > 0) {
+//             // Existing images rakho + new images add karo, max 10
+//             updatedImages = [...product.image, ...newImageUrls].slice(0, 10);
+//         } else {
+//             updatedImages = product.image;
+//         }
+
+//         // Discount handle
+//         const numericDiscount = discountPrice !== undefined && discountPrice !== ""
+//             ? Number(discountPrice) : null;
+//         const finalDiscountPrice = numericDiscount !== null ? numericDiscount : product.discountPrice;
+//         const finalDiscountActive = numericDiscount !== null ? numericDiscount > 0 : product.discountActive;
+
+//         // ✅ FIX 3 - parsedSizes me customPrice & useCustomPrice bhi rakho
+//         let parsedSizes = product.sizes;
+//         if (sizes) {
+//             try {
+//                 parsedSizes = JSON.parse(sizes).map(sizeObj => ({
+//                     size: sizeObj.size,
+//                     priceMultiplier: sizeObj.priceMultiplier || 1,
+//                     stock: sizeObj.stock || 0,
+//                     customPrice: sizeObj.useCustomPrice ? Number(sizeObj.customPrice) : 0,
+//                     // customPrice: sizeObj.customPrice || 0,      // ✅ Added
+//                     useCustomPrice: sizeObj.useCustomPrice || false, // ✅ Added
+//                 }));
+//             } catch (e) {
+//                 return res.json({ success: false, message: "Invalid sizes format" });
+//             }
+//         }
+
+//         const updatedData = {
+//             name: name ?? product.name,
+//             description: description ?? product.description,
+//             detailedDescription: detailedDescription ?? product.detailedDescription,
+//             price: price ? Number(price) : product.price,
+//             discountPrice: finalDiscountPrice,
+//             discountActive: finalDiscountActive,
+//             category: category ?? product.category,
+//             subCategory: subCategory ?? product.subCategory,
+//             bestseller: bestseller !== undefined ? bestseller === "true" : product.bestseller,
+//             image: updatedImages,
+//             sizes: parsedSizes,
+//             color: color ? JSON.parse(color) : product.color,
+//             updatedAt: Date.now(),
+//         };
+
+//         await productModel.findByIdAndUpdate(productId, updatedData, { new: true });
+//         res.json({ success: true, message: "Product updated successfully" });
+
+//     } catch (error) {
+//         console.log(error);
+//         res.json({ success: false, message: error.message });
+//     }
+// };
+
+
+
 const updateProduct = async (req, res) => {
     try {
-        const { productId } = req.body
-        const product = await productModel.findById(productId)
+        const { productId } = req.body;
+        const product = await productModel.findById(productId);
 
         if (!product) {
-            return res.json({ success: false, message: "Product not found" })
+            return res.json({ success: false, message: "Product not found" });
         }
 
         const {
-            name,
-            description,
-            detailedDescription,
-            price,
-            category,
-            discountPrice,
-            subCategory,
-            sizes,
-            color,
-            bestseller
-        } = req.body
+            name, description, detailedDescription,
+            price, discountPrice, category, subCategory,
+            sizes, color, bestseller,
+            existingImages  // ✅ Frontend se existing images aa rahi hain
+        } = req.body;
 
-        // Handle images
-        // const newImagesRaw = [
-        //   req.files?.image1?.[0],
-        //   req.files?.image2?.[0],
-        //   req.files?.image3?.[0],
-        //   req.files?.image4?.[0],
-        //   req.files?.image5?.[0]
-        // ].filter(Boolean)
+        // ══════════════════════════════════
+        // ✅ IMAGE HANDLING - DELETE + ADD
+        // ══════════════════════════════════
 
-        // let newImageUrls = []
+        // Step 1: Jo images user ne rakhi hain (delete nahi ki)
+        const keptImages = existingImages
+            ? JSON.parse(existingImages)
+            : product.image;
 
+        // Step 2: New files upload karo Cloudinary pe
         const newImagesRaw = req.files || [];
+        let newImageUrls = [];
 
         if (newImagesRaw.length > 0) {
             newImageUrls = await Promise.all(
                 newImagesRaw.map(async (img) => {
                     const uploaded = await cloudinary.uploader.upload(img.path, {
                         resource_type: "image",
-                    })
-                    return uploaded.secure_url
+                    });
+                    return uploaded.secure_url;
                 })
-            )
+            );
         }
 
-        const updatedImages = newImagesRaw.length > 0 ? newImageUrls : product.image
+        // Step 3: Kept existing + new uploaded = final, max 10
+        const updatedImages = [...keptImages, ...newImageUrls].slice(0, 10);
 
-        // Handle discount
-        const numericDiscount =
-            discountPrice !== undefined && discountPrice !== ""
-                ? Number(discountPrice)
-                : null
+        // ══════════════════════════════════
+        // DISCOUNT HANDLE
+        // ══════════════════════════════════
+        const numericDiscount = discountPrice !== undefined && discountPrice !== ""
+            ? Number(discountPrice) : null;
+        const finalDiscountPrice = numericDiscount !== null ? numericDiscount : product.discountPrice;
+        const finalDiscountActive = numericDiscount !== null ? numericDiscount > 0 : product.discountActive;
 
-        const finalDiscountPrice =
-            numericDiscount !== null ? numericDiscount : product.discountPrice
-
-        const finalDiscountActive =
-            numericDiscount !== null
-                ? numericDiscount > 0
-                : product.discountActive
-
-        // ✅ PARSE SIZES WITH MULTIPLIERS
-        let parsedSizes = product.sizes
+        // ══════════════════════════════════
+        // ✅ SIZES - customPrice & useCustomPrice properly save
+        // ══════════════════════════════════
+        let parsedSizes = product.sizes;
         if (sizes) {
             try {
-                parsedSizes = JSON.parse(sizes)
-                parsedSizes = parsedSizes.map(sizeObj => ({
+                parsedSizes = JSON.parse(sizes).map(sizeObj => ({
                     size: sizeObj.size,
                     priceMultiplier: sizeObj.priceMultiplier || 1,
-                    stock: sizeObj.stock || 0
-                }))
+                    stock: sizeObj.stock || 0,
+                    // ✅ useCustomPrice true hai toh customPrice rakho, warna 0
+                    customPrice: sizeObj.useCustomPrice ? Number(sizeObj.customPrice) || 0 : 0,
+                    // useCustomPrice: Boolean(sizeObj.useCustomPrice),
+                    useCustomPrice: sizeObj.useCustomPrice === true || sizeObj.useCustomPrice === "true",
+                }));
             } catch (e) {
-                return res.json({ success: false, message: "Invalid sizes format" })
+                return res.json({ success: false, message: "Invalid sizes format" });
             }
         }
 
+        // ══════════════════════════════════
+        // UPDATE
+        // ══════════════════════════════════
         const updatedData = {
             name: name ?? product.name,
             description: description ?? product.description,
@@ -250,21 +446,19 @@ const updateProduct = async (req, res) => {
             subCategory: subCategory ?? product.subCategory,
             bestseller: bestseller !== undefined ? bestseller === "true" : product.bestseller,
             image: updatedImages,
-            sizes: parsedSizes, // ✅ UPDATE SIZES WITH MULTIPLIERS
+            sizes: parsedSizes,
             color: color ? JSON.parse(color) : product.color,
             updatedAt: Date.now(),
-        }
+        };
 
-        await productModel.findByIdAndUpdate(productId, updatedData, { new: true })
-
-        res.json({ success: true, message: "Product updated successfully" })
+        await productModel.findByIdAndUpdate(productId, updatedData, { new: true });
+        res.json({ success: true, message: "Product updated successfully" });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
-}
-
+};
 
 
 // BULK UPLOAD

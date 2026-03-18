@@ -90,11 +90,6 @@ const productSchema = new mongoose.Schema({
     timestamps: true // Auto createdAt/updatedAt
 });
 
-// Optional: Virtual for full price (if needed for base + avg lining)
-// productSchema.virtual('avgFullPrice').get(function() {
-//     const avgLining = this.customOptions?.linings?.reduce((sum, l) => sum + l.price, 0) / (this.customOptions?.linings?.length || 1) || 0;
-//     return this.price + avgLining;
-// });
 
 const productModel = mongoose.models.product || mongoose.model("product", productSchema);
 

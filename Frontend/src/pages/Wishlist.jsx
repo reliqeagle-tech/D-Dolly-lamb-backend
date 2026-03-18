@@ -1114,7 +1114,7 @@ const Wishlist = () => {
         <div className="wl-list-card" style={{ animationDelay: `${idx * 0.055}s` }}>
             <Link to={`/product/${product._id}`} onClick={() => window.scrollTo(0, 0)}
                 style={{
-                    width: 130, flexShrink: 0, display: "block", overflow: "hidden", background: "#fff",
+                    width: 130, flexShrink: 0, overflow: "hidden", background: "#fff",
                     display: "flex", alignItems: "center", justifyContent: "center"
                 }}>
                 <img src={product.image[0]} alt={product.name}

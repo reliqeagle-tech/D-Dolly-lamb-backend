@@ -813,16 +813,35 @@ const Product = () => {
   const openCartDrawer = () => setDrawerOpen(true);
   const closeCartDrawer = () => setDrawerOpen(false);
 
+  // const handleSizeSelect = (sizeObj) => {
+  //   if (!sizeObj) return;
+  //   if (typeof sizeObj === 'string') {
+  //     setSize(sizeObj); setSizeMultiplier(1); setSizeStock(0);
+  //   } else if (typeof sizeObj === 'object' && sizeObj.size) {
+  //     setSize(sizeObj.size);
+  //     setSizeMultiplier(sizeObj.priceMultiplier || 1);
+  //     setSizeStock(sizeObj.stock || 0);
+  //   }
+  // };
+
   const handleSizeSelect = (sizeObj) => {
     if (!sizeObj) return;
     if (typeof sizeObj === 'string') {
       setSize(sizeObj); setSizeMultiplier(1); setSizeStock(0);
+      setDisplayPrice(productData.price);
     } else if (typeof sizeObj === 'object' && sizeObj.size) {
       setSize(sizeObj.size);
       setSizeMultiplier(sizeObj.priceMultiplier || 1);
       setSizeStock(sizeObj.stock || 0);
+      // ✅ customPrice priority
+      if (sizeObj.useCustomPrice && sizeObj.customPrice > 0) {
+        setDisplayPrice(sizeObj.customPrice);
+      } else {
+        setDisplayPrice(productData.price * (sizeObj.priceMultiplier || 1));
+      }
     }
   };
+
 
   const scrollThumbs = (dir) => {
     if (!thumbListRef.current) return;
@@ -851,9 +870,19 @@ const Product = () => {
   }, [productData]);
   useEffect(() => { if (productData) setDisplayPrice(productData.price); }, [productData]);
   useEffect(() => { if (productId) loadReviews(); }, [productId]);
+  // useEffect(() => {
+  //   if (productData?.price) setDisplayPrice(productData.price * (sizeMultiplier || 1));
+  // }, [sizeMultiplier, productData?.price]);
+
   useEffect(() => {
-    if (productData?.price) setDisplayPrice(productData.price * (sizeMultiplier || 1));
-  }, [sizeMultiplier, productData?.price]);
+    if (!productData?.price) return;
+    const selectedSizeObj = productData.sizes?.find(s => s.size === size);
+    if (selectedSizeObj?.useCustomPrice && selectedSizeObj?.customPrice > 0) {
+      setDisplayPrice(selectedSizeObj.customPrice); // ← customPrice priority
+    } else {
+      setDisplayPrice(productData.price * (sizeMultiplier || 1)); // ← multiplier fallback
+    }
+  }, [sizeMultiplier, productData?.price, size]);
 
   const handleAddToCart = () => {
     if (!size || !selectedColor) { toast.error('Please select a size and color.'); return; }
@@ -1147,7 +1176,15 @@ const Product = () => {
                     return (
                       <button key={index} type="button" className={`pp-size${size === sizeLabel ? ' active' : ''}`} onClick={() => handleSizeSelect(sizeObj)}>
                         <span className="pp-size-lbl">{sizeLabel}</span>
-                        <span className="pp-size-price">{currency}{(productData.price * multiplier).toFixed(2)}</span>
+                        <span className="pp-size-price">
+                          {/* {currency}{(productData.price * multiplier).toFixed(2)}
+                           */}
+                          {currency}{(
+                            sizeObj?.useCustomPrice && sizeObj?.customPrice > 0
+                              ? sizeObj.customPrice
+                              : productData.price * multiplier
+                          ).toFixed(2)}
+                        </span>
                       </button>
                     );
                   }) : <p style={{ fontSize: 13, color: C.goldMuted }}>No sizes available</p>}

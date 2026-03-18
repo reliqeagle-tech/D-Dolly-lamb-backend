@@ -2041,7 +2041,10 @@ const Collection = () => {
       "Moto Biker Jacket",
       "Racing Coat",
       "Women Winter Wear",
-      "Women Night Dress"
+      "Women Night Dress",
+      "Leather Pencil Skirt",
+      "Leather Full Skirt",
+      "Slim Bodycon Skirt",
     ],
 
     Others: [
