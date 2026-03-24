@@ -1052,12 +1052,28 @@ const Product = () => {
       <div className="pp">
 
         {/* Breadcrumb */}
-        <div className="pp-crumb">
+        {/* <div className="pp-crumb">
           <span>{productData.category?.toUpperCase()}&nbsp;/</span>
           <div className="pp-crumb-dot" />
           <span>{productData.subCategory?.toUpperCase() || 'PRODUCT'}&nbsp;-</span>
           <div className="pp-crumb-dot" />
           <span className="pp-crumb-name">{productData.name?.substring(0, 55)}{productData.name?.length > 55 ? '…' : ''}</span>
+        </div> */}
+
+        <div className="pp-crumb">
+          <span>{productData.category?.toUpperCase()}</span>
+          {productData.subCategory && (
+            <>
+              <span>&nbsp;/</span>
+              {/* <div className="pp-crumb-dot" /> */}
+              <span>{productData.subCategory?.toUpperCase()}</span>
+            </>
+          )}
+          {/* <div className="pp-crumb-dot" /> */}
+          <span>&nbsp;/</span>
+          <span className="pp-crumb-name">
+            {productData.name?.substring(0, 55)}{productData.name?.length > 55 ? '…' : ''}
+          </span>
         </div>
 
         <div className="pp-page-inner" style={{ padding: '28px 36px 80px', maxWidth: 1440, margin: '0 auto' }}>

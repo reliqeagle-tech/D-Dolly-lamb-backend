@@ -1,0 +1,322 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+    /* font-family: "Montserrat", sans-serif; */
+    font-family: "Raleway", sans-serif;
+    background: #f1f1f1;
+}
+.MuiBadge-badge {
+    background: #ff5252 !important;
+}
+.ReactCollapse--collapse {
+  transition: height 400ms;
+}
+.btn{
+    padding: 8px 20px !important;
+}
+.btn-blue{
+    background: #3872fa !important;
+    color: #fff !important;
+}
+.btn-blue:hover{
+    background: #3067e5 !important;
+}
+th.MuiTableCell-root{
+    background-color: #f1f1f1;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+a.active button {
+    background: #e3e3e3 !important;
+}
+.MuiButton-icon svg{
+    font-size: 23px !important;
+}
+.MuiTypography-root{
+    font-size: 14px !important;
+}
+.MuiAppBar-colorPrimary{
+    background: #ededed !important;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+}
+.MuiSelect-select{
+    background: #fff !important;
+}
+.otpBox input{
+  border: 1px solid rgba(0, 0, 0, 0.3) !important;
+  outline: none !important;
+  border-radius: 4px;
+}
+.otpBox input:focus{
+  border: 1px solid rgba(0, 0, 0, 0.7) !important;
+}
+.otpBox .container{
+  height: 90vh;
+  display: flex;
+}
+.MuiTableBody-root tr:nth-child(even){
+    background-color: #f1f1f1 !important;
+    /* @apply bg-gray-100 */
+}
+.MuiTableHead-root .MuiTableCell-head {
+  background-color: #3872fa !important;
+  color: #fff;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PROFESSIONAL DARK THEME — LL Leather Admin
+   Triggered by html.dark class (set by Header.jsx toggle)
+   
+   Dark palette:
+   --dark-page:    #0D0F1A  (deepest bg)
+   --dark-nav:     #111320  (sidebar, header)
+   --dark-surface: #161929  (cards, panels)
+   --dark-card:    #1C1F35  (elevated cards)
+   --dark-input:   #1F2238  (inputs, selects)
+   --dark-border:  #252842  (dividers, borders)
+   --dark-hover:   #242744  (hover states)
+   --text-primary: #EEF0FB  (headings)
+   --text-body:    #B8BCCC  (body text)
+   --text-muted:   #6C7193  (muted/placeholder)
+   --accent:       #6C63FF  (primary purple)
+════════════════════════════════════════════════════════════ */
+
+/* ── Global smooth transition ── */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+/* ════════ LIGHT MODE base ════════ */
+body {
+  background-color: #F4F5FA;
+  color: #1A1D23;
+}
+
+/* ════════ DARK MODE ════════ */
+
+/* ── Root page bg ── */
+html.dark body,
+html.dark #root,
+html.dark #root > div {
+  background-color: #0D0F1A !important;
+  color: #EEF0FB !important;
+}
+
+/* ── Layout wrappers ── */
+html.dark .main,
+html.dark .ContentMain,
+html.dark .contentRight {
+  background-color: #0D0F1A !important;
+}
+
+/* ── Sidebar ── */
+html.dark .sidebarWrapper,
+html.dark aside {
+  background-color: #111320 !important;
+  border-right: 1px solid #252842 !important;
+}
+
+/* ── Header ── */
+html.dark header {
+  background-color: #111320 !important;
+  border-bottom-color: #252842 !important;
+}
+
+/* ── ALL white / light backgrounds → dark ── */
+html.dark .bg-white                    { background-color: #1C1F35 !important; }
+html.dark .bg-gray-50                  { background-color: #161929 !important; }
+html.dark .bg-gray-100                 { background-color: #1F2238 !important; }
+html.dark .bg-gray-200                 { background-color: #252842 !important; }
+html.dark .bg-\[\#F4F5FA\]            { background-color: #0D0F1A !important; }
+html.dark .bg-\[\#F9FAFB\]            { background-color: #161929 !important; }
+html.dark .bg-\[\#FAFAFA\]            { background-color: #161929 !important; }
+
+/* ── Text colors ── */
+html.dark .text-gray-900               { color: #EEF0FB !important; }
+html.dark .text-gray-800               { color: #DDE0EF !important; }
+html.dark .text-gray-700               { color: #C4C8DC !important; }
+html.dark .text-gray-600               { color: #A8ADCA !important; }
+html.dark .text-gray-500               { color: #8C91AE !important; }
+html.dark .text-gray-400               { color: #6C7193 !important; }
+html.dark .text-gray-300               { color: #555A78 !important; }
+
+/* ── Borders ── */
+html.dark .border,
+html.dark .border-gray-50,
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-gray-300             { border-color: #252842 !important; }
+html.dark [class*="divide-gray"]  > * + * { border-color: #252842 !important; }
+
+/* ── Ring / focus ── */
+html.dark .ring-1,
+html.dark .ring-gray-200               { --tw-ring-color: #252842 !important; }
+
+/* ── Hover ── */
+html.dark .hover\:bg-gray-50:hover     { background-color: #1F2238 !important; }
+html.dark .hover\:bg-gray-100:hover    { background-color: #242744 !important; }
+html.dark .hover\:bg-white:hover       { background-color: #1C1F35 !important; }
+
+/* ── Shadow ── */
+html.dark .shadow,
+html.dark .shadow-sm,
+html.dark .shadow-md,
+html.dark .shadow-lg,
+html.dark .shadow-xl                   { box-shadow: 0 4px 24px rgba(0,0,0,0.45) !important; }
+
+/* ── Inputs, textareas, selects ── */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+html.dark textarea,
+html.dark select {
+  background-color: #1F2238 !important;
+  color: #EEF0FB !important;
+  border-color: #252842 !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder        { color: #555A78 !important; }
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus                 { border-color: #6C63FF !important; box-shadow: 0 0 0 3px rgba(108,99,255,0.15) !important; }
+
+/* ── Tables ── */
+html.dark table                        { background-color: #1C1F35 !important; }
+html.dark thead, html.dark thead tr    { background-color: #161929 !important; }
+html.dark tbody tr                     { border-color: #252842 !important; }
+html.dark tbody tr:hover               { background-color: #1F2238 !important; }
+html.dark th                           { color: #8C91AE !important; border-color: #252842 !important; }
+html.dark td                           { color: #C4C8DC !important; border-color: #252842 !important; }
+
+/* ── MUI — Paper (modals, dropdowns, cards) ── */
+html.dark .MuiPaper-root {
+  background-color: #1C1F35 !important;
+  color: #EEF0FB !important;
+  border-color: #252842 !important;
+}
+html.dark .MuiDrawer-paper             { background-color: #111320 !important; }
+html.dark .MuiAppBar-root              { background-color: #111320 !important; }
+html.dark .MuiToolbar-root             { background-color: #111320 !important; }
+
+/* ── MUI Menu / MenuItem ── */
+html.dark .MuiMenu-paper               { background-color: #1C1F35 !important; border: 1px solid #252842 !important; }
+html.dark .MuiMenuItem-root            { color: #C4C8DC !important; }
+html.dark .MuiMenuItem-root:hover      { background-color: #242744 !important; color: #EEF0FB !important; }
+html.dark .MuiMenuItem-root.Mui-selected { background-color: rgba(108,99,255,0.15) !important; }
+
+/* ── MUI List ── */
+html.dark .MuiListItemText-primary     { color: #C4C8DC !important; }
+html.dark .MuiListItemText-secondary   { color: #6C7193 !important; }
+html.dark .MuiListItemIcon-root        { color: #6C7193 !important; }
+
+/* ── MUI Table ── */
+html.dark .MuiTableCell-root {
+  border-color: #252842 !important;
+  color: #C4C8DC !important;
+}
+html.dark .MuiTableHead-root .MuiTableCell-root {
+  background-color: #161929 !important;
+  color: #8C91AE !important;
+}
+html.dark .MuiTableRow-root:hover      { background-color: #1F2238 !important; }
+html.dark .MuiTableRow-root            { border-color: #252842 !important; }
+
+/* ── MUI Input ── */
+html.dark .MuiInputBase-root {
+  background-color: #1F2238 !important;
+  color: #EEF0FB !important;
+}
+html.dark .MuiOutlinedInput-notchedOutline { border-color: #252842 !important; }
+html.dark .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline { border-color: #6C63FF !important; }
+html.dark .MuiInputLabel-root          { color: #6C7193 !important; }
+html.dark .MuiSelect-icon              { color: #6C7193 !important; }
+html.dark .MuiSelect-select            { color: #EEF0FB !important; }
+
+/* ── MUI Misc ── */
+html.dark .MuiDivider-root             { border-color: #252842 !important; }
+html.dark .MuiChip-root                { background-color: #252842 !important; color: #C4C8DC !important; }
+html.dark .MuiChip-outlined            { border-color: #252842 !important; }
+html.dark .MuiFormLabel-root           { color: #8C91AE !important; }
+html.dark .MuiFormHelperText-root      { color: #6C7193 !important; }
+html.dark .MuiSwitch-track             { background-color: #252842 !important; }
+html.dark .MuiTab-root                 { color: #8C91AE !important; }
+html.dark .MuiTab-root.Mui-selected    { color: #6C63FF !important; }
+html.dark .MuiTabs-indicator           { background-color: #6C63FF !important; }
+html.dark .MuiBackdrop-root            { background-color: rgba(5,6,15,0.75) !important; }
+html.dark .MuiTooltip-tooltip          { background-color: #1C1F35 !important; border: 1px solid #252842; color: #EEF0FB !important; }
+html.dark .MuiDialog-paper             { background-color: #1C1F35 !important; }
+html.dark .MuiAccordion-root           { background-color: #1C1F35 !important; border-color: #252842 !important; }
+html.dark .MuiAccordionSummary-root    { background-color: #161929 !important; color: #EEF0FB !important; }
+
+/* ── Recharts (charts) ── */
+html.dark .recharts-cartesian-grid-horizontal line,
+html.dark .recharts-cartesian-grid-vertical line { stroke: #252842 !important; }
+html.dark .recharts-text                { fill: #6C7193 !important; }
+html.dark .recharts-legend-item-text   { color: #8C91AE !important; }
+html.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: #1C1F35 !important;
+  border-color: #252842 !important;
+  color: #EEF0FB !important;
+}
+
+/* ── Scrollbar ── */
+html.dark ::-webkit-scrollbar           { width: 5px; height: 5px; }
+html.dark ::-webkit-scrollbar-track     { background: #111320; }
+html.dark ::-webkit-scrollbar-thumb     { background: #2D3154; border-radius: 4px; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #6C63FF; }
+html.dark *                              { scrollbar-width: thin; scrollbar-color: #2D3154 #111320; }
+
+/* ── Specific page containers ── */
+html.dark section,
+html.dark main,
+html.dark article                       { background-color: transparent; }
+
+/* ── Cards with inline styles (bg override) ── */
+html.dark [style*="background: white"],
+html.dark [style*="background: #fff"],
+html.dark [style*="background: #ffffff"],
+html.dark [style*="background-color: white"],
+html.dark [style*="background-color: #fff"],
+html.dark [style*="background-color: #ffffff"] {
+  background-color: #1C1F35 !important;
+  background: #1C1F35 !important;
+}
+html.dark [style*="background: #F4F5FA"],
+html.dark [style*="background-color: #F4F5FA"],
+html.dark [style*="background: #f4f5fa"],
+html.dark [style*="background-color: #f4f5fa"] {
+  background-color: #0D0F1A !important;
+  background: #0D0F1A !important;
+}
+
+/* ════════════════════════════════════════════════════
+   CSS VARIABLES — used by App.jsx Layout via style={}
+   These are the single source of truth for bg colors
+════════════════════════════════════════════════════ */
+:root {
+  --bg-page:    #F4F5FA;
+  --bg-sidebar: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --bg-card:    #FFFFFF;
+  --bg-input:   #F9FAFB;
+  --border:     #E8E9F0;
+  --text-main:  #1A1D23;
+  --text-muted: #6B7280;
+}
+
+html.dark {
+  --bg-page:    #0D0F1A;
+  --bg-sidebar: #111320;
+  --bg-surface: #161929;
+  --bg-card:    #1C1F35;
+  --bg-input:   #1F2238;
+  --border:     #252842;
+  --text-main:  #EEF0FB;
+  --text-muted: #6C7193;
+}
