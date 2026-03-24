@@ -30,8 +30,8 @@ import banner5 from './banner5.jpg'
 import banner6 from './banner6.jpg'
 import bannerv2_1 from './bannerv2_1.jpg'
 import bannerv2_2 from './bannerv2_2.jpg'
-import bannerBoxv2_1 from './bannerBoxv2_1.jpg'
-import bannerBoxv2_2 from './bannerBoxv2_2.jpg'
+// import bannerBoxv2_1 from './bannerBoxv2_1.jpg'
+// import bannerBoxv2_2 from './bannerBoxv2_2.jpg'
 import blog_1 from './blog-1.jpg'
 import blog_2 from './blog-2.jpg'
 import cart_1 from './carte_bleue.png'
@@ -90,8 +90,8 @@ export const assets = {
     banner6,
     bannerv2_1,
     bannerv2_2,
-    bannerBoxv2_1,
-    bannerBoxv2_2,
+    // bannerBoxv2_1,
+    // bannerBoxv2_2,
     productItem_1,
     productItem_2,
     L_img_1_1,
