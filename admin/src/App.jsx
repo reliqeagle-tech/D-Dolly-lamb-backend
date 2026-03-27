@@ -440,15 +440,15 @@ const MyContext = createContext();
    ✅ dark mode classes applied HERE once — works everywhere
 ═══════════════════════════════════════════════════════════ */
 const Layout = ({ children, isSidebarOpen, pt = 'pt-4' }) => (
-  <section className='main min-h-screen bg-[#F4F5FA] dark:bg-[#0F1117] transition-colors duration-200'>
+  <section className='main min-h-screen bg-[#0d0804  ] transition-colors duration-200'>
     <Header />
-    <div className='ContentMain flex bg-[#F4F5FA] dark:bg-[#0F1117]'>
+    <div className='ContentMain flex bg-[#0d0804  ]'>
 
       {/* ── Sidebar wrapper ── */}
       <div
         className={`
           sidebarWrapper overflow-hidden flex-shrink-0
-          bg-white dark:bg-[#141624]
+          bg-[#1a0f07]
           border-r border-transparent dark:border-[#2D3048]
           transition-all duration-300
           ${isSidebarOpen ? 'w-[20%]' : 'w-[0px] opacity-0'}
@@ -462,7 +462,7 @@ const Layout = ({ children, isSidebarOpen, pt = 'pt-4' }) => (
         className={`
           contentRight py-4 px-5 ${pt}
           min-h-[calc(100vh-64px)]
-          bg-[#F4F5FA] dark:bg-[#0F1117]
+          bg-[#0d0804]
           transition-all duration-300
           ${isSidebarOpen ? 'w-[80%]' : 'w-[100%]'}
         `}
@@ -645,10 +645,10 @@ const App = () => {
             <AppBar sx={{ position: 'relative' }}>
               <Toolbar>
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                  <IoIosClose className='text-gray-800 text-3xl' />
+                  <IoIosClose className='text-text-[#d4b87a] text-3xl' />
                 </IconButton>
                 <Typography sx={{ ml: 1, flex: 1 }} variant="h6" component="div">
-                  <span className='text-gray-800 text-lg lg:text-xl'>
+                  <span className='text-text-[#f0d898] text-lg lg:text-xl'>
                     {isOpenFullScreenPanel?.modal}
                   </span>
                 </Typography>
