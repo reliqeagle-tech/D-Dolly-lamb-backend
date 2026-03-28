@@ -425,6 +425,7 @@ import Analytics from './Pages/Analytics/Analytics'
 import Reports from './Pages/Reports/Reports'
 import { ThemeProvider } from './Context/ThemeContext'
 import Review from './Pages/review/review'
+import UnderConstruction from './Components/Underconstruction/Underconstruction'
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
 export const currency = '$'
@@ -517,6 +518,10 @@ const App = () => {
     {
       path: "/verify-account",
       element: <VerifyAccount />
+    },
+    {
+      path: "*",
+      element: <UnderConstruction />
     },
 
     /* ─── Protected pages (all use Layout) ─── */
