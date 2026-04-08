@@ -604,7 +604,7 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
         onMouseLeave={() => setHovered(false)}
       >
         {/* ── IMAGE ZONE ── */}
-        <div className="relative w-full aspect-[4/3] bg-[#F8F4EE] overflow-hidden rounded-t-[13px]">
+        <div className="relative w-full aspect-[7/6] bg-[#F8F4EE] overflow-hidden rounded-t-[13px]">
 
           {/* Exiting image */}
           {sliding && showPrev !== null && (
@@ -706,22 +706,22 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
         </div>
 
         {/* ── BODY ── */}
-        <div className="px-[18px] pt-4 pb-5">
+        <div className="px-[14px] pt-2.5 pb-3">
 
           <p className="
             ddl-name font-['Montserrat',serif] text-[13px] font-normal text-[#f5ede0]
-            leading-[1.45] mb-2 tracking-[0.02em]
+            leading-[1.45] mb-1 tracking-[0.02em]
             line-clamp-2 transition-colors duration-[250ms]
           ">
             {name}
           </p>
 
-          <div className="flex items-center gap-1.5 mb-2.5">
+          <div className="flex items-center gap-1.5 mb-1.5">
             <div className="flex gap-0.5">{renderStars(avgRating)}</div>
             <span className="text-[10px] text-[#7a6050] font-['Georgia',serif]">({reviews.length})</span>
           </div>
 
-          <div className="h-px bg-[#c8973a]/[0.12] mb-2.5" />
+          <div className="h-px bg-[#c8973a]/[0.12] mb-1.5" />
 
           <div className="flex items-baseline gap-[7px] flex-wrap">
             {hasDiscount ? (
@@ -743,7 +743,7 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
             )}
           </div>
 
-          <div className="flex justify-between items-center mt-3.5">
+          <div className="flex justify-between items-center mt-2">
             <span className="text-[9px] tracking-[0.25em] text-[#7a6050] uppercase font-['Georgia',serif]">
               Premium Leather
             </span>

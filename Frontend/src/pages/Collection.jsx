@@ -3487,7 +3487,7 @@ const Collection = () => {
         <div className="pr-2">
           <div className="flex justify-between mb-3">
             <span style={{ fontSize: "10px", color: "#c8973a", fontFamily: "Georgia,serif" }}>${priceRange[0]}</span>
-            <span style={{ fontSize: "10px", color: "#c8973a", fontFamily: "Georgia,serif" }}>${priceRange[1]}</span>
+            <span style={{ fontSize: "10px", color: "#c8973a", fontFamily: "" }}>${priceRange[1]}</span>
           </div>
           <input
             type="range"

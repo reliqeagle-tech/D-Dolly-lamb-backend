@@ -510,10 +510,35 @@ const Add = ({ token }) => {
 
                         {/* ── BASIC INFO ── */}
                         <Card icon={<TbPackage size={17} />} title="Basic Information" subtitle="Name, description & category">
+                            {/* <Field label="Product Name" required>
+                                <div style={{ position: 'relative' }}>
+                                    <input style={inp(name.length > 220) } type="text" maxLength={250} placeholder="e.g. Classic Lambskin Leather Jacket" value={name} onChange={e => setName(e.target.value)} onFocus={focusGold} onBlur={blurBorder(name.length > 220)} />
+                                    <span style={{ position: 'absolute', right: 12, bottom: 11, fontSize: 10.5, color: name.length > 220 ? B.amber.text : B.mutedSoft, pointerEvents: 'none' }}>{name.length}/250</span>
+                                </div>
+                            </Field> */}
                             <Field label="Product Name" required>
                                 <div style={{ position: 'relative' }}>
-                                    <input style={input(name.length > 90)} type="text" maxLength={100} placeholder="e.g. Classic Lambskin Leather Jacket" value={name} onChange={e => setName(e.target.value)} onFocus={focusGold} onBlur={blurBorder(name.length > 90)} />
-                                    <span style={{ position: 'absolute', right: 12, bottom: 11, fontSize: 10.5, color: name.length > 80 ? B.amber.text : B.mutedSoft, pointerEvents: 'none' }}>{name.length}/100</span>
+                                    <textarea
+                                        style={{
+                                            ...inp(name.length > 220),
+                                            resize: 'none',
+                                            wordBreak: 'break-word',
+                                            overflowWrap: 'break-word',
+                                            overflow: 'hidden',
+                                            minHeight: 48,
+                                            lineHeight: '1.5'
+                                        }}
+                                        maxLength={250}
+                                        rows={2}
+                                        placeholder="e.g. Classic Lambskin Leather Jacket"
+                                        value={name}
+                                        onChange={e => setName(e.target.value)}
+                                        onFocus={focusGold}
+                                        onBlur={blurBorder(name.length > 220)}
+                                    />
+                                    <span style={{ position: 'absolute', right: 12, bottom: 11, fontSize: 10.5, color: name.length > 220 ? B.amber.text : B.mutedSoft, pointerEvents: 'none' }}>
+                                        {name.length}/250
+                                    </span>
                                 </div>
                             </Field>
 
