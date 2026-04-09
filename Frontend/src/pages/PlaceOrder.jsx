@@ -1151,6 +1151,7 @@ import { assets } from "../assets/assets";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 
 /* ── Inline SVG icons ──────────────────────────────── */
 const IconUser = () => (
@@ -1331,7 +1332,7 @@ const Field = ({ icon, label, name, value, onChange, type = "text", placeholder,
         background: "rgba(255,255,255,0.06)",
         border: "1px solid rgba(200,151,58,0.3)",
         color: "#f5ede0",
-        fontFamily: "Georgia,serif",
+        fontFamily: "Montserrat, sans-serif",
       }}
       onFocus={e => {
         e.target.style.borderColor = "#c8973a";
@@ -1393,6 +1394,8 @@ const PayOption = ({ id, method, setMethod, label, logo, sublabel }) => {
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
   const [loading, setLoading] = useState(false);
+  const [isPayPalReady, setIsPayPalReady] = useState(false);
+  const [orderDataForPayPal, setOrderDataForPayPal] = useState(null);
   const {
     navigate, backendUrl, token, cartItems,
     setCartItems, getCartAmount, delivery_fee, products,
@@ -1460,6 +1463,12 @@ const PlaceOrder = () => {
         const r = await axios.post(`${backendUrl}/api/order/razorpay`, orderData, cfg);
         if (r.data.success) initPay(r.data.order);
         else toast.error(r.data.message);
+      } else if (method === "paypal") {
+        setOrderDataForPayPal(orderData);  // upar wala orderData already exist karta hai
+        setIsPayPalReady(true);
+        setTimeout(() => {
+          document.getElementById("paypal-btn")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || "Something went wrong");
@@ -1544,8 +1553,12 @@ const PlaceOrder = () => {
                   label="Stripe" logo={assets.stripe_logo} sublabel="Credit / Debit Card" />
                 <PayOption id="razorpay" method={method} setMethod={setMethod}
                   label="Razorpay" logo={assets.razorpay_logo} sublabel="UPI / Net Banking" />
-                <PayOption id="cod" method={method} setMethod={setMethod}
-                  label="CASH ON DELIVERY" sublabel="Pay when your order arrives" />
+                {/* <PayOption id="cod" method={method} setMethod={setMethod}
+                  label="CASH ON DELIVERY" sublabel="Pay when your order arrives" /> */}
+                <PayOption
+                  id="paypal" method={method} setMethod={() => { setMethod("paypal"); setIsPayPalReady(false); }}
+                  label="PAYPAL" sublabel="Pay via PayPal account"
+                />
               </div>
               {method === "cod" && (
                 <div
@@ -1555,6 +1568,44 @@ const PlaceOrder = () => {
                   <p className="text-[11px] italic leading-relaxed" style={{ color: "#c8973a" }}>
                     ◆ &nbsp;Cash on delivery available for orders under £500. Our courier will collect payment upon arrival.
                   </p>
+                </div>
+              )}
+              {method === "paypal" && isPayPalReady && orderDataForPayPal && (
+                <div
+                  id="paypal-btn"
+                  className="mt-4 rounded-sm overflow-hidden p-3"
+                  style={{
+                    background: "rgba(200,151,58,0.04)",
+                    border: "1px solid rgba(200,151,58,0.15)"
+                  }}
+                >
+                  <PayPalButtons
+                    style={{ layout: "vertical", color: "gold", shape: "rect" }}
+                    createOrder={async () => {
+                      const res = await axios.post(
+                        `${backendUrl}/api/order/paypal`,
+                        orderDataForPayPal,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                      );
+                      if (res.data.success) return res.data.orderID;
+                      throw new Error(res.data.message);
+                    }}
+                    onApprove={async (data) => {
+                      const res = await axios.post(
+                        `${backendUrl}/api/order/verifyPaypal`,
+                        { orderID: data.orderID },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                      );
+                      if (res.data.success) {
+                        setCartItems({});
+                        navigate("/orders");
+                        toast.success("Payment successful!");
+                      } else {
+                        toast.error(res.data.message);
+                      }
+                    }}
+                    onError={() => toast.error("PayPal payment failed.")}
+                  />
                 </div>
               )}
             </SectionCard>
@@ -1611,7 +1662,8 @@ const PlaceOrder = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                // disabled={loading}
+                disabled={loading || (method === "paypal" && isPayPalReady)}
                 className="w-full py-4 px-8 flex items-center justify-center gap-2.5 font-bold text-[11px] tracking-[0.28em] uppercase rounded-sm transition-all duration-300 disabled:opacity-55 disabled:cursor-not-allowed disabled:transform-none hover:-translate-y-0.5"
                 style={{
                   background: "linear-gradient(135deg,#c8973a,#f7c568)",
@@ -1622,9 +1674,15 @@ const PlaceOrder = () => {
                 onMouseEnter={e => { if (!loading) e.currentTarget.style.boxShadow = "0 10px 36px rgba(200,151,58,0.38)"; }}
                 onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; }}
               >
-                {loading
+                {/* {loading
                   ? <><div className="po-spinner" /> PROCESSING...</>
                   : <>PLACE ORDER <IconArrow /></>
+                } */}
+                {loading
+                  ? <><div className="po-spinner" /> PROCESSING...</>
+                  : method === "paypal" && isPayPalReady
+                    ? <>USE PAYPAL BUTTONS ABOVE</>
+                    : <>PLACE ORDER <IconArrow /></>
                 }
               </button>
               <p className="text-[9px] italic text-center mt-3 tracking-[0.1em]" style={{ color: "#7a6050" }}>
