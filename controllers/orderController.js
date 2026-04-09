@@ -374,7 +374,7 @@ const verifyRazorpay = async (req, res) => {
 // ── PAYPAL ──
 const placeOrderPaypal = async (req, res) => {
     try {
-        // const { userId, items, amount, address } = req.body;
+        // const { userId, items, amount, address } = req.body hai;
         const userId = req.userId;
         const { items, amount, address } = req.body;
 
