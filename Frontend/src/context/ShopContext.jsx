@@ -428,6 +428,19 @@ const ShopContextProvider = (props) => {
         }
     };
 
+    // ── Existing states ke saath yeh add karo ──
+    const [savedAddress, setSavedAddress] = useState(() => {
+        try {
+            const saved = localStorage.getItem('ddolly_address');
+            return saved ? JSON.parse(saved) : null;
+        } catch { return null; }
+    });
+
+    const saveAddress = (address) => {
+        setSavedAddress(address);
+        localStorage.setItem('ddolly_address', JSON.stringify(address));
+    };
+
     // ─────────────────────────────────────────────
     // CART - GET FROM SERVER
     // ─────────────────────────────────────────────
@@ -773,7 +786,8 @@ const ShopContextProvider = (props) => {
         setToken, token, userId,
         toggleWishlistItem, fetchWishlist, wishlist, setWishlist,
         submitReview, getProductReviews, deleteReview,
-        calculateSalePrice, getSingleProduct
+        calculateSalePrice, getSingleProduct,
+        savedAddress, saveAddress,
     };
 
     return (

@@ -339,8 +339,13 @@ const placeOrderRazorpay = async (req, res) => {
         };
         const newOrder = new orderModel(orderData);
         await newOrder.save();
+        // const options = {
+        //     amount: amount * 100,
+        //     currency: currency.toUpperCase(),
+        //     receipt: newOrder._id.toString()
+        // };
         const options = {
-            amount: amount * 100,
+            amount: Math.round(Number(amount) * 100),  // 7999 ← integer
             currency: currency.toUpperCase(),
             receipt: newOrder._id.toString()
         };
@@ -491,7 +496,8 @@ const allOrders = async (req, res) => {
 
 const userOrders = async (req, res) => {
     try {
-        const { userId } = req.body;
+        // const { userId } = req.body;
+        const userId = req.userId || req.body.userId;
         const orders = await orderModel.find({ userId });
         res.json({ success: true, orders });
     } catch (error) {
