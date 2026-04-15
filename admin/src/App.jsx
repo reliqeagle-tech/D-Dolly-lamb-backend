@@ -426,8 +426,9 @@ import Reports from './Pages/Reports/Reports'
 import { ThemeProvider } from './Context/ThemeContext'
 import Review from './Pages/review/review'
 import UnderConstruction from './Components/Underconstruction/Underconstruction'
+import BulkUpload from './Pages/Products/BulkAddProduct'
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL
+export const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
 export const currency = '$'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -538,6 +539,14 @@ const App = () => {
       element: (
         <Layout isSidebarOpen={isSidebarOpen} pt='pt-20'>
           <ProductsList token={token} />
+        </Layout>
+      )
+    },
+    {
+      path: "/bulk-upload",
+      element: (
+        <Layout isSidebarOpen={isSidebarOpen} pt='pt-20'>
+          <BulkUpload token={token} />
         </Layout>
       )
     },

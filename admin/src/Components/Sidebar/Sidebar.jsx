@@ -282,7 +282,7 @@ const Sidebar = () => {
                     <SidebarGroup icon={<RiProductHuntLine />} label="Products" index={3} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
                         <SubItem to="/products" label="Product List" />
                         <SubItem label="Add Product" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add product' })} />
-                        <SubItem to="/products/inventory" label="Inventory" badge="new" />
+                        <SubItem to="/bulk-upload" label="Bulk Add Products" badge="new" />
                         <SubItem to="/reviews" label="Reviews & Ratings" />
                     </SidebarGroup>
 

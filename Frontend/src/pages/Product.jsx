@@ -756,6 +756,7 @@ const colorMap = {
   green: '#008000', cognac: '#D2691E', white: '#FFFFFF', yellow: '#FFFF00',
   gray: '#808080', rose: '#FF007F', tobacco: '#A0522D', navy: '#000080',
   beige: '#F5F5DC', blue: '#0000FF', brown: '#8B4513',
+  'antique brown': '#8A5A44',
   'dark gray': '#404040', 'dark-gray': '#404040',
   'dark-wine': '#453333', 'tobacco-dark': '#6e351a',
 };

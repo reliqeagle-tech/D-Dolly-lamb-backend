@@ -1,5 +1,207 @@
 import { v2 as cloudinary } from "cloudinary"
 import productModel from "../models/productModel.js"
+import csvtojson from 'csvtojson'   // npm install csvtojson
+import fs from 'fs-extra'
+import path from 'path'
+import unzipper from 'unzipper'
+
+const csv = () => csvtojson()
+
+const DEFAULT_COLOR_HEX = {
+    black: '#000000',
+    white: '#FFFFFF',
+    red: '#EF4444',
+    navy: '#1E3A5F',
+    'royal blue': '#3B82F6',
+    'forest green': '#166534',
+    olive: '#4D7C0F',
+    yellow: '#EAB308',
+    pink: '#EC4899',
+    lavender: '#8B5CF6',
+    orange: '#F97316',
+    brown: '#92400E',
+    cream: '#FFFDD0',
+    gray: '#9CA3AF',
+    charcoal: '#374151',
+    maroon: '#7F1D1D',
+    'antique brown': '#8A5A44',
+}
+
+const resolveColorHex = (rawName = '') => {
+    const normalized = String(rawName).trim().toLowerCase().replace(/\s+/g, ' ')
+    const compact = normalized.replace(/[\s_-]+/g, '')
+
+    if (DEFAULT_COLOR_HEX[normalized]) return DEFAULT_COLOR_HEX[normalized]
+
+    const aliasMap = {
+        navyblue: 'royal blue',
+        forestgreen: 'forest green',
+        antiquebrown: 'antique brown',
+    }
+
+    const aliasKey = aliasMap[compact]
+    if (aliasKey && DEFAULT_COLOR_HEX[aliasKey]) return DEFAULT_COLOR_HEX[aliasKey]
+
+    return '#000000'
+}
+
+const normalizeHex = (value = '') => {
+    const raw = String(value).trim().replace(/^#/, '').toUpperCase()
+    if (/^[0-9A-F]{3}$/.test(raw) || /^[0-9A-F]{6}$/.test(raw)) return `#${raw}`
+    return ''
+}
+
+const parseColorToken = (token = '') => {
+    const raw = String(token).trim()
+    if (!raw) return null
+
+    // Supported custom color formats:
+    // 1) White:#F6F6FC
+    // 2) White|#F6F6FC
+    // 3) White#F6F6FC
+    // 4) White(#F6F6FC)
+    let name = raw
+    let hexCandidate = ''
+
+    if (raw.includes('|')) {
+        const [n, h] = raw.split('|')
+        name = (n || '').trim()
+        hexCandidate = (h || '').trim()
+    } else if (raw.includes(':')) {
+        const [n, h] = raw.split(':')
+        name = (n || '').trim()
+        hexCandidate = (h || '').trim()
+    } else {
+        const parenMatch = raw.match(/^(.*?)\((#?[0-9a-fA-F]{3,6})\)$/)
+        if (parenMatch) {
+            name = (parenMatch[1] || '').trim()
+            hexCandidate = (parenMatch[2] || '').trim()
+        } else {
+            const hashMatch = raw.match(/^(.*?)(#?[0-9a-fA-F]{3,6})$/)
+            if (hashMatch && hashMatch[1]?.trim()) {
+                name = hashMatch[1].trim()
+                hexCandidate = hashMatch[2]
+            }
+        }
+    }
+
+    name = name.replace(/\s+/g, ' ').trim()
+    if (!name) return null
+
+    const normalizedHex = normalizeHex(hexCandidate)
+    return {
+        name,
+        hex: normalizedHex || resolveColorHex(name),
+    }
+}
+
+const normalizeColorInput = (colorValue) => {
+    if (!colorValue) return []
+    if (Array.isArray(colorValue)) {
+        return colorValue.flatMap((item) => normalizeColorInput(item))
+    }
+    if (typeof colorValue === 'string') {
+        const parsed = colorValue
+            .split(',')
+            .map((token) => parseColorToken(token))
+            .filter(Boolean)
+
+        const seen = new Set()
+        return parsed.filter((c) => {
+            const key = c.name.toLowerCase()
+            if (seen.has(key)) return false
+            seen.add(key)
+            return true
+        })
+    }
+    if (typeof colorValue === 'object') {
+        const name = String(colorValue.name || colorValue.value || '').trim()
+        if (!name) return []
+        return [{
+            name,
+            hex: normalizeHex(colorValue.hex) || resolveColorHex(name)
+        }]
+    }
+    return []
+}
+
+const parseBulkSizes = (sizesValue = '') => {
+    if (!sizesValue || typeof sizesValue !== 'string') return []
+
+    return sizesValue
+        .split(',')
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+        .map((entry) => {
+            // Supported formats:
+            // 1) size:multiplier
+            // 2) size:multiplier:stock
+            // 3) size:multiplier:stock:customPrice
+            // 4) size:multiplier:stock:customPrice:useCustomPrice
+            // 5) size:customPrice:stock:custom
+            // 6) size:custom:customPrice:stock
+            const parts = entry.split(':').map((p) => p.trim())
+            const size = parts[0]
+            if (!size) return null
+
+            const base = {
+                size,
+                priceMultiplier: 1,
+                stock: 0,
+                customPrice: 0,
+                useCustomPrice: false,
+            }
+
+            const p1 = parts[1]?.toLowerCase()
+            const p2 = parts[2]
+            const p3 = parts[3]
+            const p4 = parts[4]
+
+            // Explicit custom mode: size:custom:2499:10
+            if (p1 === 'custom') {
+                base.customPrice = Number(p2) || 0
+                base.stock = Number.isNaN(parseInt(p3, 10)) ? 0 : parseInt(p3, 10)
+                base.useCustomPrice = true
+                return base
+            }
+
+            // Explicit custom mode: size:2499:10:custom
+            if (parts.length >= 4 && p3?.toLowerCase() === 'custom') {
+                base.customPrice = Number(parts[1]) || 0
+                base.stock = Number.isNaN(parseInt(parts[2], 10)) ? 0 : parseInt(parts[2], 10)
+                base.useCustomPrice = true
+                return base
+            }
+
+            // Shorthand custom mode: size:2499:10
+            // If first numeric value is > 2 and stock is present, treat it as customPrice.
+            if (parts.length >= 3 && Number(parts[1]) > 2) {
+                base.customPrice = Number(parts[1]) || 0
+                base.stock = Number.isNaN(parseInt(parts[2], 10)) ? 0 : parseInt(parts[2], 10)
+                base.useCustomPrice = true
+                return base
+            }
+
+            // Multiplier mode + optional stock/custom
+            base.priceMultiplier = Number(parts[1]) || 1
+            if (parts[2] !== undefined && parts[2] !== '') {
+                base.stock = Number.isNaN(parseInt(parts[2], 10)) ? 0 : parseInt(parts[2], 10)
+            }
+
+            // Backward-compatible implicit custom mode when customPrice is provided.
+            if (parts[3] !== undefined && parts[3] !== '') {
+                base.customPrice = Number(parts[3]) || 0
+                base.useCustomPrice = true
+            }
+
+            if (parts[4] !== undefined && parts[4] !== '') {
+                base.useCustomPrice = parts[4].toLowerCase() === 'true'
+            }
+
+            return base
+        })
+        .filter(Boolean)
+}
 
 // function for add product
 const addProduct = async (req, res) => {
@@ -49,19 +251,6 @@ const addProduct = async (req, res) => {
             return res.json({ success: false, message: "Invalid sizes format. Expected: [{size:'S', priceMultiplier:1, stock:10}]" })
         }
 
-        // const image1 = req.files.image1 && req.files.image1[0]
-        // const image2 = req.files.image2 && req.files.image2[0]
-        // const image3 = req.files.image3 && req.files.image3[0]
-        // const image4 = req.files.image4 && req.files.image4[0]
-
-        // const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
-
-        // let imagesUrl = await Promise.all(
-        //     images.map(async (item) => {
-        //         let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
-        //         return result.secure_url
-        //     })
-        // )
 
         const productData = {
             name,
@@ -471,7 +660,8 @@ const bulkUploadProducts = async (req, res) => {
         const filePath = req.file.path
         let jsonData = []
 
-        if (req.file.mimetype === "text/csv") {
+        const isCsv = req.file.mimetype === "text/csv" || req.file.mimetype === "application/vnd.ms-excel" || req.file.originalname.toLowerCase().endsWith('.csv');
+        if (isCsv) {
             jsonData = await csv().fromFile(filePath)
         } else {
             jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"))
@@ -496,18 +686,7 @@ const bulkUploadProducts = async (req, res) => {
                     }
                 }
 
-                // ✅ PARSE SIZES - if CSV has format: "S:0.9,M:1,L:1.1,XL:1.2,XXL:1.35"
-                let parsedSizes = []
-                if (item.sizes) {
-                    parsedSizes = item.sizes.split(",").map(s => {
-                        const [size, multiplier] = s.trim().split(":")
-                        return {
-                            size: size.trim(),
-                            priceMultiplier: parseFloat(multiplier) || 1,
-                            stock: 0
-                        }
-                    })
-                }
+                const parsedSizes = parseBulkSizes(item.sizes)
 
                 return {
                     name: item.name,
@@ -520,7 +699,7 @@ const bulkUploadProducts = async (req, res) => {
                     subCategory: item.subCategory,
                     bestseller: item.bestseller === "true",
                     sizes: parsedSizes, // ✅ WITH MULTIPLIERS
-                    color: item.color ? item.color.split(",") : [],
+                    color: normalizeColorInput(item.color),
                     image: uploadedImages,
                     date: Date.now(),
                 }
@@ -582,18 +761,7 @@ const bulkUploadZipProducts = async (req, res) => {
                 }
             }
 
-            // ✅ PARSE SIZES WITH MULTIPLIERS
-            let parsedSizes = []
-            if (item.sizes) {
-                parsedSizes = item.sizes.split(",").map(s => {
-                    const [size, multiplier] = s.trim().split(":")
-                    return {
-                        size: size.trim(),
-                        priceMultiplier: parseFloat(multiplier) || 1,
-                        stock: 0
-                    }
-                })
-            }
+            const parsedSizes = parseBulkSizes(item.sizes)
 
             finalProducts.push({
                 name: item.name,
@@ -606,7 +774,7 @@ const bulkUploadZipProducts = async (req, res) => {
                 subCategory: item.subCategory,
                 bestseller: item.bestseller === "true",
                 sizes: parsedSizes, // ✅ WITH MULTIPLIERS
-                color: item.color ? item.color.split(",") : [],
+                color: normalizeColorInput(item.color),
                 image: uploadedImages,
                 date: Date.now(),
             })
@@ -628,3 +796,5 @@ const bulkUploadZipProducts = async (req, res) => {
 }
 
 export { listProducts, addProduct, removeProduct, singleProduct, updateProduct, bulkUploadProducts, bulkUploadZipProducts }
+
+

@@ -80,7 +80,6 @@
 
 
 
-
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
@@ -94,6 +93,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import wishlistRouter from './routes/wishlistRoute.js';
 import reviewRouter from './routes/reviewRoute.js';
+
+process.on('uncaughtException', (err) => {
+  console.error('❌ ERROR:', err.message)
+  console.error('📍 File:', err.stack)
+})
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ REJECTION:', reason)
+})
+
 
 // ES Modules __dirname fix
 const __filename = fileURLToPath(import.meta.url);
@@ -125,9 +133,15 @@ app.use(express.json());
 app.use(cors({
   origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "token"],
   credentials: true
 }));
-app.options("*", cors());
+app.options("*", cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "token"],
+  credentials: true
+}));
 
 // API Routes
 app.use('/api/user', userRouter);
