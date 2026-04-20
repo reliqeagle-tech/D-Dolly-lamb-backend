@@ -115,6 +115,8 @@ import women_nav_1 from './women_nav_1.png'
 import women_nav from './women_nav.png'
 import collectionImg from './collectionImg.jpg'
 import ddl_logo from './ddl_logo.png'
+import DDL_logo from './DDL_logo.jpeg'
+import DDL_logo1 from './DDL_logo1.png'
 
 export const assets = {
     logo,
@@ -177,6 +179,8 @@ export const assets = {
     women_nav_1,
     collectionImg,
     ddl_logo,
+    DDL_logo,
+    DDL_logo1
 }
 
 export const products = [

@@ -445,17 +445,1783 @@
 
 
 
+// import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
+// import { ShopContext } from "../context/ShopContext";
+// import { Link } from "react-router-dom";
+
+// /* ── Keyframes only — cannot be replaced by Tailwind ── */
+// const ANIM = `
+//   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+
+//   @keyframes ddlGlow {
+//     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
+//     50%      { opacity:1; filter: blur(0.6px) brightness(1.6); }
+//   }
+//   @keyframes ddlSlideInFwd {
+//     from { opacity:0; transform: translateX(36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+//   @keyframes ddlSlideInBack {
+//     from { opacity:0; transform: translateX(-36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+
+//   .ddl-gold-line {
+//     position: absolute; top: 0; left: 0;
+//     width: 100%; height: 1px;
+//     background: linear-gradient(90deg,
+//       transparent 0%, #8B6914 20%, #c8973a 45%,
+//       #f7c568 50%, #c8973a 55%, #8B6914 80%, transparent 100%
+//     );
+//     transform: scaleX(0) translateZ(0);
+//     transform-origin: left center;
+//     transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+//     will-change: transform;
+//   }
+//   .ddl-card:hover .ddl-gold-line {
+//     transform: scaleX(1) translateZ(0);
+//     animation: ddlGlow 1.2s ease 0.45s infinite;
+//   }
+//   .ddl-card:hover .ddl-dots-wrap { opacity: 1; }
+//   .ddl-card:hover .ddl-overlay   { transform: translateY(0); }
+//   .ddl-card:hover .ddl-name      { color: #F7C568; }
+//   .ddl-card:hover .ddl-arrow     { color: #f7c568; transform: translateX(4px); }
+//   .ddl-card:hover                {
+//     border-color: #c8973a;
+//     transform: translateY(-6px);
+//     box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,151,58,0.25);
+//   }
+
+//   .ddl-slide-img {
+//     width: 100%; height: 100%;
+//     object-fit: contain; padding: 10px;
+//     position: absolute; inset: 0;
+//     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
+//     will-change: transform, opacity;
+//   }
+//   .ddl-slide-img.enter-fwd  { opacity: 0; transform: translateX(40px) scale(.97); }
+//   .ddl-slide-img.enter-back { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.active     { opacity: 1; transform: translateX(0) scale(1); }
+//   .ddl-slide-img.exit-fwd   { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.exit-back  { opacity: 0; transform: translateX(40px) scale(.97); }
+
+//   .ddl-quick-btn::before {
+//     content: ''; position: absolute;
+//     top: -50%; left: -60%; width: 28%; height: 200%;
+//     background: rgba(255,255,255,0.15); transform: skewX(-20deg);
+//     transition: left .5s ease;
+//   }
+//   .ddl-quick-btn:hover::before { left: 120%; }
+//   .ddl-quick-btn:hover {
+//     background-position: 100% 50%;
+//     box-shadow: 0 4px 18px rgba(201,150,26,0.4);
+//   }
+// `;
+
+// const ProductItem = ({ id, image, name, price, discountPrice }) => {
+//   const { currency, getProductReviews, toggleWishlistItem, wishlist } = useContext(ShopContext);
+
+//   const [reviews, setReviews] = useState([]);
+//   const [avgRating, setAvgRating] = useState(0);
+//   const [hovered, setHovered] = useState(false);
+//   const [imgIndex, setImgIndex] = useState(0);
+//   const [sliding, setSliding] = useState(false);
+//   const [slideDir, setSlideDir] = useState(1);
+//   const [displayIdx, setDisplayIdx] = useState(0);
+//   const autoRef = useRef(null);
+//   const images = Array.isArray(image) ? image : [image];
+
+//   useEffect(() => { loadReviews(); }, [id]);
+
+//   const loadReviews = async () => {
+//     const data = await getProductReviews(id);
+//     setReviews(data || []);
+//     if (data?.length > 0)
+//       setAvgRating(data.reduce((s, r) => s + r.rating, 0) / data.length);
+//   };
+
+//   const slideTo = useCallback((nextIdx, dir = 1) => {
+//     if (sliding || nextIdx === imgIndex) return;
+//     setSlideDir(dir);
+//     setSliding(true);
+//     setTimeout(() => { setImgIndex(nextIdx); setDisplayIdx(nextIdx); setSliding(false); }, 320);
+//   }, [sliding, imgIndex]);
+
+//   useEffect(() => {
+//     if (hovered && images.length > 1) {
+//       autoRef.current = setInterval(() => {
+//         setImgIndex(prev => {
+//           const next = (prev + 1) % images.length;
+//           setSlideDir(1);
+//           setSliding(true);
+//           setTimeout(() => { setDisplayIdx(next); setSliding(false); }, 320);
+//           return next;
+//         });
+//       }, 1800);
+//     } else {
+//       clearInterval(autoRef.current);
+//       if (!hovered) slideTo(0, -1);
+//     }
+//     return () => clearInterval(autoRef.current);
+//   }, [hovered, images.length]);
+
+//   const isWishlisted = Array.isArray(wishlist) ? wishlist.some(item => item.productId === id) : false;
+//   const percentOff = Number(discountPrice) || 0;
+//   const isValidDiscount = percentOff > 0 && percentOff < 100;
+//   const discountedPriceValue = isValidDiscount ? price - (price * percentOff) / 100 : price;
+//   const hasDiscount = isValidDiscount;
+
+//   const renderStars = (rating) =>
+//     [...Array(5)].map((_, i) => {
+//       const full = i < Math.floor(rating);
+//       const half = !full && i < rating;
+//       return (
+//         <span key={i} className="text-[10px] transition-colors duration-200"
+//           style={{ color: full || half ? "#C9961A" : "#2E1E0C" }}>
+//           {full ? "★" : half ? "⯨" : "☆"}
+//         </span>
+//       );
+//     });
+
+//   const showPrev = sliding ? displayIdx : null;
+//   const showCurr = sliding ? imgIndex : displayIdx;
+
+//   return (
+//     <>
+//       <style>{ANIM}</style>
+
+//       <Link
+//         to={`/product/${id}`}
+//         onClick={() => window.scrollTo(0, 0)}
+//         className="
+//           ddl-card block no-underline cursor-pointer relative
+//           bg-gradient-to-br from-[#1e110a] to-[#160c06]
+//           border border-[#c8973a]/[0.18] rounded-[14px] overflow-hidden
+//           transition-[border-color,transform,box-shadow] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)]
+//           font-['Jost',sans-serif]
+//         "
+//         onMouseEnter={() => setHovered(true)}
+//         onMouseLeave={() => setHovered(false)}
+//       >
+//         {/* ── IMAGE ZONE ── */}
+//         <div className="relative w-full aspect-[7/6] bg-[#F8F4EE] overflow-hidden rounded-t-[13px]">
+
+//           {/* Exiting image */}
+//           {sliding && showPrev !== null && (
+//             <img
+//               src={images[showPrev] || images[0]}
+//               alt={name}
+//               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
+//               style={{ zIndex: 1 }}
+//             />
+//           )}
+
+//           {/* Active / entering image */}
+//           <img
+//             src={images[showCurr] || images[0]}
+//             alt={name}
+//             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
+//             style={{
+//               zIndex: 2,
+//               animation: sliding
+//                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
+//                 : "none",
+//             }}
+//           />
+
+//           {/* Sale badge */}
+//           {hasDiscount && (
+//             <div className="absolute top-2.5 left-2.5 z-[8] bg-gradient-to-br from-[#C9961A] to-[#F7C568] text-[#0E0802] text-[8px] font-extrabold tracking-[0.2em] px-[9px] py-[3px] rounded-[3px] uppercase font-['Jost',sans-serif]">
+//               {percentOff}% OFF
+//             </div>
+//           )}
+
+//           {/* Wishlist */}
+//           <button
+//             className={`
+//               absolute top-2.5 right-2.5 z-[8] w-8 h-8 rounded-full
+//               flex items-center justify-center cursor-pointer
+//               backdrop-blur-sm border transition-all duration-200
+//               hover:bg-[#C9961A] hover:border-[#C9961A]
+//               ${isWishlisted
+//                 ? "bg-[rgba(201,150,26,0.15)] border-[#C9961A]"
+//                 : "bg-white/[0.92] border-[#c8973a]/35"
+//               }
+//             `}
+//             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlistItem(id); }}
+//           >
+//             <svg width="13" height="13" viewBox="0 0 24 24" fill={isWishlisted ? "#C9961A" : "none"}
+//               className="[&_path]:transition-[stroke] [&_path]:duration-200 hover:[&_path]:stroke-white">
+//               <path
+//                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+//                    2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+//                    C13.09 3.81 14.76 3 16.5 3
+//                    19.58 3 22 5.42 22 8.5
+//                    c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+//                 stroke="#C9961A" strokeWidth="1.5"
+//               />
+//             </svg>
+//           </button>
+
+//           {/* Dot indicators */}
+//           {images.length > 1 && (
+//             <div className="ddl-dots-wrap absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-[5px] z-10 opacity-0 transition-opacity duration-[250ms]">
+//               {images.slice(0, 5).map((_, i) => (
+//                 <button
+//                   key={i}
+//                   className={`h-1 rounded-[2px] border-none p-0 cursor-pointer transition-[width,background] duration-300 ${i === imgIndex ? "bg-[#C9961A]" : "bg-[rgba(201,150,26,0.35)]"}`}
+//                   style={{ width: i === imgIndex ? 18 : 4 }}
+//                   onMouseEnter={(e) => { e.preventDefault(); e.stopPropagation(); slideTo(i, i > imgIndex ? 1 : -1); }}
+//                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+//                 />
+//               ))}
+//             </div>
+//           )}
+
+//           {/* Quick view overlay */}
+//           <div
+//             className="ddl-overlay absolute bottom-0 left-0 right-0 z-[6] px-3.5 pb-3.5 pt-8 translate-y-full transition-transform duration-[320ms] ease-[cubic-bezier(.4,0,.2,1)]"
+//             style={{ background: "linear-gradient(to top, rgba(10,6,2,0.95) 0%, rgba(10,6,2,0.5) 60%, transparent 100%)" }}
+//             onClick={(e) => e.preventDefault()}
+//           >
+//             <Link to={`/product/${id}`} onClick={(e) => e.stopPropagation()}>
+//               <button className="
+//                 ddl-quick-btn w-full py-[9px]
+//                 bg-[linear-gradient(110deg,#8B6914_0%,#C9961A_50%,#E0AE3A_100%)]
+//                 [background-size:200%_200%] [background-position:0%_50%]
+//                 border-none text-[#0E0802] text-[9px] font-extrabold tracking-[0.22em]
+//                 font-['Jost',sans-serif] cursor-pointer rounded-[4px] uppercase
+//                 transition-[background-position,box-shadow] duration-[400ms]
+//                 relative overflow-hidden
+//               ">
+//                 View Product
+//               </button>
+//             </Link>
+//           </div>
+//         </div>
+
+//         {/* ── GOLD RULE ── */}
+//         <div className="relative h-px bg-[#0d0703] overflow-hidden">
+//           <div className="ddl-gold-line" />
+//         </div>
+
+//         {/* ── BODY ── */}
+//         <div className="px-[14px] pt-2.5 pb-3">
+
+//           <p className="
+//             ddl-name font-['Montserrat',serif] text-[13px] font-normal text-[#f5ede0]
+//             leading-[1.45] mb-1 tracking-[0.02em]
+//             line-clamp-2 transition-colors duration-[250ms]
+//           ">
+//             {name}
+//           </p>
+
+//           <div className="flex items-center gap-1.5 mb-1.5">
+//             <div className="flex gap-0.5">{renderStars(avgRating)}</div>
+//             <span className="text-[10px] text-[#7a6050] font-['Georgia',serif]">({reviews.length})</span>
+//           </div>
+
+//           <div className="h-px bg-[#c8973a]/[0.12] mb-1.5" />
+
+//           <div className="flex items-baseline gap-[7px] flex-wrap">
+//             {hasDiscount ? (
+//               <>
+//                 <span className="font-['Montserrat',serif] text-base font-bold text-[#f7c568]">
+//                   {currency}{discountedPriceValue.toFixed(2)}
+//                 </span>
+//                 <span className="text-[11px] text-[#5a4030] line-through font-['Montserrat',serif]">
+//                   {currency}{price}
+//                 </span>
+//                 <span className="text-[9px] text-[#c8973a] tracking-[0.18em] font-bold font-['Montserrat',serif] bg-[#c8973a]/10 px-1.5 py-0.5 border border-[#c8973a]/25 rounded-[2px]">
+//                   –{percentOff}%
+//                 </span>
+//               </>
+//             ) : (
+//               <span className="font-['Montserrat',serif] text-base font-bold text-[#f7c568]">
+//                 {currency}{price}
+//               </span>
+//             )}
+//           </div>
+
+//           <div className="flex justify-between items-center mt-2">
+//             <span className="text-[9px] tracking-[0.25em] text-[#7a6050] uppercase font-['Georgia',serif]">
+//               Premium Leather
+//             </span>
+//             <span className="ddl-arrow text-base inline-block transition-[color,transform] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)] text-[#3d2010]">
+//               →
+//             </span>
+//           </div>
+//         </div>
+//       </Link>
+//     </>
+//   );
+// };
+
+// export default ProductItem;
+
+
+
+// import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
+// import { ShopContext } from "../context/ShopContext";
+// import { Link } from "react-router-dom";
+
+// /*
+//   ═══════════════════════════════════════════════
+//   COLOR SYSTEM UPDATE — ProductItem.jsx
+//   ═══════════════════════════════════════════════
+
+//   OLD (dark brown / amber theme):
+//     card bg:      #1e110a → #160c06   muddy dark brown
+//     border:       #c8973a/18%         warm amber
+//     image bg:     #F8F4EE             warm cream
+//     body text:    #f5ede0             warm ivory
+//     muted text:   #7a6050 / #5a4030  brown-tinted
+//     price:        #f7c568             warm yellow-gold
+//     gold line:    #8B6914 → #f7c568  orange-gold
+//     badge bg:     #C9961A → #F7C568  warm amber gradient
+//     arrow:        #3d2010             dark brown
+
+//   NEW (deep navy + champagne gold — matches navbar #0D0D1F + footer #09091A):
+//     card bg:      #0D0D24 → #0A0A1C  deep navy
+//     border:       rgba(212,168,83,0.18)  champagne gold
+//     image bg:     #F2F0F7             cool neutral (products pop better)
+//     body text:    #E8DCC8             warm ivory (readable, consistent with footer)
+//     muted text:   #A89880 / #6A5E50  warm grey (no brown tint)
+//     price:        #D4A853             champagne gold
+//     gold line:    #8A6A30 → #D4A853 → #F0C97A  refined gold ramp
+//     badge bg:     #B8923E → #D4A853  champagne gradient
+//     arrow:        rgba(212,168,83,0.35)  dim gold, brightens on hover
+//     strikethrough:#5A5060            cool muted (not brown)
+//     review muted: #8A7A6A            neutral warm grey
+//   ═══════════════════════════════════════════════
+// */
+
+// const ANIM = `
+//   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+
+//   @keyframes ddlGlow {
+//     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
+//     50%      { opacity:1; filter: blur(0.6px) brightness(1.6); }
+//   }
+//   @keyframes ddlSlideInFwd {
+//     from { opacity:0; transform: translateX(36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+//   @keyframes ddlSlideInBack {
+//     from { opacity:0; transform: translateX(-36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+
+//   /* UPDATED: champagne gold line replacing orange-amber */
+//   .ddl-gold-line {
+//     position: absolute; top: 0; left: 0;
+//     width: 100%; height: 1px;
+//     background: linear-gradient(90deg,
+//       transparent 0%, #6A5020 20%, #B8923E 45%,
+//       #D4A853 50%, #B8923E 55%, #6A5020 80%, transparent 100%
+//     );
+//     transform: scaleX(0) translateZ(0);
+//     transform-origin: left center;
+//     transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+//     will-change: transform;
+//   }
+//   /* UPDATED: card hover — navy-compatible border + shadow */
+//   .ddl-card:hover .ddl-gold-line {
+//     transform: scaleX(1) translateZ(0);
+//     animation: ddlGlow 1.2s ease 0.45s infinite;
+//   }
+//   .ddl-card:hover .ddl-dots-wrap { opacity: 1; }
+//   .ddl-card:hover .ddl-overlay   { transform: translateY(0); }
+//   .ddl-card:hover .ddl-name      { color: #D4A853; }
+//   .ddl-card:hover .ddl-arrow     { color: #D4A853; transform: translateX(4px); }
+//   .ddl-card:hover {
+//     border-color: rgba(212,168,83,0.55);
+//     transform: translateY(-6px);
+//     box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,168,83,0.2);
+//   }
+
+//   .ddl-slide-img {
+//     width: 100%; height: 100%;
+//     object-fit: contain; padding: 10px;
+//     position: absolute; inset: 0;
+//     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
+//     will-change: transform, opacity;
+//   }
+//   .ddl-slide-img.enter-fwd  { opacity: 0; transform: translateX(40px) scale(.97); }
+//   .ddl-slide-img.enter-back { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.active     { opacity: 1; transform: translateX(0) scale(1); }
+//   .ddl-slide-img.exit-fwd   { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.exit-back  { opacity: 0; transform: translateX(40px) scale(.97); }
+
+//   /* UPDATED: shimmer uses champagne gold tones */
+//   .ddl-quick-btn::before {
+//     content: ''; position: absolute;
+//     top: -50%; left: -60%; width: 28%; height: 200%;
+//     background: rgba(255,255,255,0.18); transform: skewX(-20deg);
+//     transition: left .5s ease;
+//   }
+//   .ddl-quick-btn:hover::before { left: 120%; }
+//   .ddl-quick-btn:hover {
+//     background-position: 100% 50%;
+//     box-shadow: 0 4px 18px rgba(212,168,83,0.35);
+//   }
+// `;
+
+// const ProductItem = ({ id, image, name, price, discountPrice }) => {
+//   const { currency, getProductReviews, toggleWishlistItem, wishlist } = useContext(ShopContext);
+
+//   const [reviews, setReviews] = useState([]);
+//   const [avgRating, setAvgRating] = useState(0);
+//   const [hovered, setHovered] = useState(false);
+//   const [imgIndex, setImgIndex] = useState(0);
+//   const [sliding, setSliding] = useState(false);
+//   const [slideDir, setSlideDir] = useState(1);
+//   const [displayIdx, setDisplayIdx] = useState(0);
+//   const autoRef = useRef(null);
+//   const images = Array.isArray(image) ? image : [image];
+
+//   useEffect(() => { loadReviews(); }, [id]);
+
+//   const loadReviews = async () => {
+//     const data = await getProductReviews(id);
+//     setReviews(data || []);
+//     if (data?.length > 0)
+//       setAvgRating(data.reduce((s, r) => s + r.rating, 0) / data.length);
+//   };
+
+//   const slideTo = useCallback((nextIdx, dir = 1) => {
+//     if (sliding || nextIdx === imgIndex) return;
+//     setSlideDir(dir);
+//     setSliding(true);
+//     setTimeout(() => { setImgIndex(nextIdx); setDisplayIdx(nextIdx); setSliding(false); }, 320);
+//   }, [sliding, imgIndex]);
+
+//   useEffect(() => {
+//     if (hovered && images.length > 1) {
+//       autoRef.current = setInterval(() => {
+//         setImgIndex(prev => {
+//           const next = (prev + 1) % images.length;
+//           setSlideDir(1);
+//           setSliding(true);
+//           setTimeout(() => { setDisplayIdx(next); setSliding(false); }, 320);
+//           return next;
+//         });
+//       }, 1800);
+//     } else {
+//       clearInterval(autoRef.current);
+//       if (!hovered) slideTo(0, -1);
+//     }
+//     return () => clearInterval(autoRef.current);
+//   }, [hovered, images.length]);
+
+//   const isWishlisted = Array.isArray(wishlist) ? wishlist.some(item => item.productId === id) : false;
+//   const percentOff = Number(discountPrice) || 0;
+//   const isValidDiscount = percentOff > 0 && percentOff < 100;
+//   const discountedPriceValue = isValidDiscount ? price - (price * percentOff) / 100 : price;
+//   const hasDiscount = isValidDiscount;
+
+//   /* UPDATED: stars use champagne gold #D4A853, empty uses navy-tinted grey */
+//   const renderStars = (rating) =>
+//     [...Array(5)].map((_, i) => {
+//       const full = i < Math.floor(rating);
+//       const half = !full && i < rating;
+//       return (
+//         <span key={i} className="text-[10px] transition-colors duration-200"
+//           style={{ color: full || half ? "#D4A853" : "#2A2A40" }}>
+//           {full ? "★" : half ? "⯨" : "☆"}
+//         </span>
+//       );
+//     });
+
+//   const showPrev = sliding ? displayIdx : null;
+//   const showCurr = sliding ? imgIndex : displayIdx;
+
+//   return (
+//     <>
+//       <style>{ANIM}</style>
+
+//       <Link
+//         to={`/product/${id}`}
+//         onClick={() => window.scrollTo(0, 0)}
+//         className="
+//           ddl-card block no-underline cursor-pointer relative
+//           rounded-[14px] overflow-hidden
+//           transition-[border-color,transform,box-shadow] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)]
+//           font-['Jost',sans-serif]
+//         "
+//         style={{
+//           /* UPDATED: deep navy gradient instead of dark brown */
+//           background: "linear-gradient(145deg, #0D0D24 0%, #0A0A1C 100%)",
+//           border: "1px solid rgba(212,168,83,0.18)",
+//         }}
+//         onMouseEnter={() => setHovered(true)}
+//         onMouseLeave={() => setHovered(false)}
+//       >
+//         {/* ── IMAGE ZONE ── */}
+//         {/* UPDATED: cool neutral bg so product images pop cleanly */}
+//         <div className="relative w-full aspect-[7/6] overflow-hidden rounded-t-[13px]"
+//           style={{ background: "#F2F0F7" }}>
+
+//           {/* Exiting image */}
+//           {sliding && showPrev !== null && (
+//             <img
+//               src={images[showPrev] || images[0]}
+//               alt={name}
+//               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
+//               style={{ zIndex: 1 }}
+//             />
+//           )}
+
+//           {/* Active / entering image */}
+//           <img
+//             src={images[showCurr] || images[0]}
+//             alt={name}
+//             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
+//             style={{
+//               zIndex: 2,
+//               animation: sliding
+//                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
+//                 : "none",
+//             }}
+//           />
+
+//           {/* UPDATED: Sale badge — champagne gradient, navy text */}
+//           {hasDiscount && (
+//             <div className="absolute top-2.5 left-2.5 z-[8] uppercase font-['Jost',sans-serif]"
+//               style={{
+//                 background: "linear-gradient(135deg, #B8923E, #D4A853)",
+//                 color: "#0A0A1C",
+//                 fontSize: 8, fontWeight: 800, letterSpacing: "0.2em",
+//                 padding: "3px 9px", borderRadius: 3,
+//               }}>
+//               {percentOff}% OFF
+//             </div>
+//           )}
+
+//           {/* UPDATED: Wishlist — clean white/navy toggle */}
+//           <button
+//             className="absolute top-2.5 right-2.5 z-[8] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer backdrop-blur-sm transition-all duration-200"
+//             style={{
+//               background: isWishlisted ? "rgba(212,168,83,0.18)" : "rgba(255,255,255,0.92)",
+//               border: isWishlisted ? "1px solid #D4A853" : "1px solid rgba(212,168,83,0.3)",
+//             }}
+//             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlistItem(id); }}
+//           >
+//             <svg width="13" height="13" viewBox="0 0 24 24" fill={isWishlisted ? "#D4A853" : "none"}>
+//               <path
+//                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+//                    2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+//                    C13.09 3.81 14.76 3 16.5 3
+//                    19.58 3 22 5.42 22 8.5
+//                    c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+//                 stroke="#D4A853" strokeWidth="1.5"
+//               />
+//             </svg>
+//           </button>
+
+//           {/* UPDATED: Dot indicators — champagne gold active, navy-dim inactive */}
+//           {images.length > 1 && (
+//             <div className="ddl-dots-wrap absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-[5px] z-10 opacity-0 transition-opacity duration-[250ms]">
+//               {images.slice(0, 5).map((_, i) => (
+//                 <button
+//                   key={i}
+//                   className="h-1 rounded-[2px] border-none p-0 cursor-pointer transition-[width,background] duration-300"
+//                   style={{
+//                     width: i === imgIndex ? 18 : 4,
+//                     background: i === imgIndex ? "#D4A853" : "rgba(212,168,83,0.3)",
+//                   }}
+//                   onMouseEnter={(e) => { e.preventDefault(); e.stopPropagation(); slideTo(i, i > imgIndex ? 1 : -1); }}
+//                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+//                 />
+//               ))}
+//             </div>
+//           )}
+
+//           {/* UPDATED: Quick view overlay — navy bg, champagne CTA */}
+//           <div
+//             className="ddl-overlay absolute bottom-0 left-0 right-0 z-[6] px-3.5 pb-3.5 pt-8 translate-y-full transition-transform duration-[320ms] ease-[cubic-bezier(.4,0,.2,1)]"
+//             style={{ background: "linear-gradient(to top, rgba(9,9,26,0.96) 0%, rgba(9,9,26,0.55) 60%, transparent 100%)" }}
+//             onClick={(e) => e.preventDefault()}
+//           >
+//             <Link to={`/product/${id}`} onClick={(e) => e.stopPropagation()}>
+//               <button className="ddl-quick-btn w-full py-[9px] border-none uppercase cursor-pointer rounded-[4px] relative overflow-hidden font-['Jost',sans-serif]"
+//                 style={{
+//                   background: "linear-gradient(110deg, #6A5020 0%, #B8923E 50%, #D4A853 100%)",
+//                   backgroundSize: "200% 200%",
+//                   backgroundPosition: "0% 50%",
+//                   color: "#0A0A1C",
+//                   fontSize: 9, fontWeight: 800, letterSpacing: "0.22em",
+//                   transition: "background-position 0.4s, box-shadow 0.3s",
+//                 }}>
+//                 View Product
+//               </button>
+//             </Link>
+//           </div>
+//         </div>
+
+//         {/* ── GOLD RULE ── */}
+//         {/* UPDATED: rule sits on navy, not brown */}
+//         <div className="relative h-px overflow-hidden" style={{ background: "#0A0A1C" }}>
+//           <div className="ddl-gold-line" />
+//         </div>
+
+//         {/* ── BODY ── */}
+//         <div className="px-[14px] pt-2.5 pb-3">
+
+//           {/* UPDATED: product name — warm ivory on navy */}
+//           <p className="ddl-name font-['Jost',sans-serif] text-[13px] font-normal leading-[1.45] mb-1 tracking-[0.02em] line-clamp-2 transition-colors duration-[250ms]"
+//             style={{ color: "#E8DCC8" }}>
+//             {name}
+//           </p>
+
+//           {/* UPDATED: review count — neutral warm grey */}
+//           <div className="flex items-center gap-1.5 mb-1.5">
+//             <div className="flex gap-0.5">{renderStars(avgRating)}</div>
+//             <span className="text-[10px] font-['Georgia',serif]" style={{ color: "#8A7A6A" }}>
+//               ({reviews.length})
+//             </span>
+//           </div>
+
+//           {/* UPDATED: divider — champagne gold at low opacity */}
+//           <div className="h-px mb-1.5" style={{ background: "rgba(212,168,83,0.12)" }} />
+
+//           {/* UPDATED: price display — champagne gold, cool strikethrough */}
+//           <div className="flex items-baseline gap-[7px] flex-wrap">
+//             {hasDiscount ? (
+//               <>
+//                 <span className="font-['Jost',sans-serif] text-base font-bold" style={{ color: "#D4A853" }}>
+//                   {currency}{discountedPriceValue.toFixed(2)}
+//                 </span>
+//                 <span className="text-[11px] line-through font-['Jost',sans-serif]" style={{ color: "#5A5060" }}>
+//                   {currency}{price}
+//                 </span>
+//                 <span className="text-[9px] font-bold font-['Jost',sans-serif] tracking-[0.18em] px-1.5 py-0.5 rounded-[2px]"
+//                   style={{
+//                     color: "#D4A853",
+//                     background: "rgba(212,168,83,0.1)",
+//                     border: "1px solid rgba(212,168,83,0.22)",
+//                   }}>
+//                   –{percentOff}%
+//                 </span>
+//               </>
+//             ) : (
+//               <span className="font-['Jost',sans-serif] text-base font-bold" style={{ color: "#D4A853" }}>
+//                 {currency}{price}
+//               </span>
+//             )}
+//           </div>
+
+//           {/* UPDATED: footer row — muted gold label + dim arrow that brightens on hover */}
+//           <div className="flex justify-between items-center mt-2">
+//             <span className="text-[9px] tracking-[0.25em] uppercase font-['Georgia',serif]" style={{ color: "#6A5E50" }}>
+//               Premium Leather
+//             </span>
+//             <span className="ddl-arrow text-base inline-block transition-[color,transform] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)]"
+//               style={{ color: "rgba(212,168,83,0.35)" }}>
+//               →
+//             </span>
+//           </div>
+//         </div>
+//       </Link>
+//     </>
+//   );
+// };
+
+// export default ProductItem;
+
+
+
+
+// import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
+// import { ShopContext } from "../context/ShopContext";
+// import { Link } from "react-router-dom";
+
+// /*
+//   ═══════════════════════════════════════════════
+//   LIGHT MODE — ProductItem.jsx
+//   ═══════════════════════════════════════════════
+//   card bg:        #FFFFFF  pure white
+//   card border:    rgba(99,102,241,0.15)  soft indigo
+//   card hover:     rgba(99,102,241,0.35) border + indigo shadow
+//   image bg:       #FFFFFF  white — matches product photos
+//   name text:      #1E1B4B  deep navy-indigo
+//   name hover:     #6366F1  indigo
+//   muted text:     #6B7280  cool grey
+//   price:          #4338CA  deep indigo
+//   strike:         #9CA3AF  light grey
+//   badge bg:       #EEF2FF → #6366F1  indigo pill
+//   divider:        rgba(99,102,241,0.1)
+//   star active:    #6366F1  indigo
+//   star empty:     #E0E7FF  pale indigo
+//   overlay bg:     rgba(30,27,75,0.92) → transparent  navy
+//   quick btn:      indigo gradient
+//   arrow dim:      rgba(99,102,241,0.3)  → #6366F1 hover
+//   wishlist:       indigo heart
+//   dot active:     #6366F1
+//   dot inactive:   rgba(99,102,241,0.25)
+//   gold line:      #6366F1 → #818CF8 → #4338CA  (indigo shimmer)
+//   ═══════════════════════════════════════════════
+// */
+
+// const ANIM = `
+//   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+//   @keyframes ddlGlow {
+//     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
+//     50%      { opacity:1; filter: blur(0.5px) brightness(1.4); }
+//   }
+//   @keyframes ddlSlideInFwd {
+//     from { opacity:0; transform: translateX(36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+//   @keyframes ddlSlideInBack {
+//     from { opacity:0; transform: translateX(-36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+
+//   .ddl-gold-line {
+//     position: absolute; top: 0; left: 0;
+//     width: 100%; height: 1px;
+//     background: linear-gradient(90deg,
+//       transparent 0%, #4338CA 20%, #6366F1 45%,
+//       #818CF8 50%, #6366F1 55%, #4338CA 80%, transparent 100%
+//     );
+//     transform: scaleX(0) translateZ(0);
+//     transform-origin: left center;
+//     transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+//     will-change: transform;
+//   }
+//   .ddl-card:hover .ddl-gold-line {
+//     transform: scaleX(1) translateZ(0);
+//     animation: ddlGlow 1.4s ease 0.45s infinite;
+//   }
+//   .ddl-card:hover .ddl-dots-wrap { opacity: 1; }
+//   .ddl-card:hover .ddl-overlay   { transform: translateY(0); }
+//   .ddl-card:hover .ddl-name      { color: #6366F1 !important; }
+//   .ddl-card:hover .ddl-arrow     { color: #6366F1 !important; transform: translateX(4px); }
+//   .ddl-card:hover {
+//     border-color: rgba(99,102,241,0.4) !important;
+//     transform: translateY(-6px);
+//     box-shadow: 0 20px 48px rgba(99,102,241,0.14), 0 0 0 1px rgba(99,102,241,0.12);
+//   }
+
+//   .ddl-slide-img {
+//     width: 100%; height: 100%;
+//     object-fit: contain; padding: 10px;
+//     position: absolute; inset: 0;
+//     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
+//     will-change: transform, opacity;
+//   }
+//   .ddl-slide-img.enter-fwd  { opacity: 0; transform: translateX(40px) scale(.97); }
+//   .ddl-slide-img.enter-back { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.active     { opacity: 1; transform: translateX(0) scale(1); }
+//   .ddl-slide-img.exit-fwd   { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.exit-back  { opacity: 0; transform: translateX(40px) scale(.97); }
+
+//   .ddl-quick-btn::before {
+//     content: ''; position: absolute;
+//     top: -50%; left: -60%; width: 28%; height: 200%;
+//     background: rgba(255,255,255,0.2); transform: skewX(-20deg);
+//     transition: left .5s ease;
+//   }
+//   .ddl-quick-btn:hover::before { left: 120%; }
+//   .ddl-quick-btn:hover {
+//     background-position: 100% 50%;
+//     box-shadow: 0 4px 18px rgba(99,102,241,0.35);
+//   }
+// `;
+
+// const ProductItem = ({ id, image, name, price, discountPrice }) => {
+//   const { currency, getProductReviews, toggleWishlistItem, wishlist } = useContext(ShopContext);
+
+//   const [reviews, setReviews] = useState([]);
+//   const [avgRating, setAvgRating] = useState(0);
+//   const [hovered, setHovered] = useState(false);
+//   const [imgIndex, setImgIndex] = useState(0);
+//   const [sliding, setSliding] = useState(false);
+//   const [slideDir, setSlideDir] = useState(1);
+//   const [displayIdx, setDisplayIdx] = useState(0);
+//   const autoRef = useRef(null);
+//   const images = Array.isArray(image) ? image : [image];
+
+//   useEffect(() => { loadReviews(); }, [id]);
+
+//   const loadReviews = async () => {
+//     const data = await getProductReviews(id);
+//     setReviews(data || []);
+//     if (data?.length > 0)
+//       setAvgRating(data.reduce((s, r) => s + r.rating, 0) / data.length);
+//   };
+
+//   const slideTo = useCallback((nextIdx, dir = 1) => {
+//     if (sliding || nextIdx === imgIndex) return;
+//     setSlideDir(dir);
+//     setSliding(true);
+//     setTimeout(() => { setImgIndex(nextIdx); setDisplayIdx(nextIdx); setSliding(false); }, 320);
+//   }, [sliding, imgIndex]);
+
+//   useEffect(() => {
+//     if (hovered && images.length > 1) {
+//       autoRef.current = setInterval(() => {
+//         setImgIndex(prev => {
+//           const next = (prev + 1) % images.length;
+//           setSlideDir(1);
+//           setSliding(true);
+//           setTimeout(() => { setDisplayIdx(next); setSliding(false); }, 320);
+//           return next;
+//         });
+//       }, 1800);
+//     } else {
+//       clearInterval(autoRef.current);
+//       if (!hovered) slideTo(0, -1);
+//     }
+//     return () => clearInterval(autoRef.current);
+//   }, [hovered, images.length]);
+
+//   const isWishlisted = Array.isArray(wishlist) ? wishlist.some(item => item.productId === id) : false;
+//   const percentOff = Number(discountPrice) || 0;
+//   const isValidDiscount = percentOff > 0 && percentOff < 100;
+//   const discountedPriceValue = isValidDiscount ? price - (price * percentOff) / 100 : price;
+//   const hasDiscount = isValidDiscount;
+
+//   const renderStars = (rating) =>
+//     [...Array(5)].map((_, i) => {
+//       const full = i < Math.floor(rating);
+//       const half = !full && i < rating;
+//       return (
+//         <span key={i} style={{ fontSize: 10, color: full || half ? "#6366F1" : "#C7D2FE", transition: "color .2s" }}>
+//           {full ? "★" : half ? "⯨" : "☆"}
+//         </span>
+//       );
+//     });
+
+//   const showPrev = sliding ? displayIdx : null;
+//   const showCurr = sliding ? imgIndex : displayIdx;
+
+//   return (
+//     <>
+//       <style>{ANIM}</style>
+
+//       <Link
+//         to={`/product/${id}`}
+//         onClick={() => window.scrollTo(0, 0)}
+//         className="ddl-card block no-underline cursor-pointer relative rounded-[14px] overflow-hidden transition-[border-color,transform,box-shadow] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)]"
+//         style={{
+//           background: "#FFFFFF",
+//           border: "1px solid rgba(99,102,241,0.15)",
+//           fontFamily: "'Montserrat', sans-serif",
+//           boxShadow: "0 2px 12px rgba(99,102,241,0.06)",
+//         }}
+//         onMouseEnter={() => setHovered(true)}
+//         onMouseLeave={() => setHovered(false)}
+//       >
+//         {/* ── IMAGE ZONE — pure white bg so product images blend seamlessly ── */}
+//         <div className="relative w-full aspect-[7/6] overflow-hidden rounded-t-[13px]"
+//           style={{ background: "#FFFFFF" }}>
+
+//           {sliding && showPrev !== null && (
+//             <img src={images[showPrev] || images[0]} alt={name}
+//               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
+//               style={{ zIndex: 1 }} />
+//           )}
+
+//           <img src={images[showCurr] || images[0]} alt={name}
+//             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
+//             style={{
+//               zIndex: 2,
+//               animation: sliding
+//                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
+//                 : "none",
+//             }} />
+
+//           {/* Sale badge — indigo pill */}
+//           {hasDiscount && (
+//             <div className="absolute top-2.5 left-2.5 z-[8]"
+//               style={{
+//                 background: "linear-gradient(135deg, #4338CA, #6366F1)",
+//                 color: "#ffffff",
+//                 fontSize: 8, fontWeight: 700, letterSpacing: "0.2em",
+//                 padding: "3px 9px", borderRadius: 3,
+//                 fontFamily: "'Montserrat', sans-serif",
+//               }}>
+//               {percentOff}% OFF
+//             </div>
+//           )}
+
+//           {/* Wishlist */}
+//           <button
+//             className="absolute top-2.5 right-2.5 z-[8] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all duration-200"
+//             style={{
+//               background: isWishlisted ? "rgba(99,102,241,0.12)" : "rgba(255,255,255,0.95)",
+//               border: isWishlisted ? "1px solid #6366F1" : "1px solid rgba(99,102,241,0.25)",
+//               boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+//             }}
+//             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlistItem(id); }}
+//           >
+//             <svg width="13" height="13" viewBox="0 0 24 24" fill={isWishlisted ? "#6366F1" : "none"}>
+//               <path
+//                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+//                 stroke="#6366F1" strokeWidth="1.5"
+//               />
+//             </svg>
+//           </button>
+
+//           {/* Dot indicators */}
+//           {images.length > 1 && (
+//             <div className="ddl-dots-wrap absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-[5px] z-10 opacity-0 transition-opacity duration-[250ms]">
+//               {images.slice(0, 5).map((_, i) => (
+//                 <button key={i}
+//                   className="h-1 rounded-[2px] border-none p-0 cursor-pointer transition-[width,background] duration-300"
+//                   style={{
+//                     width: i === imgIndex ? 18 : 4,
+//                     background: i === imgIndex ? "#6366F1" : "rgba(99,102,241,0.25)",
+//                   }}
+//                   onMouseEnter={(e) => { e.preventDefault(); e.stopPropagation(); slideTo(i, i > imgIndex ? 1 : -1); }}
+//                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+//                 />
+//               ))}
+//             </div>
+//           )}
+
+//           {/* Quick view overlay — deep navy */}
+//           <div
+//             className="ddl-overlay absolute bottom-0 left-0 right-0 z-[6] px-3.5 pb-3.5 pt-8 translate-y-full transition-transform duration-[320ms] ease-[cubic-bezier(.4,0,.2,1)]"
+//             style={{ background: "linear-gradient(to top, rgba(30,27,75,0.92) 0%, rgba(30,27,75,0.5) 60%, transparent 100%)" }}
+//             onClick={(e) => e.preventDefault()}
+//           >
+//             <Link to={`/product/${id}`} onClick={(e) => e.stopPropagation()}>
+//               <button className="ddl-quick-btn w-full py-[9px] border-none uppercase cursor-pointer rounded-[4px] relative overflow-hidden"
+//                 style={{
+//                   background: "linear-gradient(110deg, #4338CA 0%, #6366F1 50%, #818CF8 100%)",
+//                   backgroundSize: "200% 200%",
+//                   backgroundPosition: "0% 50%",
+//                   color: "#ffffff",
+//                   fontSize: 9, fontWeight: 700, letterSpacing: "0.22em",
+//                   fontFamily: "'Montserrat', sans-serif",
+//                   transition: "background-position 0.4s, box-shadow 0.3s",
+//                 }}>
+//                 View Product
+//               </button>
+//             </Link>
+//           </div>
+//         </div>
+
+//         {/* ── INDIGO RULE ── */}
+//         <div className="relative h-px overflow-hidden" style={{ background: "#f5f5ff" }}>
+//           <div className="ddl-gold-line" />
+//         </div>
+
+//         {/* ── BODY — white bg, dark text ── */}
+//         <div className="px-[14px] pt-2.5 pb-3" style={{ background: "#FFFFFF" }}>
+
+//           <p className="ddl-name text-[13px] font-medium leading-[1.45] mb-1 tracking-[0.01em] line-clamp-2 transition-colors duration-[250ms]"
+//             style={{ color: "#1E1B4B", fontFamily: "'Montserrat', sans-serif" }}>
+//             {name}
+//           </p>
+
+//           <div className="flex items-center gap-1.5 mb-1.5">
+//             <div className="flex gap-0.5">{renderStars(avgRating)}</div>
+//             <span style={{ fontSize: 10, color: "#9CA3AF", fontFamily: "'Montserrat', sans-serif" }}>
+//               ({reviews.length})
+//             </span>
+//           </div>
+
+//           <div className="h-px mb-1.5" style={{ background: "rgba(99,102,241,0.1)" }} />
+
+//           <div className="flex items-baseline gap-[7px] flex-wrap">
+//             {hasDiscount ? (
+//               <>
+//                 <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+//                   {currency}{discountedPriceValue.toFixed(2)}
+//                 </span>
+//                 <span style={{ fontSize: 11, color: "#9CA3AF", textDecoration: "line-through", fontFamily: "'Montserrat', sans-serif" }}>
+//                   {currency}{price}
+//                 </span>
+//                 <span style={{
+//                   fontSize: 9, fontWeight: 700, letterSpacing: "0.18em",
+//                   color: "#6366F1", background: "rgba(99,102,241,0.08)",
+//                   border: "1px solid rgba(99,102,241,0.18)", borderRadius: 2,
+//                   padding: "1px 6px", fontFamily: "'Montserrat', sans-serif",
+//                 }}>
+//                   –{percentOff}%
+//                 </span>
+//               </>
+//             ) : (
+//               <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+//                 {currency}{price}
+//               </span>
+//             )}
+//           </div>
+
+//           <div className="flex justify-between items-center mt-2">
+//             <span style={{ fontSize: 9, letterSpacing: "0.25em", color: "#9CA3AF", textTransform: "uppercase", fontFamily: "'Montserrat', sans-serif" }}>
+//               Premium Leather
+//             </span>
+//             <span className="ddl-arrow text-base inline-block transition-[color,transform] duration-[350ms]"
+//               style={{ color: "rgba(99,102,241,0.3)" }}>
+//               →
+//             </span>
+//           </div>
+//         </div>
+//       </Link>
+//     </>
+//   );
+// };
+
+// export default ProductItem;
+
+
+
+
+
+// import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
+// import { ShopContext } from "../context/ShopContext";
+// import { Link } from "react-router-dom";
+
+// const ANIM = `
+//   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+//   @keyframes ddlGlow {
+//     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
+//     50%      { opacity:1; filter: blur(0.5px) brightness(1.5); }
+//   }
+//   @keyframes ddlSlideInFwd {
+//     from { opacity:0; transform: translateX(36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+//   @keyframes ddlSlideInBack {
+//     from { opacity:0; transform: translateX(-36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+
+//   .ddl-gold-line {
+//     position: absolute; top: 0; left: 0;
+//     width: 100%; height: 1.5px;
+//     background: linear-gradient(90deg,
+//       transparent 0%, #4338CA 20%, #6366F1 45%,
+//       #818CF8 50%, #6366F1 55%, #4338CA 80%, transparent 100%
+//     );
+//     transform: scaleX(0) translateZ(0);
+//     transform-origin: left center;
+//     transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+//     will-change: transform;
+//   }
+
+//   /* FIX 1: All hover effects via CSS — no JS needed for card-level transitions */
+//   .ddl-card:hover .ddl-gold-line {
+//     transform: scaleX(1) translateZ(0);
+//     animation: ddlGlow 1.4s ease 0.45s infinite;
+//   }
+//   .ddl-card:hover .ddl-dots-wrap { opacity: 1; }
+//   .ddl-card:hover .ddl-overlay   { transform: translateY(0); }
+//   .ddl-card:hover .ddl-name      { color: #6366F1; }
+//   .ddl-card:hover .ddl-arrow     { color: #6366F1; transform: translateX(4px); }
+//   .ddl-card {
+//     transition: border-color 0.35s cubic-bezier(.16,1,.3,1),
+//                 transform 0.35s cubic-bezier(.16,1,.3,1),
+//                 box-shadow 0.35s cubic-bezier(.16,1,.3,1);
+//   }
+//   .ddl-card:hover {
+//     border-color: rgba(99,102,241,0.45) !important;
+//     transform: translateY(-6px);
+//     box-shadow: 0 20px 48px rgba(99,102,241,0.13), 0 0 0 1px rgba(99,102,241,0.1);
+//   }
+
+//   .ddl-slide-img {
+//     width: 100%; height: 100%;
+//     object-fit: contain; padding: 12px;
+//     position: absolute; inset: 0;
+//     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
+//     will-change: transform, opacity;
+//   }
+//   .ddl-slide-img.enter-fwd  { opacity: 0; transform: translateX(40px) scale(.97); }
+//   .ddl-slide-img.enter-back { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.active     { opacity: 1; transform: translateX(0) scale(1); }
+//   .ddl-slide-img.exit-fwd   { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.exit-back  { opacity: 0; transform: translateX(40px) scale(.97); }
+
+//   /* FIX 3: Stars bigger — 13px */
+//   .ddl-star { font-size: 13px; transition: color .2s; }
+
+//   /* FIX 2: Quick view button — lighter overlay, clean btn */
+//   .ddl-overlay {
+//     position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+//     padding: 12px 14px 14px;
+//     transform: translateY(100%);
+//     transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+//     /* FIX 2: Much lighter gradient — just enough to darken image bottom */
+//     background: linear-gradient(to top,
+//       rgba(30,27,75,0.72) 0%,
+//       rgba(30,27,75,0.28) 55%,
+//       transparent 100%
+//     );
+//   }
+
+//   .ddl-quick-btn {
+//     width: 100%; padding: 10px 0;
+//     background: linear-gradient(110deg, #4338CA 0%, #6366F1 55%, #818CF8 100%);
+//     background-size: 200% 200%;
+//     background-position: 0% 50%;
+//     border: none; cursor: pointer;
+//     border-radius: 5px;
+//     color: #fff;
+//     font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+//     font-family: 'Montserrat', sans-serif;
+//     text-transform: uppercase;
+//     position: relative; overflow: hidden;
+//     transition: background-position 0.4s ease, box-shadow 0.3s ease;
+//   }
+//   .ddl-quick-btn::before {
+//     content: '';
+//     position: absolute; top: -50%; left: -60%;
+//     width: 28%; height: 200%;
+//     background: rgba(255,255,255,0.22);
+//     transform: skewX(-20deg);
+//     transition: left .5s ease;
+//   }
+//   .ddl-quick-btn:hover::before { left: 120%; }
+//   .ddl-quick-btn:hover {
+//     background-position: 100% 50%;
+//     box-shadow: 0 4px 18px rgba(99,102,241,0.4);
+//   }
+
+//   /* FIX 4: Info section gradient */
+//   .ddl-body {
+//     background: linear-gradient(160deg, #FAFAFE 0%, #F4F4FF 60%, #EEF0FF 100%);
+//     padding: 12px 14px 14px;
+//   }
+
+//   .ddl-name {
+//     color: #1E1B4B;
+//     font-family: 'Montserrat', sans-serif;
+//     font-size: 13px;
+//     font-weight: 500;
+//     line-height: 1.45;
+//     margin-bottom: 6px;
+//     letter-spacing: 0.01em;
+//     display: -webkit-box;
+//     -webkit-line-clamp: 2;
+//     -webkit-box-orient: vertical;
+//     overflow: hidden;
+//     transition: color 0.25s;
+//   }
+//   .ddl-arrow {
+//     font-size: 16px;
+//     display: inline-block;
+//     color: rgba(99,102,241,0.3);
+//     transition: color 0.35s cubic-bezier(.16,1,.3,1),
+//                 transform 0.35s cubic-bezier(.16,1,.3,1);
+//   }
+//   .ddl-dots-wrap {
+//     opacity: 0;
+//     transition: opacity 0.25s;
+//   }
+// `;
+
+// const ProductItem = ({ id, image, name, price, discountPrice }) => {
+//   const { currency, getProductReviews, toggleWishlistItem, wishlist } = useContext(ShopContext);
+
+//   const [reviews, setReviews] = useState([]);
+//   const [avgRating, setAvgRating] = useState(0);
+//   const [hovered, setHovered] = useState(false);
+//   const [imgIndex, setImgIndex] = useState(0);
+//   const [sliding, setSliding] = useState(false);
+//   const [slideDir, setSlideDir] = useState(1);
+//   const [displayIdx, setDisplayIdx] = useState(0);
+//   const autoRef = useRef(null);
+//   const images = Array.isArray(image) ? image : [image];
+
+//   useEffect(() => { loadReviews(); }, [id]);
+
+//   const loadReviews = async () => {
+//     const data = await getProductReviews(id);
+//     setReviews(data || []);
+//     if (data?.length > 0)
+//       setAvgRating(data.reduce((s, r) => s + r.rating, 0) / data.length);
+//   };
+
+//   const slideTo = useCallback((nextIdx, dir = 1) => {
+//     if (sliding || nextIdx === imgIndex) return;
+//     setSlideDir(dir);
+//     setSliding(true);
+//     setTimeout(() => { setImgIndex(nextIdx); setDisplayIdx(nextIdx); setSliding(false); }, 320);
+//   }, [sliding, imgIndex]);
+
+//   useEffect(() => {
+//     if (hovered && images.length > 1) {
+//       autoRef.current = setInterval(() => {
+//         setImgIndex(prev => {
+//           const next = (prev + 1) % images.length;
+//           setSlideDir(1);
+//           setSliding(true);
+//           setTimeout(() => { setDisplayIdx(next); setSliding(false); }, 320);
+//           return next;
+//         });
+//       }, 1800);
+//     } else {
+//       clearInterval(autoRef.current);
+//       if (!hovered) slideTo(0, -1);
+//     }
+//     return () => clearInterval(autoRef.current);
+//   }, [hovered, images.length]);
+
+//   const isWishlisted = Array.isArray(wishlist) ? wishlist.some(item => item.productId === id) : false;
+//   const percentOff = Number(discountPrice) || 0;
+//   const isValidDiscount = percentOff > 0 && percentOff < 100;
+//   const discountedPriceValue = isValidDiscount ? price - (price * percentOff) / 100 : price;
+//   const hasDiscount = isValidDiscount;
+
+//   /* FIX 3: Stars at 13px using .ddl-star class */
+//   const renderStars = (rating) =>
+//     [...Array(5)].map((_, i) => {
+//       const full = i < Math.floor(rating);
+//       const half = !full && i < rating;
+//       return (
+//         <span key={i} className="ddl-star"
+//           style={{ color: full || half ? "#6366F1" : "#C7D2FE" }}>
+//           {full ? "★" : half ? "⯨" : "☆"}
+//         </span>
+//       );
+//     });
+
+//   const showPrev = sliding ? displayIdx : null;
+//   const showCurr = sliding ? imgIndex : displayIdx;
+
+//   return (
+//     <>
+//       <style>{ANIM}</style>
+
+//       <Link
+//         to={`/product/${id}`}
+//         onClick={() => window.scrollTo(0, 0)}
+//         className="ddl-card block no-underline cursor-pointer relative rounded-[14px] overflow-hidden"
+//         style={{
+//           background: "#FFFFFF",
+//           border: "1px solid rgba(99,102,241,0.14)",
+//           boxShadow: "0 2px 12px rgba(99,102,241,0.06)",
+//           fontFamily: "'Montserrat', sans-serif",
+//         }}
+//         onMouseEnter={() => setHovered(true)}
+//         onMouseLeave={() => setHovered(false)}
+//       >
+//         {/* ── IMAGE ZONE — pure white ── */}
+//         <div className="relative w-full aspect-[7/6] overflow-hidden rounded-t-[13px]"
+//           style={{ background: "#FFFFFF" }}>
+
+//           {sliding && showPrev !== null && (
+//             <img src={images[showPrev] || images[0]} alt={name}
+//               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
+//               style={{ zIndex: 1 }} />
+//           )}
+
+//           <img src={images[showCurr] || images[0]} alt={name}
+//             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
+//             style={{
+//               zIndex: 2,
+//               animation: sliding
+//                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
+//                 : "none",
+//             }} />
+
+//           {/* Sale badge */}
+//           {hasDiscount && (
+//             <div style={{
+//               position: "absolute", top: 10, left: 10, zIndex: 8,
+//               background: "linear-gradient(135deg, #4338CA, #6366F1)",
+//               color: "#fff", fontSize: 8, fontWeight: 700,
+//               letterSpacing: "0.2em", padding: "3px 9px", borderRadius: 3,
+//               fontFamily: "'Montserrat', sans-serif",
+//             }}>
+//               {percentOff}% OFF
+//             </div>
+//           )}
+
+//           {/* Wishlist — FIX 1: pure CSS hover via inline onMouse */}
+//           <button
+//             style={{
+//               position: "absolute", top: 10, right: 10, zIndex: 8,
+//               width: 32, height: 32, borderRadius: "50%",
+//               display: "flex", alignItems: "center", justifyContent: "center",
+//               cursor: "pointer",
+//               background: isWishlisted ? "rgba(99,102,241,0.12)" : "rgba(255,255,255,0.95)",
+//               border: isWishlisted ? "1px solid #6366F1" : "1px solid rgba(99,102,241,0.22)",
+//               boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
+//               transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+//             }}
+//             onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.12)"; }}
+//             onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
+//             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlistItem(id); }}
+//           >
+//             <svg width="14" height="14" viewBox="0 0 24 24" fill={isWishlisted ? "#6366F1" : "none"}>
+//               <path
+//                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+//                 stroke="#6366F1" strokeWidth="1.5"
+//               />
+//             </svg>
+//           </button>
+
+//           {/* Dot indicators */}
+//           {images.length > 1 && (
+//             <div className="ddl-dots-wrap" style={{
+//               position: "absolute", bottom: 10,
+//               left: "50%", transform: "translateX(-50%)",
+//               display: "flex", gap: 5, zIndex: 10,
+//             }}>
+//               {images.slice(0, 5).map((_, i) => (
+//                 <button key={i} style={{
+//                   height: 4, border: "none", padding: 0, cursor: "pointer",
+//                   borderRadius: 2,
+//                   width: i === imgIndex ? 18 : 4,
+//                   background: i === imgIndex ? "#6366F1" : "rgba(99,102,241,0.25)",
+//                   transition: "width 0.3s, background 0.3s",
+//                 }}
+//                   onMouseEnter={(e) => { e.preventDefault(); e.stopPropagation(); slideTo(i, i > imgIndex ? 1 : -1); }}
+//                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+//                 />
+//               ))}
+//             </div>
+//           )}
+
+//           {/* FIX 2: Quick view overlay — lighter gradient */}
+//           <div className="ddl-overlay" onClick={(e) => e.preventDefault()}>
+//             <Link to={`/product/${id}`} onClick={(e) => e.stopPropagation()}>
+//               <button className="ddl-quick-btn">View Product</button>
+//             </Link>
+//           </div>
+//         </div>
+
+//         {/* ── INDIGO RULE ── */}
+//         <div style={{ position: "relative", height: 1, overflow: "hidden", background: "#EEEEFF" }}>
+//           <div className="ddl-gold-line" />
+//         </div>
+
+//         {/* FIX 4: Info section — soft lavender gradient */}
+//         <div className="ddl-body">
+
+//           <p className="ddl-name">{name}</p>
+
+//           {/* FIX 3: Stars — 13px, more visible */}
+//           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+//             <div style={{ display: "flex", gap: 2 }}>{renderStars(avgRating)}</div>
+//             <span style={{ fontSize: 11, color: "#9CA3AF", fontFamily: "'Montserrat', sans-serif" }}>
+//               ({reviews.length})
+//             </span>
+//           </div>
+
+//           <div style={{ height: 1, background: "rgba(99,102,241,0.1)", marginBottom: 8 }} />
+
+//           <div style={{ display: "flex", alignItems: "baseline", gap: 7, flexWrap: "wrap" }}>
+//             {hasDiscount ? (
+//               <>
+//                 <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+//                   {currency}{discountedPriceValue.toFixed(2)}
+//                 </span>
+//                 <span style={{ fontSize: 11, color: "#9CA3AF", textDecoration: "line-through", fontFamily: "'Montserrat', sans-serif" }}>
+//                   {currency}{price}
+//                 </span>
+//                 <span style={{
+//                   fontSize: 9, fontWeight: 700, letterSpacing: "0.18em",
+//                   color: "#6366F1", background: "rgba(99,102,241,0.08)",
+//                   border: "1px solid rgba(99,102,241,0.18)", borderRadius: 2,
+//                   padding: "1px 6px", fontFamily: "'Montserrat', sans-serif",
+//                 }}>
+//                   –{percentOff}%
+//                 </span>
+//               </>
+//             ) : (
+//               <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+//                 {currency}{price}
+//               </span>
+//             )}
+//           </div>
+
+//           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+//             <span style={{ fontSize: 9, letterSpacing: "0.25em", color: "#9CA3AF", textTransform: "uppercase", fontFamily: "'Montserrat', sans-serif" }}>
+//               Premium Leather
+//             </span>
+//             <span className="ddl-arrow">→</span>
+//           </div>
+//         </div>
+//       </Link>
+//     </>
+//   );
+// };
+
+// export default ProductItem;
+
+
+
+// import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
+// import { ShopContext } from "../context/ShopContext";
+// import { Link } from "react-router-dom";
+
+// const ANIM = `
+//   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+//   @keyframes ddlGlow {
+//     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
+//     50%      { opacity:1; filter: blur(0.5px) brightness(1.5); }
+//   }
+//   @keyframes ddlSlideInFwd {
+//     from { opacity:0; transform: translateX(36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+//   @keyframes ddlSlideInBack {
+//     from { opacity:0; transform: translateX(-36px) scale(.97); }
+//     to   { opacity:1; transform: translateX(0) scale(1); }
+//   }
+
+//   .ddl-gold-line {
+//     position: absolute; top: 0; left: 0;
+//     width: 100%; height: 1.5px;
+//     background: linear-gradient(90deg,
+//       transparent 0%, #4338CA 20%, #6366F1 45%,
+//       #818CF8 50%, #6366F1 55%, #4338CA 80%, transparent 100%
+//     );
+//     transform: scaleX(0) translateZ(0);
+//     transform-origin: left center;
+//     transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+//     will-change: transform;
+//   }
+//   .ddl-card:hover .ddl-gold-line {
+//     transform: scaleX(1) translateZ(0);
+//     animation: ddlGlow 1.4s ease 0.45s infinite;
+//   }
+//   .ddl-card:hover .ddl-dots-wrap { opacity: 1; }
+//   .ddl-card:hover .ddl-overlay   { transform: translateY(0); }
+//   .ddl-card:hover .ddl-name      { color: #6366F1; }
+//   .ddl-card:hover .ddl-arrow     { color: #6366F1; transform: translateX(4px); }
+//   .ddl-card {
+//     transition: border-color 0.35s cubic-bezier(.16,1,.3,1),
+//                 transform 0.35s cubic-bezier(.16,1,.3,1),
+//                 box-shadow 0.35s cubic-bezier(.16,1,.3,1);
+//   }
+//   .ddl-card:hover {
+//     border-color: rgba(99,102,241,0.45) !important;
+//     transform: translateY(-6px);
+//     box-shadow: 0 20px 48px rgba(99,102,241,0.13), 0 0 0 1px rgba(99,102,241,0.1);
+//   }
+
+//   .ddl-slide-img {
+//     width: 100%; height: 100%;
+//     object-fit: contain; padding: 12px;
+//     position: absolute; inset: 0;
+//     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
+//     will-change: transform, opacity;
+//   }
+//   .ddl-slide-img.enter-fwd  { opacity: 0; transform: translateX(40px) scale(.97); }
+//   .ddl-slide-img.enter-back { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.active     { opacity: 1; transform: translateX(0) scale(1); }
+//   .ddl-slide-img.exit-fwd   { opacity: 0; transform: translateX(-40px) scale(.97); }
+//   .ddl-slide-img.exit-back  { opacity: 0; transform: translateX(40px) scale(.97); }
+
+//   .ddl-star { font-size: 13px; transition: color .2s; }
+
+//   /* FIX: overlay has NO dark gradient — just a clean frosted strip at the very bottom */
+//   .ddl-overlay {
+//     position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+//     padding: 10px 12px 12px;
+//     transform: translateY(100%);
+//     transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+//     background: transparent;
+//   }
+
+//   .ddl-quick-btn {
+//     width: 100%; padding: 10px 0;
+//     background: linear-gradient(110deg, #4338CA 0%, #6366F1 55%, #818CF8 100%);
+//     background-size: 200% 200%;
+//     background-position: 0% 50%;
+//     border: none; cursor: pointer;
+//     border-radius: 5px;
+//     color: #fff;
+//     font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+//     font-family: 'Montserrat', sans-serif;
+//     text-transform: uppercase;
+//     position: relative; overflow: hidden;
+//     transition: background-position 0.4s ease, box-shadow 0.3s ease;
+//     box-shadow: 0 2px 12px rgba(99,102,241,0.25);
+//   }
+//   .ddl-quick-btn::before {
+//     content: '';
+//     position: absolute; top: -50%; left: -60%;
+//     width: 28%; height: 200%;
+//     background: rgba(255,255,255,0.22);
+//     transform: skewX(-20deg);
+//     transition: left .5s ease;
+//   }
+//   .ddl-quick-btn:hover::before { left: 120%; }
+//   .ddl-quick-btn:hover {
+//     background-position: 100% 50%;
+//     box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+//   }
+
+//   /* FIX: info section — warm indigo-tinted gradient */
+//   .ddl-body {
+//     background: linear-gradient(160deg, #F8F8FF 0%, #F0F1FF 50%, #EAECff 100%);
+//     padding: 12px 14px 14px;
+//   }
+
+//   .ddl-name {
+//     color: #1E1B4B;
+//     font-family: 'Montserrat', sans-serif;
+//     font-size: 13px;
+//     font-weight: 500;
+//     line-height: 1.45;
+//     margin-bottom: 6px;
+//     letter-spacing: 0.01em;
+//     display: -webkit-box;
+//     -webkit-line-clamp: 2;
+//     -webkit-box-orient: vertical;
+//     overflow: hidden;
+//     transition: color 0.25s;
+//   }
+//   .ddl-arrow {
+//     font-size: 16px;
+//     display: inline-block;
+//     color: rgba(99,102,241,0.3);
+//     transition: color 0.35s cubic-bezier(.16,1,.3,1),
+//                 transform 0.35s cubic-bezier(.16,1,.3,1);
+//   }
+//   .ddl-dots-wrap {
+//     opacity: 0;
+//     transition: opacity 0.25s;
+//   }
+// `;
+
+// const ProductItem = ({ id, image, name, price, discountPrice }) => {
+//   const { currency, getProductReviews, toggleWishlistItem, wishlist } = useContext(ShopContext);
+
+//   const [reviews, setReviews] = useState([]);
+//   const [avgRating, setAvgRating] = useState(0);
+//   const [hovered, setHovered] = useState(false);
+//   const [imgIndex, setImgIndex] = useState(0);
+//   const [sliding, setSliding] = useState(false);
+//   const [slideDir, setSlideDir] = useState(1);
+//   const [displayIdx, setDisplayIdx] = useState(0);
+//   const autoRef = useRef(null);
+//   const images = Array.isArray(image) ? image : [image];
+
+//   useEffect(() => { loadReviews(); }, [id]);
+
+//   const loadReviews = async () => {
+//     const data = await getProductReviews(id);
+//     setReviews(data || []);
+//     if (data?.length > 0)
+//       setAvgRating(data.reduce((s, r) => s + r.rating, 0) / data.length);
+//   };
+
+//   const slideTo = useCallback((nextIdx, dir = 1) => {
+//     if (sliding || nextIdx === imgIndex) return;
+//     setSlideDir(dir);
+//     setSliding(true);
+//     setTimeout(() => { setImgIndex(nextIdx); setDisplayIdx(nextIdx); setSliding(false); }, 320);
+//   }, [sliding, imgIndex]);
+
+//   useEffect(() => {
+//     if (hovered && images.length > 1) {
+//       autoRef.current = setInterval(() => {
+//         setImgIndex(prev => {
+//           const next = (prev + 1) % images.length;
+//           setSlideDir(1); setSliding(true);
+//           setTimeout(() => { setDisplayIdx(next); setSliding(false); }, 320);
+//           return next;
+//         });
+//       }, 1800);
+//     } else {
+//       clearInterval(autoRef.current);
+//       if (!hovered) slideTo(0, -1);
+//     }
+//     return () => clearInterval(autoRef.current);
+//   }, [hovered, images.length]);
+
+//   const isWishlisted = Array.isArray(wishlist) ? wishlist.some(i => i.productId === id) : false;
+//   const percentOff = Number(discountPrice) || 0;
+//   const isValid = percentOff > 0 && percentOff < 100;
+//   const finalPrice = isValid ? price - (price * percentOff) / 100 : price;
+
+//   const renderStars = (rating) =>
+//     [...Array(5)].map((_, i) => {
+//       const full = i < Math.floor(rating), half = !full && i < rating;
+//       return (
+//         <span key={i} className="ddl-star" style={{ color: full || half ? "#6366F1" : "#C7D2FE" }}>
+//           {full ? "★" : half ? "⯨" : "☆"}
+//         </span>
+//       );
+//     });
+
+//   const showPrev = sliding ? displayIdx : null;
+//   const showCurr = sliding ? imgIndex : displayIdx;
+
+//   return (
+//     <>
+//       <style>{ANIM}</style>
+
+//       <Link
+//         to={`/product/${id}`}
+//         onClick={() => window.scrollTo(0, 0)}
+//         className="ddl-card block no-underline cursor-pointer relative rounded-[14px] overflow-hidden"
+//         style={{
+//           background: "#FFFFFF",
+//           border: "1px solid rgba(99,102,241,0.14)",
+//           boxShadow: "0 2px 12px rgba(99,102,241,0.06)",
+//           fontFamily: "'Montserrat', sans-serif",
+//         }}
+//         onMouseEnter={() => setHovered(true)}
+//         onMouseLeave={() => setHovered(false)}
+//       >
+//         {/* ── IMAGE ZONE — pure white, no shadow bleeding ── */}
+//         <div className="relative w-full aspect-[7/6] overflow-hidden rounded-t-[13px]"
+//           style={{ background: "#FFFFFF" }}>
+
+//           {sliding && showPrev !== null && (
+//             <img src={images[showPrev] || images[0]} alt={name}
+//               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
+//               style={{ zIndex: 1 }} />
+//           )}
+//           <img src={images[showCurr] || images[0]} alt={name}
+//             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
+//             style={{
+//               zIndex: 2,
+//               animation: sliding
+//                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
+//                 : "none",
+//             }} />
+
+//           {/* Sale badge */}
+//           {isValid && (
+//             <div style={{
+//               position: "absolute", top: 10, left: 10, zIndex: 8,
+//               background: "linear-gradient(135deg, #4338CA, #6366F1)",
+//               color: "#fff", fontSize: 8, fontWeight: 700,
+//               letterSpacing: "0.2em", padding: "3px 9px", borderRadius: 3,
+//               fontFamily: "'Montserrat', sans-serif",
+//             }}>
+//               {percentOff}% OFF
+//             </div>
+//           )}
+
+//           {/* Wishlist */}
+//           <button
+//             style={{
+//               position: "absolute", top: 10, right: 10, zIndex: 8,
+//               width: 32, height: 32, borderRadius: "50%",
+//               display: "flex", alignItems: "center", justifyContent: "center",
+//               cursor: "pointer",
+//               background: isWishlisted ? "rgba(99,102,241,0.12)" : "rgba(255,255,255,0.95)",
+//               border: isWishlisted ? "1px solid #6366F1" : "1px solid rgba(99,102,241,0.22)",
+//               boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
+//               transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+//             }}
+//             onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.12)"; }}
+//             onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
+//             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlistItem(id); }}
+//           >
+//             <svg width="14" height="14" viewBox="0 0 24 24" fill={isWishlisted ? "#6366F1" : "none"}>
+//               <path
+//                 d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+//                 stroke="#6366F1" strokeWidth="1.5"
+//               />
+//             </svg>
+//           </button>
+
+//           {/* Dots */}
+//           {images.length > 1 && (
+//             <div className="ddl-dots-wrap" style={{
+//               position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)",
+//               display: "flex", gap: 5, zIndex: 10,
+//             }}>
+//               {images.slice(0, 5).map((_, i) => (
+//                 <button key={i} style={{
+//                   height: 4, border: "none", padding: 0, cursor: "pointer", borderRadius: 2,
+//                   width: i === imgIndex ? 18 : 4,
+//                   background: i === imgIndex ? "#6366F1" : "rgba(99,102,241,0.25)",
+//                   transition: "width 0.3s, background 0.3s",
+//                 }}
+//                   onMouseEnter={(e) => { e.preventDefault(); e.stopPropagation(); slideTo(i, i > imgIndex ? 1 : -1); }}
+//                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+//                 />
+//               ))}
+//             </div>
+//           )}
+
+//           {/* FIX: View Product — NO dark overlay gradient, button only */}
+//           <div className="ddl-overlay" onClick={(e) => e.preventDefault()}>
+//             <Link to={`/product/${id}`} onClick={(e) => e.stopPropagation()}>
+//               <button className="ddl-quick-btn">View Product</button>
+//             </Link>
+//           </div>
+//         </div>
+
+//         {/* Indigo rule */}
+//         <div style={{ position: "relative", height: 1, overflow: "hidden", background: "#EEEEFF" }}>
+//           <div className="ddl-gold-line" />
+//         </div>
+
+//         {/* FIX: Info section — soft indigo-tinted gradient bg */}
+//         <div className="ddl-body">
+//           <p className="ddl-name">{name}</p>
+
+//           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+//             <div style={{ display: "flex", gap: 2 }}>{renderStars(avgRating)}</div>
+//             <span style={{ fontSize: 11, color: "#9CA3AF", fontFamily: "'Montserrat', sans-serif" }}>
+//               ({reviews.length})
+//             </span>
+//           </div>
+
+//           <div style={{ height: 1, background: "rgba(99,102,241,0.1)", marginBottom: 8 }} />
+
+//           <div style={{ display: "flex", alignItems: "baseline", gap: 7, flexWrap: "wrap" }}>
+//             {isValid ? (
+//               <>
+//                 <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+//                   {currency}{finalPrice.toFixed(2)}
+//                 </span>
+//                 <span style={{ fontSize: 11, color: "#9CA3AF", textDecoration: "line-through", fontFamily: "'Montserrat', sans-serif" }}>
+//                   {currency}{price}
+//                 </span>
+//                 <span style={{
+//                   fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", color: "#6366F1",
+//                   background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)",
+//                   borderRadius: 2, padding: "1px 6px", fontFamily: "'Montserrat', sans-serif",
+//                 }}>
+//                   –{percentOff}%
+//                 </span>
+//               </>
+//             ) : (
+//               <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+//                 {currency}{price}
+//               </span>
+//             )}
+//           </div>
+
+//           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+//             <span style={{ fontSize: 9, letterSpacing: "0.25em", color: "#9CA3AF", textTransform: "uppercase", fontFamily: "'Montserrat', sans-serif" }}>
+//               Premium Leather
+//             </span>
+//             <span className="ddl-arrow">→</span>
+//           </div>
+//         </div>
+//       </Link>
+//     </>
+//   );
+// };
+
+// export default ProductItem;
+
+
+
+
+
 import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 
-/* ── Keyframes only — cannot be replaced by Tailwind ── */
 const ANIM = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
   @keyframes ddlGlow {
     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
-    50%      { opacity:1; filter: blur(0.6px) brightness(1.6); }
+    50%      { opacity:1; filter: blur(0.5px) brightness(1.5); }
   }
   @keyframes ddlSlideInFwd {
     from { opacity:0; transform: translateX(36px) scale(.97); }
@@ -468,10 +2234,10 @@ const ANIM = `
 
   .ddl-gold-line {
     position: absolute; top: 0; left: 0;
-    width: 100%; height: 1px;
+    width: 100%; height: 1.5px;
     background: linear-gradient(90deg,
-      transparent 0%, #8B6914 20%, #c8973a 45%,
-      #f7c568 50%, #c8973a 55%, #8B6914 80%, transparent 100%
+      transparent 0%, #4338CA 20%, #6366F1 45%,
+      #818CF8 50%, #6366F1 55%, #4338CA 80%, transparent 100%
     );
     transform: scaleX(0) translateZ(0);
     transform-origin: left center;
@@ -480,21 +2246,25 @@ const ANIM = `
   }
   .ddl-card:hover .ddl-gold-line {
     transform: scaleX(1) translateZ(0);
-    animation: ddlGlow 1.2s ease 0.45s infinite;
+    animation: ddlGlow 1.4s ease 0.45s infinite;
   }
   .ddl-card:hover .ddl-dots-wrap { opacity: 1; }
   .ddl-card:hover .ddl-overlay   { transform: translateY(0); }
-  .ddl-card:hover .ddl-name      { color: #F7C568; }
-  .ddl-card:hover .ddl-arrow     { color: #f7c568; transform: translateX(4px); }
-  .ddl-card:hover                {
-    border-color: #c8973a;
-    transform: translateY(-6px);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,151,58,0.25);
+  .ddl-card:hover .ddl-name      { color: #6366F1; }
+  .ddl-card:hover .ddl-arrow     { color: #6366F1; transform: translateX(4px); }
+  .ddl-card {
+    transition: border-color 0.35s cubic-bezier(.16,1,.3,1),
+                transform 0.35s cubic-bezier(.16,1,.3,1),
+                box-shadow 0.35s cubic-bezier(.16,1,.3,1);
   }
-
+  .ddl-card:hover {
+    border-color: rgba(99,102,241,0.5) !important;
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(99,102,241,0.15), 0 0 0 1px rgba(99,102,241,0.12);
+  }
   .ddl-slide-img {
     width: 100%; height: 100%;
-    object-fit: contain; padding: 10px;
+    object-fit: contain; padding: 12px;
     position: absolute; inset: 0;
     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
     will-change: transform, opacity;
@@ -505,17 +2275,56 @@ const ANIM = `
   .ddl-slide-img.exit-fwd   { opacity: 0; transform: translateX(-40px) scale(.97); }
   .ddl-slide-img.exit-back  { opacity: 0; transform: translateX(40px) scale(.97); }
 
+  .ddl-star { font-size: 13px; transition: color .2s; }
+
+  /* No overlay shadow — transparent bg, button only */
+  .ddl-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+    padding: 10px 12px 12px;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    background: transparent;
+  }
+  .ddl-quick-btn {
+    width: 100%; padding: 10px 0;
+    background: linear-gradient(110deg, #4338CA 0%, #6366F1 55%, #818CF8 100%);
+    background-size: 200% 200%; background-position: 0% 50%;
+    border: none; cursor: pointer; border-radius: 5px;
+    color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+    font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+    position: relative; overflow: hidden;
+    transition: background-position 0.4s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 14px rgba(99,102,241,0.3);
+  }
   .ddl-quick-btn::before {
-    content: ''; position: absolute;
-    top: -50%; left: -60%; width: 28%; height: 200%;
-    background: rgba(255,255,255,0.15); transform: skewX(-20deg);
+    content: ''; position: absolute; top: -50%; left: -60%;
+    width: 28%; height: 200%;
+    background: rgba(255,255,255,0.22); transform: skewX(-20deg);
     transition: left .5s ease;
   }
   .ddl-quick-btn:hover::before { left: 120%; }
-  .ddl-quick-btn:hover {
-    background-position: 100% 50%;
-    box-shadow: 0 4px 18px rgba(201,150,26,0.4);
+  .ddl-quick-btn:hover { background-position: 100% 50%; box-shadow: 0 4px 20px rgba(99,102,241,0.45); }
+
+  /* FIX: Info section — clearly visible indigo-blue gradient */
+  .ddl-body {
+    // background: linear-gradient(160deg, #EEF0FF 0%, #E8EAFF 55%, #DDE0FF 100%);
+    padding: 12px 14px 14px;
   }
+
+  .ddl-name {
+    color: #1E1B4B; font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600; line-height: 1.45;
+    margin-bottom: 6px; letter-spacing: 0.01em;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+    transition: color 0.25s;
+  }
+  .ddl-arrow {
+    font-size: 16px; display: inline-block;
+    color: rgba(99,102,241,0.4);
+    transition: color 0.35s cubic-bezier(.16,1,.3,1), transform 0.35s cubic-bezier(.16,1,.3,1);
+  }
+  .ddl-dots-wrap { opacity: 0; transition: opacity 0.25s; }
 `;
 
 const ProductItem = ({ id, image, name, price, discountPrice }) => {
@@ -542,8 +2351,7 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
 
   const slideTo = useCallback((nextIdx, dir = 1) => {
     if (sliding || nextIdx === imgIndex) return;
-    setSlideDir(dir);
-    setSliding(true);
+    setSlideDir(dir); setSliding(true);
     setTimeout(() => { setImgIndex(nextIdx); setDisplayIdx(nextIdx); setSliding(false); }, 320);
   }, [sliding, imgIndex]);
 
@@ -552,8 +2360,7 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
       autoRef.current = setInterval(() => {
         setImgIndex(prev => {
           const next = (prev + 1) % images.length;
-          setSlideDir(1);
-          setSliding(true);
+          setSlideDir(1); setSliding(true);
           setTimeout(() => { setDisplayIdx(next); setSliding(false); }, 320);
           return next;
         });
@@ -565,19 +2372,16 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
     return () => clearInterval(autoRef.current);
   }, [hovered, images.length]);
 
-  const isWishlisted = Array.isArray(wishlist) ? wishlist.some(item => item.productId === id) : false;
+  const isWishlisted = Array.isArray(wishlist) ? wishlist.some(i => i.productId === id) : false;
   const percentOff = Number(discountPrice) || 0;
-  const isValidDiscount = percentOff > 0 && percentOff < 100;
-  const discountedPriceValue = isValidDiscount ? price - (price * percentOff) / 100 : price;
-  const hasDiscount = isValidDiscount;
+  const isValid = percentOff > 0 && percentOff < 100;
+  const finalPrice = isValid ? price - (price * percentOff) / 100 : price;
 
   const renderStars = (rating) =>
     [...Array(5)].map((_, i) => {
-      const full = i < Math.floor(rating);
-      const half = !full && i < rating;
+      const full = i < Math.floor(rating), half = !full && i < rating;
       return (
-        <span key={i} className="text-[10px] transition-colors duration-200"
-          style={{ color: full || half ? "#C9961A" : "#2E1E0C" }}>
+        <span key={i} className="ddl-star" style={{ color: full || half ? "#6366F1" : "#C7D2FE" }}>
           {full ? "★" : half ? "⯨" : "☆"}
         </span>
       );
@@ -593,84 +2397,112 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
       <Link
         to={`/product/${id}`}
         onClick={() => window.scrollTo(0, 0)}
-        className="
-          ddl-card block no-underline cursor-pointer relative
-          bg-gradient-to-br from-[#1e110a] to-[#160c06]
-          border border-[#c8973a]/[0.18] rounded-[14px] overflow-hidden
-          transition-[border-color,transform,box-shadow] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)]
-          font-['Jost',sans-serif]
-        "
+        className="ddl-card block no-underline cursor-pointer relative rounded-[14px] overflow-hidden"
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid rgba(99,102,241,0.15)",
+          boxShadow: "0 2px 12px rgba(99,102,241,0.07)",
+          fontFamily: "'Montserrat', sans-serif",
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* ── IMAGE ZONE ── */}
-        <div className="relative w-full aspect-[7/6] bg-[#F8F4EE] overflow-hidden rounded-t-[13px]">
+        {/* IMAGE ZONE — pure white */}
+        <div className="relative w-full aspect-[7/6] overflow-hidden rounded-t-[13px]"
+          style={{ background: "#FFFFFF" }}>
 
-          {/* Exiting image */}
           {sliding && showPrev !== null && (
-            <img
-              src={images[showPrev] || images[0]}
-              alt={name}
+            <img src={images[showPrev] || images[0]} alt={name}
               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
-              style={{ zIndex: 1 }}
-            />
+              style={{ zIndex: 1 }} />
           )}
-
-          {/* Active / entering image */}
-          <img
-            src={images[showCurr] || images[0]}
-            alt={name}
+          <img src={images[showCurr] || images[0]} alt={name}
             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
             style={{
               zIndex: 2,
               animation: sliding
                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
                 : "none",
-            }}
-          />
+            }} />
 
           {/* Sale badge */}
-          {hasDiscount && (
-            <div className="absolute top-2.5 left-2.5 z-[8] bg-gradient-to-br from-[#C9961A] to-[#F7C568] text-[#0E0802] text-[8px] font-extrabold tracking-[0.2em] px-[9px] py-[3px] rounded-[3px] uppercase font-['Jost',sans-serif]">
-              {percentOff}% OFF
-            </div>
+          {isValid && (
+            <div style={{
+              position: "absolute", top: 10, left: 10, zIndex: 8,
+              background: "linear-gradient(135deg, #4338CA, #6366F1)",
+              color: "#fff", fontSize: 8, fontWeight: 700,
+              letterSpacing: "0.2em", padding: "3px 9px", borderRadius: 3,
+              fontFamily: "'Montserrat', sans-serif",
+            }}>{percentOff}% OFF</div>
           )}
 
           {/* Wishlist */}
-          <button
-            className={`
-              absolute top-2.5 right-2.5 z-[8] w-8 h-8 rounded-full
-              flex items-center justify-center cursor-pointer
-              backdrop-blur-sm border transition-all duration-200
-              hover:bg-[#C9961A] hover:border-[#C9961A]
-              ${isWishlisted
-                ? "bg-[rgba(201,150,26,0.15)] border-[#C9961A]"
-                : "bg-white/[0.92] border-[#c8973a]/35"
-              }
-            `}
+          {/* <button
+            className="hover:bg-indigo-500 hover:border-indigo-300 text-white"
+            style={{
+              position: "absolute", top: 10, right: 10, zIndex: 8,
+              width: 32, height: 32, borderRadius: "50%",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer",
+              // background: isWishlisted ? "rgba(99,102,241,0.14)" : "rgba(255,255,255,0.96)",
+              border: isWishlisted ? "1px solid #6366F1" : "1px solid rgba(99,102,241,0.25)",
+              boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
+              transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.12)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlistItem(id); }}
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill={isWishlisted ? "#C9961A" : "none"}
-              className="[&_path]:transition-[stroke] [&_path]:duration-200 hover:[&_path]:stroke-white">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill={isWishlisted ? "#FFF" : "none"}>
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                stroke="#6366F1" strokeWidth="1.5" />
+            </svg>
+          </button> */}
+
+          <button
+            className="text-indigo-500 hover:text-white hover:bg-indigo-500"
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 8,
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              border: "1px solid rgba(99,102,241,0.25)",
+              boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
+              transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+              // transition: "all 0.2s ease"
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.12)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-                   2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
-                   C13.09 3.81 14.76 3 16.5 3
-                   19.58 3 22 5.42 22 8.5
-                   c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                stroke="#C9961A" strokeWidth="1.5"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                stroke="currentColor"
+                strokeWidth="1.5"
               />
             </svg>
           </button>
 
           {/* Dot indicators */}
           {images.length > 1 && (
-            <div className="ddl-dots-wrap absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-[5px] z-10 opacity-0 transition-opacity duration-[250ms]">
+            <div className="ddl-dots-wrap" style={{
+              position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)",
+              display: "flex", gap: 5, zIndex: 10,
+            }}>
               {images.slice(0, 5).map((_, i) => (
-                <button
-                  key={i}
-                  className={`h-1 rounded-[2px] border-none p-0 cursor-pointer transition-[width,background] duration-300 ${i === imgIndex ? "bg-[#C9961A]" : "bg-[rgba(201,150,26,0.35)]"}`}
-                  style={{ width: i === imgIndex ? 18 : 4 }}
+                <button key={i} style={{
+                  height: 4, border: "none", padding: 0, cursor: "pointer", borderRadius: 2,
+                  width: i === imgIndex ? 18 : 4,
+                  background: i === imgIndex ? "#6366F1" : "rgba(99,102,241,0.25)",
+                  transition: "width 0.3s, background 0.3s",
+                }}
                   onMouseEnter={(e) => { e.preventDefault(); e.stopPropagation(); slideTo(i, i > imgIndex ? 1 : -1); }}
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 />
@@ -678,78 +2510,60 @@ const ProductItem = ({ id, image, name, price, discountPrice }) => {
             </div>
           )}
 
-          {/* Quick view overlay */}
-          <div
-            className="ddl-overlay absolute bottom-0 left-0 right-0 z-[6] px-3.5 pb-3.5 pt-8 translate-y-full transition-transform duration-[320ms] ease-[cubic-bezier(.4,0,.2,1)]"
-            style={{ background: "linear-gradient(to top, rgba(10,6,2,0.95) 0%, rgba(10,6,2,0.5) 60%, transparent 100%)" }}
-            onClick={(e) => e.preventDefault()}
-          >
+          {/* View Product — no dark shadow */}
+          <div className="ddl-overlay" onClick={(e) => e.preventDefault()}>
             <Link to={`/product/${id}`} onClick={(e) => e.stopPropagation()}>
-              <button className="
-                ddl-quick-btn w-full py-[9px]
-                bg-[linear-gradient(110deg,#8B6914_0%,#C9961A_50%,#E0AE3A_100%)]
-                [background-size:200%_200%] [background-position:0%_50%]
-                border-none text-[#0E0802] text-[9px] font-extrabold tracking-[0.22em]
-                font-['Jost',sans-serif] cursor-pointer rounded-[4px] uppercase
-                transition-[background-position,box-shadow] duration-[400ms]
-                relative overflow-hidden
-              ">
-                View Product
-              </button>
+              <button className="ddl-quick-btn">View Product</button>
             </Link>
           </div>
         </div>
 
-        {/* ── GOLD RULE ── */}
-        <div className="relative h-px bg-[#0d0703] overflow-hidden">
+        {/* Indigo rule */}
+        <div style={{ position: "relative", height: 1, overflow: "hidden", background: "#DDE0FF" }}>
           <div className="ddl-gold-line" />
         </div>
 
-        {/* ── BODY ── */}
-        <div className="px-[14px] pt-2.5 pb-3">
+        {/* INFO SECTION — clearly visible indigo-blue gradient */}
+        <div className="ddl-body bg-[#d4e8fc]">
+          <p className="ddl-name">{name}</p>
 
-          <p className="
-            ddl-name font-['Montserrat',serif] text-[13px] font-normal text-[#f5ede0]
-            leading-[1.45] mb-1 tracking-[0.02em]
-            line-clamp-2 transition-colors duration-[250ms]
-          ">
-            {name}
-          </p>
-
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <div className="flex gap-0.5">{renderStars(avgRating)}</div>
-            <span className="text-[10px] text-[#7a6050] font-['Georgia',serif]">({reviews.length})</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+            <div style={{ display: "flex", gap: 2 }}>{renderStars(avgRating)}</div>
+            <span style={{ fontSize: 11, color: "#6B7280", fontFamily: "'Montserrat', sans-serif", fontWeight: 500 }}>
+              ({reviews.length})
+            </span>
           </div>
 
-          <div className="h-px bg-[#c8973a]/[0.12] mb-1.5" />
+          <div style={{ height: 1, background: "rgba(99,102,241,0.18)", marginBottom: 8 }} />
 
-          <div className="flex items-baseline gap-[7px] flex-wrap">
-            {hasDiscount ? (
+          <div style={{ display: "flex", alignItems: "baseline", gap: 7, flexWrap: "wrap" }}>
+            {isValid ? (
               <>
-                <span className="font-['Montserrat',serif] text-base font-bold text-[#f7c568]">
-                  {currency}{discountedPriceValue.toFixed(2)}
+                <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
+                  {currency}{finalPrice.toFixed(2)}
                 </span>
-                <span className="text-[11px] text-[#5a4030] line-through font-['Montserrat',serif]">
+                <span style={{ fontSize: 11, color: "#9CA3AF", textDecoration: "line-through", fontFamily: "'Montserrat', sans-serif" }}>
                   {currency}{price}
                 </span>
-                <span className="text-[9px] text-[#c8973a] tracking-[0.18em] font-bold font-['Montserrat',serif] bg-[#c8973a]/10 px-1.5 py-0.5 border border-[#c8973a]/25 rounded-[2px]">
-                  –{percentOff}%
-                </span>
+                <span style={{
+                  fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", color: "#6366F1",
+                  background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.22)",
+                  borderRadius: 2, padding: "1px 6px", fontFamily: "'Montserrat', sans-serif",
+                }}>–{percentOff}%</span>
               </>
             ) : (
-              <span className="font-['Montserrat',serif] text-base font-bold text-[#f7c568]">
+              <span style={{ fontSize: 16, fontWeight: 700, color: "#4338CA", fontFamily: "'Montserrat', sans-serif" }}>
                 {currency}{price}
               </span>
             )}
           </div>
 
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-[9px] tracking-[0.25em] text-[#7a6050] uppercase font-['Georgia',serif]">
-              Premium Leather
-            </span>
-            <span className="ddl-arrow text-base inline-block transition-[color,transform] duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)] text-[#3d2010]">
-              →
-            </span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+            <span style={{
+              fontSize: 9, letterSpacing: "0.22em", color: "#6B7280",
+              textTransform: "uppercase", fontFamily: "'Montserrat', sans-serif", fontWeight: 500,
+            }}>Premium Leather</span>
+            <span className="ddl-arrow">→</span>
           </div>
         </div>
       </Link>
