@@ -148,12 +148,13 @@ const LatestCollection = () => {
 
   return (
     <section
-      className="px-[5%] py-20 sm:py-24"
+      className="px-[5%] py-10 border-t border-indigo-300 "
       style={{
         background: "linear-gradient(180deg, #EEF0FF 0%, #F4F5FF 40%, #FFFFFF 100%)",
         position: "relative",
         overflow: "hidden",
-      }}
+      }
+      }
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
@@ -215,16 +216,16 @@ const LatestCollection = () => {
         {/* Decorative divider — indigo */}
         <div className="flex items-center justify-center gap-4 mt-7">
           <span
-            className="block w-16 h-px"
-            style={{ background: "linear-gradient(to right, transparent, rgba(99,102,241,0.4))" }}
+            className="block w-[100px] h-[2px] rounded-lg"
+            style={{ background: "linear-gradient(to right, transparent, rgba(99,102,241,0.9))" }}
           />
           <span
-            className="block w-[5px] h-[5px] rotate-45"
+            className="block w-[8px] h-[8px] rotate-45"
             style={{ background: "#6366F1" }}
           />
           <span
-            className="block w-16 h-px"
-            style={{ background: "linear-gradient(to left, transparent, rgba(99,102,241,0.4))" }}
+            className="block w-[100px] h-[2px] rounded-lg"
+            style={{ background: "linear-gradient(to left, transparent, rgba(99,102,241,0.9))" }}
           />
         </div>
       </div>
@@ -276,7 +277,7 @@ const LatestCollection = () => {
           <span className="lc-arrow">→</span>
         </Link>
       </div>
-    </section>
+    </section >
   );
 };
 

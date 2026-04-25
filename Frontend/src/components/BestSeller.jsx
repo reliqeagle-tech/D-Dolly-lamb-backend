@@ -189,7 +189,7 @@ const BestSeller = () => {
 
   return (
     <section
-      className="px-[5%] py-20 sm:py-24"
+      className="px-[5%] py-10"
       style={{
         background: "linear-gradient(180deg, #FFFFFF 0%, #F5F4FF 50%, #EEF0FF 100%)",
         borderTop: "1px solid rgba(99,102,241,0.1)",
@@ -228,13 +228,15 @@ const BestSeller = () => {
 
       {/* Background decorations */}
       <div className="bs-grid-bg" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
-      <div className="bs-blob" />
+      <div className="bs-blob" x />
 
       {/* ── Header ── */}
+      <div className="text-center mb-4">
+        <Title text1="BEST" text2="SELLERS" />
+      </div>
       <div className="flex flex-wrap items-end justify-between gap-6 mb-12"
         style={{ position: "relative", zIndex: 1 }}>
         <div>
-          <Title text1="BEST" text2="SELLERS" />
           <p className="max-w-[460px] mt-3 text-sm italic leading-loose"
             style={{ color: "#6B7280", fontFamily: "'Montserrat', sans-serif" }}>
             Our most-loved styles — chosen by thousands of customers worldwide

@@ -680,7 +680,7 @@ const About = () => {
         }} />
 
         <div className="ab-hero-text" style={{
-          textAlign: "center", padding: "80px 24px",
+          textAlign: "center", padding: "30px 24px",
           position: "relative", zIndex: 1, maxWidth: 680, margin: "0 auto",
         }}>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>

@@ -1209,7 +1209,7 @@ const ActiveSlider = () => {
 
   return (
     <section style={{
-      position: "relative", overflow: "hidden", padding: "96px 0 80px",
+      position: "relative", overflow: "hidden", padding: "40px 0 40px",
       background: "linear-gradient(180deg, #EAECFF 0%, #F0F2FF 35%, #F8F9FF 70%, #FFFFFF 100%)",
     }}>
       <style>{`

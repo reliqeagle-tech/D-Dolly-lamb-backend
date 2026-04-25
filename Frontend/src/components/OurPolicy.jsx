@@ -634,7 +634,7 @@ const OurPolicy = () => {
 
   return (
     <section style={{
-      padding: "80px 5%",
+      padding: "40px 5%",
       background: "linear-gradient(180deg, #FFFFFF 0%, #F4F5FF 40%, #EEF0FF 100%)",
       borderTop: "1px solid rgba(99,102,241,0.1)",
       position: "relative", overflow: "hidden",
