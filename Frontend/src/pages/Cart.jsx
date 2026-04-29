@@ -1873,7 +1873,7 @@ const Cart = () => {
         }}
       >
         {/* ── Indigo shimmer top — matches navbar ── */}
-        <div className="indigo-shimmer mb-8" />
+        {/* <div className="indigo-shimmer mb-8" /> */}
 
         {/* ═══ PAGE HEADER ═══ */}
         <div className="mb-9">

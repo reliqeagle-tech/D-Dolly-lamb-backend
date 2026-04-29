@@ -3939,7 +3939,7 @@ const Navbar = () => {
                 }}>
                     {/* LOGO */}
                     <Link to="/">
-                        <img className=" w-[140px]" src={assets.DDL_logo} alt="" />
+                        <img className=" w-[124px]" src={assets.DDL_logo4} alt="" />
                     </Link>
 
                     {/* CENTER NAV — desktop only */}

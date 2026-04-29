@@ -450,7 +450,7 @@ const Layout = ({ children, isSidebarOpen, pt = 'pt-4' }) => (
       <div
         className={`
           sidebarWrapper overflow-hidden flex-shrink-0
-          bg-[#1a0f07]
+          bg-[#fafaf8]
           border-r border-transparent dark:border-[#2D3048]
           transition-all duration-300
           ${isSidebarOpen ? 'w-[20%]' : 'w-[0px] opacity-0'}
@@ -464,7 +464,8 @@ const Layout = ({ children, isSidebarOpen, pt = 'pt-4' }) => (
         className={`
           contentRight py-4 px-5 ${pt}
           min-h-[calc(100vh-64px)]
-          bg-[#0d0804]
+          // bg-[#0d0804]
+          bg-[#fafaf8]
           transition-all duration-300
           ${isSidebarOpen ? 'w-[80%]' : 'w-[100%]'}
         `}
@@ -491,8 +492,17 @@ const App = () => {
     localStorage.getItem('token') ? localStorage.getItem('token') : ''
   );
 
+  // useEffect(() => {
+  //   localStorage.setItem('token', token)
+  // }, [token])
   useEffect(() => {
-    localStorage.setItem('token', token)
+    if (token) {
+      localStorage.setItem('token', token);
+      setIsLogin(true);   // ← set login true when token exists
+    } else {
+      localStorage.removeItem('token');
+      setIsLogin(false);  // ← clear login when token removed
+    }
   }, [token])
 
   const handleClose = () => setIsOpenFullScreenPanel({ open: false });
@@ -502,7 +512,7 @@ const App = () => {
     /* ─── Auth pages (no sidebar/header) ─── */
     {
       path: "/login",
-      element: <Login setToken={setToken} />
+      element: <Login setToken={setToken} setIsLogin={setIsLogin} />
     },
     {
       path: "/sign-up",
@@ -659,10 +669,10 @@ const App = () => {
             <AppBar sx={{ position: 'relative' }}>
               <Toolbar>
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                  <IoIosClose className='text-text-[#d4b87a] text-3xl' />
+                  <IoIosClose className='text-[#1A7A4A] text-3xl' />
                 </IconButton>
                 <Typography sx={{ ml: 1, flex: 1 }} variant="h6" component="div">
-                  <span className='text-text-[#f0d898] text-lg lg:text-xl'>
+                  <span className='text-[#1A7A4A] text-lg lg:text-xl'>
                     {isOpenFullScreenPanel?.modal}
                   </span>
                 </Typography>

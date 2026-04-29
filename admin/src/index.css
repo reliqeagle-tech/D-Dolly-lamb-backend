@@ -39,7 +39,7 @@ a.active button {
     font-size: 14px !important;
 }
 .MuiAppBar-colorPrimary{
-    background: #c9a84c !important;
+    background: #fafaf8 !important;
 }
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{

@@ -6,6 +6,7 @@ import parcel_icon from './parcel_icon.svg'
 import logo_1 from './logo1.png'
 import logo_2 from './logo2.png'
 import logo_3 from './logo3-removebg-preview.png'
+import admin_logo from './admin_logo.png'
 import bannerimg from './bannerimg.png'
 import bannerimg1 from './bannerimg1.png'
 import slideBanner1 from './slideBanner1.jpg'
@@ -54,6 +55,7 @@ import profileImg from './profileImg.jpg'
 import dashboard from './dashboard.png'
 import login_bg from './login_bg-image.png'
 // import upload_area from './upload_area.png'
+import profileImg1 from './profileImg2.png'
 
 
 
@@ -61,6 +63,7 @@ export const assets = {
     logo,
     logo_1,
     logo_2,
+    admin_logo,
     add_icon,
     order_icon,
     upload_area,
@@ -111,6 +114,7 @@ export const assets = {
     profileImg,
     dashboard,
     login_bg,
-    logo_3
+    logo_3,
+    profileImg1
 }
 

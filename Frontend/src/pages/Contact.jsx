@@ -738,7 +738,8 @@ const Contact = () => {
             }}>
               {/* Top indigo accent bar */}
               <div style={{
-                height: 3, marginBottom: 28, borderRadius: "8px 8px 0 0",
+                height: 3, marginBottom: 28,
+                // borderRadius: "8px 8px 0 0",
                 background: "linear-gradient(90deg, #4338CA, #6366F1, #818CF8)",
                 margin: "-36px -32px 28px",
                 borderRadius: "16px 16px 0 0",
