@@ -619,7 +619,7 @@ const frontendMail = async (req, res) => {
 
     await sendMail(
       email,
-      "D Dolly Lamb Leather - Here Your 20% OFF",
+      "D Dolly Lamb Leather - Here Your's 20% OFF",
       "",
       htmlTemplate
     );
