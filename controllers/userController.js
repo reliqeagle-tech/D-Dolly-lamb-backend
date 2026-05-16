@@ -432,7 +432,7 @@ const frontendMail = async (req, res) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>You're In — D Dolly Lamb Inner Circle</title>
+  <title>D Dolly Lamb Leather - Here Your 20% OFF</title>
 </head>
 <body style="margin:0; padding:0; background-color:#0d0703; font-family:Georgia,'Times New Roman',serif;">
 
@@ -619,7 +619,7 @@ const frontendMail = async (req, res) => {
 
     await sendMail(
       email,
-      "You're In — Welcome to the D Dolly Lamb Inner Circle",
+      "D Dolly Lamb Leather - Here Your 20% OFF",
       "",
       htmlTemplate
     );

@@ -8,7 +8,12 @@ import { HelmetProvider } from 'react-helmet-async';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  <BrowserRouter future={{
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
+  }}
+
+  >
     <HelmetProvider>
       <PayPalScriptProvider
         options={{

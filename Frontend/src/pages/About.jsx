@@ -752,11 +752,12 @@ const About = () => {
             <img
               src={assets.collectionImg}
               alt="D Dolly Lamb Atelier"
-              style={{
-                width: "100%", maxWidth: 440, borderRadius: 6,
-                position: "relative", zIndex: 1, display: "block",
-                boxShadow: "0 8px 32px rgba(99,102,241,0.1)",
-              }}
+              className='w-[340px] sm:w-[440px]'
+            // style={{
+            //   width: "100%", maxWidth: 440, borderRadius: 6,
+            //   position: "relative", zIndex: 1, display: "block",
+            //   boxShadow: "0 8px 32px rgba(99,102,241,0.1)",
+            // }}
             />
             {/* Indigo corner accents */}
             {[{ top: -4, left: -4 }, { top: -4, right: -4 }, { bottom: -4, left: -4 }, { bottom: -4, right: -4 }].map((pos, i) => (
