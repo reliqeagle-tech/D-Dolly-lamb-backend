@@ -207,7 +207,7 @@ const parseBulkSizes = (sizesValue = '') => {
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, detailedDescription, price, discountPrice, discountActive, category, subCategory, sizes, color, bestseller } = req.body
+        const { name, description, detailedDescription, itemDetails, price, discountPrice, discountActive, category, subCategory, sizes, color, bestseller } = req.body
 
         // Validate price
         const numericPrice = Number(price)
@@ -251,11 +251,33 @@ const addProduct = async (req, res) => {
             return res.json({ success: false, message: "Invalid sizes format. Expected: [{size:'S', priceMultiplier:1, stock:10}]" })
         }
 
+        let parsedItemDetails = []
+
+        try {
+
+            parsedItemDetails = itemDetails
+                ? JSON.parse(itemDetails).filter(
+                    item =>
+                        item.title?.trim() &&
+                        item.value?.trim()
+                )
+                : []
+
+        } catch (e) {
+
+            return res.json({
+                success: false,
+                message: "Invalid itemDetails format"
+            })
+
+        }
+
 
         const productData = {
             name,
             description,
             detailedDescription,
+            itemDetails: parsedItemDetails,
             category,
             subCategory,
             price: Number(price),
@@ -560,7 +582,7 @@ const updateProduct = async (req, res) => {
         }
 
         const {
-            name, description, detailedDescription,
+            name, description, detailedDescription, itemDetails,
             price, discountPrice, category, subCategory,
             sizes, color, bestseller,
             existingImages  // ✅ Frontend se existing images aa rahi hain
@@ -621,6 +643,30 @@ const updateProduct = async (req, res) => {
             }
         }
 
+        let parsedItemDetails = product.itemDetails || []
+
+        if (itemDetails) {
+
+            try {
+
+                parsedItemDetails = JSON.parse(itemDetails)
+                    .filter(
+                        item =>
+                            item.title?.trim() &&
+                            item.value?.trim()
+                    )
+
+            } catch (e) {
+
+                return res.json({
+                    success: false,
+                    message: "Invalid itemDetails format"
+                })
+
+            }
+
+        }
+
         // ══════════════════════════════════
         // UPDATE
         // ══════════════════════════════════
@@ -628,6 +674,7 @@ const updateProduct = async (req, res) => {
             name: name ?? product.name,
             description: description ?? product.description,
             detailedDescription: detailedDescription ?? product.detailedDescription,
+            itemDetails: parsedItemDetails,
             price: price ? Number(price) : product.price,
             discountPrice: finalDiscountPrice,
             discountActive: finalDiscountActive,

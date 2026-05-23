@@ -83,6 +83,26 @@ const productSchema = new mongoose.Schema({
         }] // Default empty; populate via admin UI
     },
 
+    // itemDetails:
+    // {
+    //     title: String,
+    //     value: String,
+    // },
+
+    itemDetails: [
+        {
+            title: {
+                type: String,
+                trim: true
+            },
+
+            value: {
+                type: String,
+                trim: true
+            }
+        }
+    ],
+
     bestseller: { type: Boolean, default: false, index: true }, // Default + index
     date: { type: Date, default: Date.now, required: true }, // Changed to Date; auto-now
     isDeleted: { type: Boolean, default: false } // Soft delete

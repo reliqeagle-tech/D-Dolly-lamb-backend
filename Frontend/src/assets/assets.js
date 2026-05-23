@@ -119,6 +119,14 @@ import DDL_logo from './DDL_logo.jpeg'
 import DDL_logo1 from './DDL_logo1.png'
 import DDL_logo2 from './DDL-logo2.png'
 import DDL_logo4 from './DDL_logo4.png'
+import menPng from './menPng.png'
+import pillowPng from './pillowPng.png'
+import womenPng from './womenPng.png'
+import otherPng from './otherPng.png'
+import otherPng1 from './otherPng1.png'
+import contactImg2 from './contactImg 2.png'
+
+
 
 export const assets = {
     logo,
@@ -185,6 +193,12 @@ export const assets = {
     DDL_logo1,
     DDL_logo2,
     DDL_logo4,
+    menPng,
+    womenPng,
+    pillowPng,
+    otherPng,
+    otherPng1,
+    contactImg2
 }
 
 export const products = [

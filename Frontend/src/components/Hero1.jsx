@@ -1314,6 +1314,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { assets } from "../assets/assets";
 
 /* ── Animated Counter ──────────────────────────── */
 const AnimatedCounter = ({ end, suffix = "", duration = 1800 }) => {
@@ -1424,9 +1425,15 @@ const Hero1 = () => {
   ];
 
   const collections = [
-    { title: "MEN'S", subtitle: "Leather Jackets", tag: "NEW SEASON", desc: "Structured silhouettes with raw edge finishing", href: "/collection?category=Men", accent: "#4F46E5", light: "#EEF2FF", mid: "#C7D2FE" },
-    { title: "WOMEN'S", subtitle: "Leather Jackets", tag: "BESTSELLER", desc: "Tailored cuts with refined feminine details", href: "/collection?category=Women", accent: "#7C3AED", light: "#F5F3FF", mid: "#DDD6FE" },
-    { title: "LIMITED", subtitle: "Edition Collection", tag: "EXCLUSIVE", desc: "Numbered pieces for the discerning collector", href: "/collection", accent: "#0EA5E9", light: "#F0F9FF", mid: "#BAE6FD" },
+    {
+      title: "MEN'S", subtitle: "Leather Jackets", tag: "NEW SEASON", desc: "Structured silhouettes with raw edge finishing", href: "/collection?category=Men", accent: "#4F46E5", light: "#EEF2FF", mid: "#C7D2FE", image: assets.menPng, menWidth: "52%",
+    },
+    {
+      title: "WOMEN'S", subtitle: "Leather Jackets", tag: "BESTSELLER", desc: "Tailored cuts with refined feminine details", href: "/collection?category=Women", accent: "#7C3AED", light: "#F5F3FF", mid: "#DDD6FE", image: assets.womenPng, imgWidth: "62%", menWidth: "62%",
+    },
+    {
+      title: "OTHERS", subtitle: "Edition Collection", tag: "EXCLUSIVE", desc: "Numbered pieces for the discerning collector", href: "/collection", accent: "#0EA5E9", light: "#F0F9FF", mid: "#BAE6FD", image: assets.otherPng, imgWidth: "58%", menWidth: "40%",
+    },
   ];
 
   const testimonials = [
@@ -1620,7 +1627,7 @@ const Hero1 = () => {
           </div>
 
           {/* Ornamental divider */}
-          <div style={{ margin: "30px auto", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", maxWidth: "280px" }}>
+          <div style={{ margin: "20px auto", display: "flex", alignItems: "center", justifyContent: "center", gap: "14px", maxWidth: "280px" }}>
             <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, transparent, #6366F1)" }} />
             <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
               <div style={{ width: "4px", height: "4px", background: "#C7D2FE", borderRadius: "50%" }} />
@@ -1641,7 +1648,7 @@ const Hero1 = () => {
           </p>
 
           {/* CTA buttons */}
-          <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap", marginBottom: "64px" }}>
+          <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap", marginBottom: "64px", paddingBottom: "20px" }}>
             <Link
               to="/collection"
               style={{
@@ -1717,12 +1724,12 @@ const Hero1 = () => {
         </div>
 
         {/* Scroll indicator */}
-        <div style={{ position: "absolute", bottom: "72px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", opacity: 0.55 }}>
+        {/* <div style={{ position: "absolute", bottom: "72px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", opacity: 0.55 }}>
           <span style={{ fontSize: "8px", letterSpacing: "0.4em", color: "#6366F1", fontFamily: "sans-serif", fontWeight: 600 }}>SCROLL</span>
           <div style={{ width: "22px", height: "36px", border: "1.5px solid rgba(99,102,241,0.4)", borderRadius: "12px", display: "flex", justifyContent: "center", paddingTop: "6px" }}>
             <div style={{ width: "3px", height: "8px", background: "#6366F1", borderRadius: "2px", animation: "scrollMouse 2s ease-in-out infinite" }} />
           </div>
-        </div>
+        </div> */}
 
         {/* Feature ticker */}
         <div style={{
@@ -1844,12 +1851,16 @@ const Hero1 = () => {
                   0{i + 1}
                 </div>
 
+                <div>
+                  <img src={col.image} alt={col.title} style={{ position: "absolute", bottom: 0, right: 0, width: "70%", height: "80%", objectFit: "cover", borderRadius: "16px", pointerEvents: "none", objectFit: "contain", }} />
+                </div>
+
                 <div style={{ position: "relative", zIndex: 1 }}>
                   <p style={{ fontSize: "10px", letterSpacing: "0.28em", color: col.accent, fontFamily: "sans-serif", margin: "0 0 8px", fontWeight: 600 }}>{col.subtitle}</p>
                   <h3 style={{ color: "#0F172A", fontWeight: 300, margin: "0 0 14px", letterSpacing: "0.05em", fontSize: "clamp(1.8rem, 4vw, 2.7rem)" }}>
                     {col.title}
                   </h3>
-                  <p style={{ fontSize: "13px", color: "#64748B", fontStyle: "italic", marginBottom: "28px", lineHeight: 1.7 }}>{col.desc}</p>
+                  <p style={{ width: col.menWidth, fontSize: "13px", color: "#64748B", fontStyle: "italic", marginBottom: "28px", lineHeight: 1.7 }}>{col.desc}</p>
 
                   {/* Explore link with animated bottom bar */}
                   <div style={{ position: "relative", display: "inline-block", paddingBottom: "6px" }}>
@@ -1858,7 +1869,7 @@ const Hero1 = () => {
                       fontSize: "10px", letterSpacing: "0.22em", color: col.accent,
                       fontFamily: "sans-serif", fontWeight: 700,
                     }}>
-                      EXPLORE COLLECTION →
+                      EXPLORE <br /> COLLECTION →
                     </div>
                     {/* Animated underline bar */}
                     <div

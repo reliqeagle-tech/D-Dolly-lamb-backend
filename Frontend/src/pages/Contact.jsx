@@ -864,7 +864,7 @@ const Contact = () => {
                 border: "1px solid rgba(99,102,241,0.18)",
                 borderRadius: 14, zIndex: 0,
               }} />
-              <img src={assets.contact_img} alt="D Dolly Lamb Atelier" style={{
+              <img src={assets.contactImg2} alt="D Dolly Lamb Atelier" style={{
                 width: "100%", borderRadius: 10, display: "block",
                 position: "relative", zIndex: 1,
                 boxShadow: "0 8px 28px rgba(99,102,241,0.1)",

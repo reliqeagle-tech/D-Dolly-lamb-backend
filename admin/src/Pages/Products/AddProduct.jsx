@@ -1386,6 +1386,13 @@ const Add = ({ token }) => {
     const [showDraftPage, setShowDraftPage] = useState(false);
     const [sizeErr, setSizeErr] = useState(false);
     const [sizeCardShake, setSizeCardShake] = useState(false);
+    const [itemDetails, setItemDetails] = useState([
+        { title: "", value: "" }
+    ])
+
+
+    // GLOBAL STATE
+    const [pricingMode, setPricingMode] = useState("custom");
     const dzRef = useRef(null);
     const sizeRef = useRef(null);
 
@@ -1520,7 +1527,10 @@ const Add = ({ token }) => {
             const fd = new FormData();
             fd.append('name', name.trim()); fd.append('description', description.trim()); fd.append('detailedDescription', detailedDescription);
             fd.append('price', price); fd.append('discountPrice', discountPrice || ''); fd.append('category', category); fd.append('subCategory', subCategory);
-            fd.append('bestseller', bestseller); fd.append('sizes', JSON.stringify(formatSizes())); fd.append('color', JSON.stringify(colors));
+            fd.append('bestseller', bestseller); fd.append('sizes', JSON.stringify(formatSizes())); fd.append('color', JSON.stringify(colors)); fd.append(
+                'itemDetails',
+                JSON.stringify(itemDetails)
+            );
             images.forEach(img => { if (img) fd.append('images', img); });
             const res = await axios.post(`${backendUrl}/api/product/add`, fd, { headers: { token } });
             if (res.data.success) { toast.success('🎉 Product published!'); try { localStorage.removeItem('ap_draft'); localStorage.removeItem('ap_full_draft'); } catch { } resetForm(); }
@@ -1542,6 +1552,29 @@ const Add = ({ token }) => {
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238FA0AD' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
         backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', paddingRight: 36,
     };
+
+    const addItemDetail = () => {
+        setItemDetails([
+            ...itemDetails,
+            { title: "", value: "" }
+        ])
+    }
+
+    const updateItemDetail = (index, field, value) => {
+        const updated = [...itemDetails]
+
+        updated[index][field] = value
+
+        setItemDetails(updated)
+    }
+
+    const removeItemDetail = (index) => {
+        const updated = itemDetails.filter(
+            (_, i) => i !== index
+        )
+
+        setItemDetails(updated)
+    }
 
     return (
         <div style={{ background: B.bg, fontFamily: "'Inter', system-ui, -apple-system, sans-serif", WebkitFontSmoothing: 'antialiased' }}>
@@ -1694,6 +1727,109 @@ const Add = ({ token }) => {
                             </div>
                         </Card>
 
+                        <Card
+                            icon={<TbInfoCircle size={17} />}
+                            title="Item Details"
+                            subtitle="Additional product specifications"
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 14
+                                }}
+                            >
+
+                                {
+                                    itemDetails.map((item, index) => (
+
+                                        <div
+                                            key={index}
+                                            style={{
+                                                display: 'grid',
+                                                gridTemplateColumns: '1fr 1fr auto',
+                                                gap: 10,
+                                                alignItems: 'center'
+                                            }}
+                                        >
+
+                                            {/* TITLE */}
+
+                                            <input
+                                                type="text"
+                                                placeholder="Title (e.g. Brand Name)"
+                                                value={item.title}
+                                                onChange={(e) =>
+                                                    updateItemDetail(
+                                                        index,
+                                                        "title",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                style={inputStyle()}
+                                            />
+
+                                            {/* VALUE */}
+
+                                            <input
+                                                type="text"
+                                                placeholder="Value (e.g. D Dolly Lamb)"
+                                                value={item.value}
+                                                onChange={(e) =>
+                                                    updateItemDetail(
+                                                        index,
+                                                        "value",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                style={inputStyle()}
+                                            />
+
+                                            {/* DELETE */}
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeItemDetail(index)}
+                                                style={{
+                                                    width: 38,
+                                                    height: 38,
+                                                    borderRadius: 10,
+                                                    border: '1px solid #FECACA',
+                                                    background: '#FEF2F2',
+                                                    color: '#991B1B',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <TbTrash size={16} />
+                                            </button>
+
+                                        </div>
+
+                                    ))
+                                }
+
+                                {/* ADD BUTTON */}
+
+                                <button
+                                    type="button"
+                                    onClick={addItemDetail}
+                                    style={{
+                                        padding: '12px',
+                                        borderRadius: 10,
+                                        border: '1px dashed #A8D5BC',
+                                        background: '#E8F4EE',
+                                        color: '#1A7A4A',
+                                        fontWeight: 700,
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    + Add Item Detail
+                                </button>
+
+                            </div>
+                        </Card>
+
+
                         {/* ── MEDIA ── */}
                         <Card icon={<TbPhoto size={17} />} title="Product Images" subtitle={`${uploaded.length}/10 uploaded`}
                             action={uploaded.length > 0 && (
@@ -1763,7 +1899,7 @@ const Add = ({ token }) => {
                         <Card icon={<TbPalette size={17} />} title="Color Variants" subtitle="Add available colors"
                             badge={colors.length > 0 && <span style={{ padding: '2px 8px', borderRadius: 99, background: B.greenBg, color: B.green, border: `1px solid ${B.greenBdr}`, fontSize: 10, fontWeight: 800 }}>{colors.length}</span>}>
                             <Field label="Input Mode">
-                                <ToggleGroup options={[['both', 'Name + Color'], ['nameOnly', 'Name Only'], ['hexOnly', 'Color Only']]} value={colorMode} onChange={setColorMode} />
+                                <ToggleGroup options={[['both', 'color']]} value={colorMode} onChange={setColorMode} />
                             </Field>
 
                             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', gap: 12, padding: 16, background: B.surface, borderRadius: 11, border: `1px solid ${B.border}`, marginBottom: 14 }}>
@@ -1857,6 +1993,124 @@ const Add = ({ token }) => {
                                 <ToggleGroup options={[['standard', '👕 Standard (XS–3XL)'], ['inch', '📏 Inch-Based']]} value={sizeType} onChange={setSizeType} />
                             </Field>
 
+                            {/* GLOBAL PRICE MODE */}
+                            <div
+                                style={{
+                                    marginBottom: 20,
+                                    padding: 16,
+                                    border: '1px solid #E0DBD3',
+                                    borderRadius: 12,
+                                    background: '#F8F8F8'
+                                }}
+                            >
+                                <p
+                                    style={{
+                                        fontSize: 12,
+                                        fontWeight: 700,
+                                        marginBottom: 10,
+                                        color: '#1C2B3A',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '.5px'
+                                    }}
+                                >
+                                    Global Pricing Mode
+                                </p>
+
+                                <div style={{ display: 'flex', gap: 10 }}>
+                                    {/* MULTIPLIER BUTTON */}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPricingMode("multiplier");
+
+                                            // ALL SIZES MULTIPLIER MODE
+                                            const updated = { ...stdSizes };
+
+                                            Object.keys(updated).forEach((size) => {
+                                                updated[size].useCustomPrice = false;
+                                            });
+
+                                            setStdSizes(updated);
+                                        }}
+                                        style={{
+                                            padding: '10px 18px',
+                                            borderRadius: 10,
+                                            border:
+                                                pricingMode === "multiplier"
+                                                    ? '1px solid #1A7A4A'
+                                                    : '1px solid #ccc',
+
+                                            background:
+                                                pricingMode === "multiplier"
+                                                    ? '#1A7A4A'
+                                                    : '#fff',
+
+                                            color:
+                                                pricingMode === "multiplier"
+                                                    ? '#fff'
+                                                    : '#1C2B3A',
+
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            transition: '.2s'
+                                        }}
+                                    >
+                                        Multiplier Based
+                                    </button>
+
+                                    {/* CUSTOM PRICE BUTTON */}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPricingMode("custom");
+
+                                            // ALL SIZES CUSTOM MODE
+                                            const updated = { ...stdSizes };
+
+                                            Object.keys(updated).forEach((size) => {
+                                                updated[size].useCustomPrice = true;
+                                            });
+
+                                            setStdSizes(updated);
+                                        }}
+                                        style={{
+                                            padding: '10px 18px',
+                                            borderRadius: 10,
+                                            border:
+                                                pricingMode === "custom"
+                                                    ? '1px solid #1A7A4A'
+                                                    : '1px solid #ccc',
+
+                                            background:
+                                                pricingMode === "custom"
+                                                    ? '#1A7A4A'
+                                                    : '#fff',
+
+                                            color:
+                                                pricingMode === "custom"
+                                                    ? '#fff'
+                                                    : '#1C2B3A',
+
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            transition: '.2s'
+                                        }}
+                                    >
+                                        Custom Price
+                                    </button>
+                                </div>
+
+                                <p
+                                    style={{
+                                        marginTop: 10,
+                                        fontSize: 12,
+                                        color: '#666'
+                                    }}
+                                >
+                                    Select once and apply to all sizes automatically.
+                                </p>
+                            </div>
+
                             {sizeType === 'standard' && (
                                 <>
                                     <div ref={sizeRef} className={sizeCardShake ? 'ap-shake' : ''} style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, marginBottom: 14 }}>
@@ -1875,10 +2129,10 @@ const Add = ({ token }) => {
                                                     </div>
                                                     {on && (
                                                         <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                                            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, fontWeight: 600, color: B.navySoft, cursor: 'pointer' }}>
+                                                            {/* <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11.5, fontWeight: 600, color: B.navySoft, cursor: 'pointer' }}>
                                                                 <input type="checkbox" checked={d.useCustomPrice} onChange={() => toggleCP(k)} style={{ accentColor: B.green }} /> Custom Price
-                                                            </label>
-                                                            {d.useCustomPrice ? (
+                                                            </label> */}
+                                                            {pricingMode === "custom" ? (
                                                                 <div>
                                                                     <p style={{ fontSize: 10, color: B.navyGhost, fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Price (₹)</p>
                                                                     <input type="number" step="0.01" min="0" value={d.customPrice} onChange={e => setSzF(k, 'customPrice', e.target.value)} placeholder="Price" style={{ ...inputStyle(), padding: '6px 10px', fontSize: 12 }} onFocus={focusGreen} onBlur={blurBorder()} />

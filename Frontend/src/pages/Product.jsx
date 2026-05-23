@@ -2009,7 +2009,7 @@ const Product = () => {
               </div>
 
               {/* Made to Measure */}
-              <div style={{ marginBottom: 8 }}>
+              {/* <div style={{ marginBottom: 8 }}>
                 <button className={`pp-mtm${makeMeasure ? ' active' : ''}`} onClick={() => setMakeMeasure(!makeMeasure)}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <HiSparkles size={13} style={{ color: C.accent }} /><span>Made to Measure</span>
@@ -2022,7 +2022,7 @@ const Product = () => {
                     <p style={{ fontSize: 12, color: C.textMuted, lineHeight: 1.6 }}>Custom measurements can be added on the Cart page.</p>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* CTA */}
               <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -2033,7 +2033,109 @@ const Product = () => {
                 </button>
               </div>
 
-              <JacketLiningSelector basePrice={productData.price} onPriceChange={p => setDisplayPrice(p)} />
+              {/* <JacketLiningSelector basePrice={productData.price} onPriceChange={p => setDisplayPrice(p)} /> */}
+
+              {
+                productData.itemDetails?.some(
+                  item => item.title || item.value
+                ) && (
+
+                  <div
+                    style={{
+                      marginTop: 22,
+                      background: C.bgCard,
+                      border: `1px solid ${C.border}`,
+                      borderRadius: 12,
+                      overflow: 'hidden',
+                    }}
+                  >
+
+                    {/* Heading */}
+
+                    <div
+                      className='bg-gray-200'
+                      style={{
+                        padding: '14px 18px',
+                        borderBottom: `1px solid ${C.border}`,
+                        // background: 'rgba(99,102,241,0.03)',
+                      }}
+                    >
+                      <h2
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: C.textNav,
+                          letterSpacing: '.08em',
+                          textTransform: 'uppercase',
+                          fontFamily: "'Montserrat',sans-serif",
+                        }}
+                      >
+                        Product Specifications
+                      </h2>
+                    </div>
+
+                    {/* Rows */}
+
+                    {
+                      productData.itemDetails.map((item, index) => (
+
+                        item.title || item.value ? (
+
+                          <div
+                            key={index}
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: '40% 50%',
+                              gap: 2,
+                              padding: '6px 18px',
+                              borderBottom:
+                                index !== productData.itemDetails.length - 1
+                                  ? `1px solid ${C.border}`
+                                  : 'none',
+                              alignItems: 'center'
+                            }}
+                          >
+
+                            {/* Left Title */}
+
+                            <p
+                              style={{
+                                fontWeight: 600,
+                                color: C.textBody,
+                                fontSize: 13,
+                                letterSpacing: '.03em',
+                                lineHeight: 1.4,
+                              }}
+                            >
+                              {item.title}
+                            </p>
+
+                            {/* Right Value */}
+
+                            <p
+                              className='text-gray-500'
+                              style={{
+                                // color: C.textDim,
+                                fontSize: 12,
+                                lineHeight: 1.6,
+                                letterSpacing: '.02em',
+                              }}
+                            >
+                              {item.value}
+                            </p>
+
+                          </div>
+
+                        ) : null
+
+                      ))
+                    }
+
+                  </div>
+
+                )
+              }
+
 
               {/* Policies */}
               <div style={{ paddingTop: 8 }} />
