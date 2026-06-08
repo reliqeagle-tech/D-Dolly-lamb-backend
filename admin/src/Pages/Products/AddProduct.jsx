@@ -1446,6 +1446,11 @@ const Add = ({ token }) => {
         if (minP && minP > 0 && minP.toString() !== price) setPrice(minP.toString());
     }, [sizeType, enabledSizes, stdSizes, inchSizes]);
 
+
+    useEffect(() => {
+        setNiCustom(pricingMode === "custom");
+    }, [pricingMode]);
+
     /* Image handlers */
     const setImg = (i, f) => setImages(p => { const n = [...p]; n[i] = f; return n; });
     const delImg = (i) => setImages(p => { const n = [...p]; n[i] = null; return n; });
@@ -1484,8 +1489,8 @@ const Add = ({ token }) => {
         if (!niSize.trim()) return toast.error('Enter size');
         if (inchSizes.some(s => s.size === niSize)) return toast.error('Size exists');
         setSizeErr(false);
-        setInchSizes([...inchSizes, { size: niSize, multiplier: niMult, stock: niStock, customPrice: niPrice, useCustomPrice: niCustom }]);
-        setNiSize(''); setNiMult(1.0); setNiStock(0); setNiPrice(''); setNiCustom(false); toast.success('Size added!');
+        setInchSizes([...inchSizes, { size: niSize, multiplier: niMult, stock: niStock, customPrice: niPrice, useCustomPrice: pricingMode === "custom" }]);
+        setNiSize(''); setNiMult(1.0); setNiStock(0); setNiPrice(''); setNiCustom(pricingMode === "custom"); toast.success('Size added!');
     };
     const rmInch = s => setInchSizes(inchSizes.filter(i => i.size !== s));
     const edInch = (i, f, v) => { const u = [...inchSizes]; if (f === 'useCustomPrice') u[i].useCustomPrice = !u[i].useCustomPrice; else if (f === 'stock') u[i].stock = parseInt(v) || 0; else if (f === 'multiplier') u[i].multiplier = parseFloat(v) || 1; else u[i][f] = v; setInchSizes(u); };
@@ -2185,9 +2190,9 @@ const Add = ({ token }) => {
                                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', gap: 12, padding: 16, background: B.surface, borderRadius: 11, border: `1px solid ${B.border}`, marginBottom: 14 }}>
                                         <Field label="Size Label"><input style={{ ...inputStyle(), width: 100 }} type="text" placeholder="14x14" value={niSize} onChange={e => setNiSize(e.target.value)} onFocus={focusGreen} onBlur={blurBorder()} /></Field>
                                         <Field label="Stock"><input style={{ ...inputStyle(), width: 80 }} type="number" min="0" value={niStock} onChange={e => setNiStock(parseInt(e.target.value) || 0)} onFocus={focusGreen} onBlur={blurBorder()} /></Field>
-                                        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: B.navySoft, cursor: 'pointer', paddingBottom: 10 }}>
+                                        {/* <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: B.navySoft, cursor: 'pointer', paddingBottom: 10 }}>
                                             <input type="checkbox" checked={niCustom} onChange={e => setNiCustom(e.target.checked)} style={{ accentColor: B.green }} /> Custom Price
-                                        </label>
+                                        </label> */}
                                         {niCustom
                                             ? <Field label="Price (₹)"><input style={{ ...inputStyle(), width: 90 }} type="number" step="0.01" min="0" value={niPrice} onChange={e => setNiPrice(e.target.value)} onFocus={focusGreen} onBlur={blurBorder()} /></Field>
                                             : <Field label="Multiplier"><input style={{ ...inputStyle(), width: 85 }} type="number" step="0.1" min="0.5" max="2" value={niMult} onChange={e => setNiMult(parseFloat(e.target.value) || 1)} onFocus={focusGreen} onBlur={blurBorder()} /></Field>
