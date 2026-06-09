@@ -1852,7 +1852,7 @@ const Hero1 = () => {
                 </div>
 
                 <div>
-                  <img src={col.image} alt={col.title} style={{ position: "absolute", bottom: 0, right: 0, width: "70%", height: "80%", objectFit: "cover", borderRadius: "16px", pointerEvents: "none", objectFit: "contain", }} />
+                  <img src={col.image} alt={col.title} style={{ position: "absolute", bottom: 0, right: 0, width: "70%", height: "80%", borderRadius: "16px", pointerEvents: "none", objectFit: "contain", }} />
                 </div>
 
                 <div style={{ position: "relative", zIndex: 1 }}>

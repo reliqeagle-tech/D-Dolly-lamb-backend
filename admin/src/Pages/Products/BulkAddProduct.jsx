@@ -913,25 +913,27 @@ const cardStyle = (extra = {}) => ({
 });
 
 /* ── CSV column spec ── */
-const REQUIRED_COLS = ['name', 'description', 'price', 'category', 'subCategory', 'sizes'];
+const REQUIRED_COLS = ['sku', 'name', 'description', 'price', 'category', 'subCategory', 'sizes'];
 const ALL_COLS = [...REQUIRED_COLS, 'detailedDescription', 'discountPrice', 'bestseller', 'color', 'image'];
 
 const SAMPLE_ROWS = [
     {
+        sku: 'DDL-MJ-0001',
         name: 'Classic Lambskin Leather Jacket',
         description: 'Premium quality lambskin leather jacket with quilted lining',
         detailedDescription: 'Handcrafted from genuine lambskin leather. Features YKK zippers, two side pockets, and one inner pocket. Dry clean only.',
-        price: 4999, discountPrice: 10,
+        price: 1000, discountPrice: 10,
         category: 'Men', subCategory: 'Jackets', bestseller: 'false',
-        sizes: 'XS:0.9:10,S:1:10,M:1.1:5,L:1.2:2,',
+        sizes: 'XS:0.9:10,S:1:10,M:1.1:5,L:1.2:2,XL:1.3:0',
         color: 'Black,Brown,Antique Brown:#8A5A44',
         image: 'https://m.media-amazon.com/images/I/71rgZMIZJhL._AC_SX425_.jpg',
     },
     {
+        sku: 'DDL-WJ-0002',
         name: 'Women Biker Leather Jacket',
         description: 'Edgy moto-inspired jacket for women in genuine cowhide',
         detailedDescription: 'Asymmetric front zip, epaulettes, and belt detail. Soft microfiber lining.',
-        price: 5499, discountPrice: '5',
+        price: 1000, discountPrice: 5,
         category: 'Women', subCategory: 'Moto Biker Jacket', bestseller: 'true',
         sizes: 'XS:1000:10,S:1100:5,M:1200:2,L:1300:0,',
         color: 'Black,Red,Navy Blue',
@@ -942,6 +944,17 @@ const SAMPLE_ROWS = [
 /* ── Validate a single row ── */
 const validateRow = (row, idx) => {
     const errors = [];
+    if (!row.sku?.toString().trim()) errors.push('SKU is required');
+    const skuPattern = /^DDL-[A-Z]{2,3}-\d{4}$/;
+
+    if (
+        row.sku &&
+        !skuPattern.test(row.sku.toString().trim().toUpperCase())
+    ) {
+        errors.push(
+            "SKU format must be like DDL-MJ-0001"
+        );
+    }
     if (!row.name?.toString().trim()) errors.push('Name is required');
     if (!row.price || isNaN(+row.price) || +row.price <= 0) errors.push('Valid price required');
     if (!row.category?.toString().trim()) errors.push('Category required');
@@ -970,6 +983,7 @@ const validateRow = (row, idx) => {
 
     return { ...row, _idx: idx + 1, _errors: errors, _valid: errors.length === 0, _id: `row_${idx}` };
 };
+
 
 /* ── Badge ── */
 const Badge = ({ color, children }) => (
@@ -1009,6 +1023,9 @@ const BulkUpload = ({ token }) => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Products');
         const instructions = [
+            {
+                Field: 'sku', Required: 'YES', Description: 'Unique SKU. Example: DDL-MJ-0001'
+            },
             { Field: 'name', Required: 'YES', Description: 'Product name' },
             { Field: 'description', Required: 'YES', Description: 'Short product description' },
             { Field: 'detailedDescription', Required: 'no', Description: 'Long HTML description (optional)' },
@@ -1077,7 +1094,7 @@ const BulkUpload = ({ token }) => {
         setUploading(true); setProgress(10);
         try {
             const clean = validRows.map(({ _idx, _errors, _valid, _id, ...rest }) => ({
-                ...rest, sizes: rest.sizes?.toString() || '', color: rest.color?.toString() || '',
+                ...rest, sku: rest.sku?.toString().trim().toUpperCase(), sizes: rest.sizes?.toString() || '', color: rest.color?.toString() || '',
                 image: rest.image?.toString() || '', price: rest.price?.toString() || '0',
                 discountPrice: rest.discountPrice?.toString() || '', bestseller: rest.bestseller?.toString() || 'false',
             }));
@@ -1342,8 +1359,8 @@ const BulkUpload = ({ token }) => {
                             {previewOpen && (
                                 <div style={{ padding: '0 0 4px' }}>
                                     {/* Column headers */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 1fr 90px 80px 100px 90px 50px', gap: 0, padding: '10px 18px', background: B.surface, borderBottom: `1px solid ${B.border}` }}>
-                                        {['', '#', 'Name', 'Price', 'Discount', 'Category', 'Sizes', 'Del'].map((h, i) => (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 120px 1fr 90px 80px 100px 90px 50px', gap: 0, padding: '10px 18px', background: B.surface, borderBottom: `1px solid ${B.border}` }}>
+                                        {['', '#', 'SKU', 'Name', 'Price', 'Discount', 'Category', 'Sizes', 'Del'].map((h, i) => (
                                             <span key={i} style={{ color: B.navyGhost, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.6px' }}>{h}</span>
                                         ))}
                                     </div>
@@ -1353,7 +1370,7 @@ const BulkUpload = ({ token }) => {
                                         return (
                                             <div key={row._id} className="bu-row" style={{ borderBottom: `1px solid ${B.border}`, background: row._valid ? 'transparent' : '#FEF9F9' }}>
                                                 {/* Row summary */}
-                                                <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 1fr 90px 80px 100px 90px 50px', gap: 0, padding: '11px 18px', alignItems: 'center', cursor: 'pointer', transition: 'background .12s' }}
+                                                <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 120px 1fr 90px 80px 100px 90px 50px', gap: 0, padding: '11px 18px', alignItems: 'center', cursor: 'pointer', transition: 'background .12s' }}
                                                     onClick={() => toggleRow(row._id)}
                                                     onMouseEnter={e => e.currentTarget.style.background = B.surface}
                                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
@@ -1367,6 +1384,15 @@ const BulkUpload = ({ token }) => {
                                                     <span style={{ color: B.navyGhost, fontSize: 11.5 }}>{row._idx}</span>
                                                     <span style={{ color: B.navy, fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 10 }}>
                                                         {row.name || <span style={{ color: B.red.text, fontStyle: 'italic', fontSize: 12 }}>Missing</span>}
+                                                    </span>
+                                                    <span
+                                                        style={{
+                                                            color: B.navyMid,
+                                                            fontSize: 12,
+                                                            fontWeight: 600
+                                                        }}
+                                                    >
+                                                        {row.sku}
                                                     </span>
                                                     <span style={{ color: B.green, fontSize: 13, fontWeight: 700 }}>
                                                         {row.price ? `₹${row.price}` : <span style={{ color: B.red.text }}>—</span>}
@@ -1519,6 +1545,7 @@ const BulkUpload = ({ token }) => {
                             <p style={{ color: B.navy, fontSize: 13, fontWeight: 700, margin: 0 }}>Format Guide</p>
                         </div>
                         {[
+                            { field: 'sku', example: 'DDL-MJ-0001', note: 'Brand-Category-Number format' },
                             { field: 'sizes', example: 'S:0.9,M:1,L:1.1:10,XL:1.2:15:4499:true', note: 'size:multiplier[:stock[:customPrice[:useCustomPrice]]]' },
                             { field: '  ├ multiplier', example: '0.9 = 90% of base price', note: 'auto-calculated if no custom price' },
                             { field: '  ├ stock', example: '10 = 10 units available', note: 'optional, defaults to 0' },

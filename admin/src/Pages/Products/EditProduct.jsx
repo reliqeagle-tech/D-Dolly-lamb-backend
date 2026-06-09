@@ -1469,22 +1469,70 @@ const INIT_STD = {
     "3XL": { multiplier: 1.5, stock: 0, customPrice: "", useCustomPrice: false },
 };
 
+// const SUB_CATEGORIES = {
+//     Men: ["Jackets", "Bomber Biker Jacket", "Moto Biker Jacket", "Racing Coat", "Leather Coats", "Men Winter Wear"],
+//     Women: ["Jackets", "Bomber Biker Jacket", "Moto Biker Jacket", "Racing Coat", "Women Winter Wear", "Women Night Dress", "Leather Pencil Skirt", "Leather Full Skirt", "Slim Bodycon Skirt"],
+//     Others: ["Pillow", "Cushion Cover", "Aprons", "Desk Mat", "Chair Cover"],
+//     "Leather Pillow Cover": ["Cylindrical Pillow Cover", "Square Pillow Cover", "Rectangle Pillow Cover", "Round Pillow Cover", "Ear Hole Pillow Cushion Cover"],
+//     "Sofa Headrest": ["Recliner Chair Headrest Cover"],
+//     "Leather Desk Pad": ["Leather Desk Mat"],
+//     "Men Leather Apron": ["Apron"],
+// };
+
 const SUB_CATEGORIES = {
-    Men: ["Jackets", "Bomber Biker Jacket", "Moto Biker Jacket", "Racing Coat", "Leather Coats", "Men Winter Wear"],
-    Women: ["Jackets", "Bomber Biker Jacket", "Moto Biker Jacket", "Racing Coat", "Women Winter Wear", "Women Night Dress", "Leather Pencil Skirt", "Leather Full Skirt", "Slim Bodycon Skirt"],
-    Others: ["Pillow", "Cushion Cover", "Aprons", "Desk Mat", "Chair Cover"],
-    "Leather Pillow Cover": ["Cylindrical Pillow Cover", "Square Pillow Cover", "Rectangle Pillow Cover", "Round Pillow Cover", "Ear Hole Pillow Cushion Cover"],
-    "Sofa Headrest": ["Recliner Chair Headrest Cover"],
-    "Leather Desk Pad": ["Leather Desk Mat"],
-    "Men Leather Apron": ["Apron"],
+    "Apron": [
+        "Leather Aprons"
+    ],
+
+    "Desk Pads": [
+        "Leather Mouse Pad"
+    ],
+
+    "Pillow Covers": [
+        "Round Cushion",
+        "Square Cushion",
+        "Rectangle Cushion",
+        "Cylindrical Cushion",
+        "Ear Hole Cushion"
+    ],
+
+    "Men's": [
+        "Bomber Jacket",
+        "Moto Biker Jacket",
+        "Coats"
+    ],
+
+    "Women's": [
+        "Bomber Jacket",
+        "Moto Biker Jacket",
+        "Coats",
+        "Blazer",
+        "Jackets",
+        "Nightsuits",
+        "Top",
+        "Skirts"
+    ],
+
+    "Recliner Slipcover": [
+        "Headrest"
+    ]
 };
 
+// const CAT_DEFAULT = {
+//     Men: "Jackets", Women: "Jackets", Others: "Pillow",
+//     "Leather Pillow Cover": "Cylindrical Pillow Cover",
+//     "Sofa Headrest": "Recliner Chair Headrest Cover",
+//     "Leather Desk Pad": "Leather Desk Mat",
+//     "Men Leather Apron": "Apron",
+// };
+
 const CAT_DEFAULT = {
-    Men: "Jackets", Women: "Jackets", Others: "Pillow",
-    "Leather Pillow Cover": "Cylindrical Pillow Cover",
-    "Sofa Headrest": "Recliner Chair Headrest Cover",
-    "Leather Desk Pad": "Leather Desk Mat",
-    "Men Leather Apron": "Apron",
+    "Apron": "Leather Aprons",
+    "Desk Pads": "Leather Mouse Pad",
+    "Pillow Covers": "Round Cushion",
+    "Men's": "Bomber Jacket",
+    "Women's": "Bomber Jacket",
+    "Recliner Slipcover": "Headrest"
 };
 
 /* ════════════════════════════════════════════════════════════════

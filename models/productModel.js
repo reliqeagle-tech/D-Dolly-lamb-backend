@@ -102,7 +102,13 @@ const productSchema = new mongoose.Schema({
             }
         }
     ],
-
+    sku: {
+        type: String,
+        required: true,
+        uppercase: true,
+        unique: true,
+        index: true
+    },
     bestseller: { type: Boolean, default: false, index: true }, // Default + index
     date: { type: Date, default: Date.now, required: true }, // Changed to Date; auto-now
     isDeleted: { type: Boolean, default: false } // Soft delete

@@ -698,73 +698,234 @@ const updateProduct = async (req, res) => {
 
 
 // BULK UPLOAD
+// const bulkUploadProducts = async (req, res) => {
+//     try {
+//         if (!req.file) {
+//             return res.json({ success: false, message: "No file uploaded" })
+//         }
+
+//         const filePath = req.file.path
+//         let jsonData = []
+
+//         const isCsv = req.file.mimetype === "text/csv" || req.file.mimetype === "application/vnd.ms-excel" || req.file.originalname.toLowerCase().endsWith('.csv');
+//         if (isCsv) {
+//             jsonData = await csv().fromFile(filePath)
+//         } else {
+//             jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"))
+//         }
+
+//         const formattedProducts = await Promise.all(
+//             jsonData.map(async (item) => {
+//                 let uploadedImages = []
+
+//                 if (item.image) {
+//                     const images = item.image.split(",").map((i) => i.trim())
+
+//                     for (let img of images) {
+//                         try {
+//                             const result = await cloudinary.uploader.upload(img, {
+//                                 resource_type: "image",
+//                             })
+//                             uploadedImages.push(result.secure_url)
+//                         } catch (err) {
+//                             console.log("Error uploading image:", img, err)
+//                         }
+//                     }
+//                 }
+
+//                 const parsedSizes = parseBulkSizes(item.sizes)
+
+//                 return {
+//                     name: item.name,
+//                     description: item.description,
+//                     detailedDescription: item.detailedDescription || "",
+//                     price: Number(item.price),
+//                     discountPrice: item.discountPrice ? Number(item.discountPrice) : 0,
+//                     discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
+//                     category: item.category,
+//                     subCategory: item.subCategory,
+//                     bestseller: item.bestseller === "true",
+//                     sizes: parsedSizes, // ✅ WITH MULTIPLIERS
+//                     color: normalizeColorInput(item.color),
+//                     image: uploadedImages,
+//                     date: Date.now(),
+//                 }
+//             })
+//         )
+
+//         await productModel.insertMany(formattedProducts)
+//         fs.unlinkSync(filePath)
+
+//         res.json({
+//             success: true,
+//             message: `${formattedProducts.length} products uploaded successfully`,
+//         })
+//     } catch (error) {
+//         console.log(error)
+//         res.json({ success: false, message: error.message })
+//     }
+// }
+
+
 const bulkUploadProducts = async (req, res) => {
     try {
+
         if (!req.file) {
-            return res.json({ success: false, message: "No file uploaded" })
+            return res.json({
+                success: false,
+                message: "No file uploaded"
+            });
         }
 
-        const filePath = req.file.path
-        let jsonData = []
+        const filePath = req.file.path;
+        let jsonData = [];
 
-        const isCsv = req.file.mimetype === "text/csv" || req.file.mimetype === "application/vnd.ms-excel" || req.file.originalname.toLowerCase().endsWith('.csv');
+        const isCsv =
+            req.file.mimetype === "text/csv" ||
+            req.file.mimetype === "application/vnd.ms-excel" ||
+            req.file.originalname.toLowerCase().endsWith(".csv");
+
         if (isCsv) {
-            jsonData = await csv().fromFile(filePath)
+            jsonData = await csv().fromFile(filePath);
         } else {
-            jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"))
+            jsonData = JSON.parse(
+                fs.readFileSync(filePath, "utf-8")
+            );
         }
 
-        const formattedProducts = await Promise.all(
-            jsonData.map(async (item) => {
-                let uploadedImages = []
+        let inserted = 0;
+        let updated = 0;
 
-                if (item.image) {
-                    const images = item.image.split(",").map((i) => i.trim())
+        for (const item of jsonData) {
 
-                    for (let img of images) {
-                        try {
-                            const result = await cloudinary.uploader.upload(img, {
+            // SKU REQUIRED
+            if (!item.sku) {
+                console.log(`SKU missing for ${item.name}`);
+                continue;
+            }
+
+            let uploadedImages = [];
+
+            if (item.image) {
+
+                const images = item.image
+                    .split(",")
+                    .map((i) => i.trim());
+
+                for (let img of images) {
+                    try {
+
+                        const result =
+                            await cloudinary.uploader.upload(img, {
                                 resource_type: "image",
-                            })
-                            uploadedImages.push(result.secure_url)
-                        } catch (err) {
-                            console.log("Error uploading image:", img, err)
-                        }
+                            });
+
+                        uploadedImages.push(
+                            result.secure_url
+                        );
+
+                    } catch (err) {
+                        console.log(
+                            "Image Upload Error:",
+                            img
+                        );
                     }
                 }
+            }
 
-                const parsedSizes = parseBulkSizes(item.sizes)
+            const parsedSizes =
+                parseBulkSizes(item.sizes);
 
-                return {
-                    name: item.name,
-                    description: item.description,
-                    detailedDescription: item.detailedDescription || "",
-                    price: Number(item.price),
-                    discountPrice: item.discountPrice ? Number(item.discountPrice) : 0,
-                    discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
-                    category: item.category,
-                    subCategory: item.subCategory,
-                    bestseller: item.bestseller === "true",
-                    sizes: parsedSizes, // ✅ WITH MULTIPLIERS
-                    color: normalizeColorInput(item.color),
-                    image: uploadedImages,
-                    date: Date.now(),
-                }
-            })
-        )
+            const productData = {
+                sku: item.sku.trim().toUpperCase(),
 
-        await productModel.insertMany(formattedProducts)
-        fs.unlinkSync(filePath)
+                name: item.name,
+                description: item.description,
 
-        res.json({
+                detailedDescription:
+                    item.detailedDescription || "",
+
+                price: Number(item.price),
+
+                discountPrice:
+                    item.discountPrice
+                        ? Number(item.discountPrice)
+                        : 0,
+
+                // discountActive:
+                //     item.discountPrice &&
+                //     Number(item.discountPrice) > 0,
+                discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
+
+                category: item.category,
+                subCategory: item.subCategory,
+
+                bestseller:
+                    String(item.bestseller).toLowerCase() ===
+                    "true",
+
+                sizes: parsedSizes,
+
+                color: normalizeColorInput(
+                    item.color
+                ),
+
+                image: uploadedImages,
+
+                date: Date.now(),
+            };
+
+            const existing =
+                await productModel.findOne({
+                    sku: item.sku.trim(),
+                });
+
+            if (existing && uploadedImages.length === 0) {
+                productData.image = existing.image;
+            }
+
+            if (existing) {
+
+                await productModel.updateOne(
+                    {
+                        sku: item.sku.trim(),
+                    },
+                    {
+                        $set: productData,
+                    }
+                );
+
+                updated++;
+
+            } else {
+
+                await productModel.create(
+                    productData
+                );
+
+                inserted++;
+            }
+        }
+
+        fs.unlinkSync(filePath);
+
+        return res.json({
             success: true,
-            message: `${formattedProducts.length} products uploaded successfully`,
-        })
+            message: `${inserted} new products added, ${updated} products updated`,
+            inserted,
+            updated,
+        });
+
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+
+        console.log(error);
+
+        return res.json({
+            success: false,
+            message: error.message,
+        });
     }
-}
+};
 
 
 // BULK UPLOAD WITH ZIP
