@@ -2700,6 +2700,7 @@ const Add = ({ token }) => {
     const [sizeCardShake, setSizeCardShake] = useState(false);
     const [itemDetails, setItemDetails] = useState([{ title: "", value: "" }]);
     const [pricingMode, setPricingMode] = useState("custom");
+    const [sku, setSku] = useState('');
 
     const dzRef = useRef(null);
     const sizeRef = useRef(null);
@@ -2894,6 +2895,7 @@ const Add = ({ token }) => {
             fd.append('price', price); fd.append('discountPrice', discountPrice || ''); fd.append('category', category); fd.append('subCategory', subCategory);
             fd.append('bestseller', bestseller); fd.append('sizes', JSON.stringify(formatSizes()));
             fd.append('color', JSON.stringify(colors)); fd.append('itemDetails', JSON.stringify(itemDetails));
+            fd.append('sku', sku);
             images.forEach(img => { if (img) fd.append('images', img); });
             const res = await axios.post(`${backendUrl}/api/product/add`, fd, { headers: { token } });
             if (res.data.success) {
@@ -3068,8 +3070,8 @@ const Add = ({ token }) => {
                                         {category === "Apron" && <option>Leather Aprons</option>}
                                     </select>
                                 </Field>
-                                <Field label="SKU / Code" hint="Auto-generated if blank">
-                                    <input style={inputStyle()} type="text" placeholder="Auto-generated" onFocus={focusGreen} onBlur={blurBorder()} />
+                                <Field label="SKU / Code" hint="Mandatory for inventory management. E.g. DDL-ML-005">
+                                    <input value={sku} onChange={e => setSku(e.target.value)} style={inputStyle()} type="text" placeholder="DDL-ML-001" onFocus={focusGreen} onBlur={blurBorder()} />
                                 </Field>
                             </div>
 

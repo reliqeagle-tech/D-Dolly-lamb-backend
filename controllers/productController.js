@@ -207,7 +207,8 @@ const parseBulkSizes = (sizesValue = '') => {
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, detailedDescription, itemDetails, price, discountPrice, discountActive, category, subCategory, sizes, color, bestseller } = req.body
+        const { sku, name, description, detailedDescription, itemDetails, price, discountPrice, discountActive, category, subCategory, sizes, color, bestseller } = req.body
+
 
         // Validate price
         const numericPrice = Number(price)
@@ -274,6 +275,7 @@ const addProduct = async (req, res) => {
 
 
         const productData = {
+            sku,
             name,
             description,
             detailedDescription,
