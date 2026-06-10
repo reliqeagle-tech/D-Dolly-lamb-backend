@@ -1685,6 +1685,7 @@ const UpdateProduct = ({ token }) => {
     const [category, setCat] = useState('Men');
     const [subCategory, setSubCat] = useState(CAT_DEFAULT['Men']);
     const [bestseller, setBest] = useState(false);
+    const [sku, setSku] = useState('');
 
     /* ── Item Details ── */
     const [itemDetails, setItemDetails] = useState([{ title: "", value: "" }]);
@@ -1736,6 +1737,7 @@ const UpdateProduct = ({ token }) => {
                     setName(p.name || '');
                     setDesc(p.description || '');
                     setDetDesc(p.detailedDescription || '');
+                    setSku(p.sku || '');
                     setPrice(String(p.price || ''));
                     setDiscPrice(String(p.discountPrice || ''));
                     setBest(p.bestseller || false);
@@ -1951,6 +1953,7 @@ const UpdateProduct = ({ token }) => {
             fd.append('name', name.trim());
             fd.append('description', description.trim());
             fd.append('detailedDescription', detDesc);
+            fd.append('sku', sku.trim());
             fd.append('price', price);
             fd.append('discountPrice', discPrice || '');
             fd.append('category', category);
@@ -2091,7 +2094,7 @@ const UpdateProduct = ({ token }) => {
                                     </select>
                                 </Field>
                                 <Field label="SKU / Code" hint="Auto-generated if blank">
-                                    <input style={inpStyle()} type="text" placeholder="Auto-generated" onFocus={focG} onBlur={blrB()} />
+                                    <input style={inpStyle()} type="text" value={sku} onChange={(e) => setSku(e.target.value)} placeholder="DDL-MJ-0001" onFocus={focG} onBlur={blrB()} />
                                 </Field>
                             </div>
 

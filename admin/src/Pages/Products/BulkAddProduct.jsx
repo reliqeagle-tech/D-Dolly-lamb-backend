@@ -914,7 +914,7 @@ const cardStyle = (extra = {}) => ({
 
 /* ── CSV column spec ── */
 const REQUIRED_COLS = ['sku', 'name', 'description', 'price', 'category', 'subCategory', 'sizes'];
-const ALL_COLS = [...REQUIRED_COLS, 'detailedDescription', 'discountPrice', 'bestseller', 'color', 'image'];
+const ALL_COLS = [...REQUIRED_COLS, 'detailedDescription', 'itemDetails', 'discountPrice', 'bestseller', 'color', 'image'];
 
 const SAMPLE_ROWS = [
     {
@@ -922,6 +922,7 @@ const SAMPLE_ROWS = [
         name: 'Classic Lambskin Leather Jacket',
         description: 'Premium quality lambskin leather jacket with quilted lining',
         detailedDescription: 'Handcrafted from genuine lambskin leather. Features YKK zippers, two side pockets, and one inner pocket. Dry clean only.',
+        itemDetails: '[{"title":"Brand","value":"D Dolly Lamb"},{"title":"Material","value":"Lamb Leather"}]',
         price: 1000, discountPrice: 10,
         category: 'Men', subCategory: 'Jackets', bestseller: 'false',
         sizes: 'XS:0.9:10,S:1:10,M:1.1:5,L:1.2:2,XL:1.3:0',
@@ -933,6 +934,7 @@ const SAMPLE_ROWS = [
         name: 'Women Biker Leather Jacket',
         description: 'Edgy moto-inspired jacket for women in genuine cowhide',
         detailedDescription: 'Asymmetric front zip, epaulettes, and belt detail. Soft microfiber lining.',
+        itemDetails: '[{"title":"Brand","value":"D Dolly Lamb"},{"title":"Material","value":"Cowhide Leather"}]',
         price: 1000, discountPrice: 5,
         category: 'Women', subCategory: 'Moto Biker Jacket', bestseller: 'true',
         sizes: 'XS:1000:10,S:1100:5,M:1200:2,L:1300:0,',
@@ -1546,6 +1548,7 @@ const BulkUpload = ({ token }) => {
                         </div>
                         {[
                             { field: 'sku', example: 'DDL-MJ-0001', note: 'Brand-Category-Number format' },
+                            { field: 'itemDetails', example: '[{"title":"Brand","value":"D Dolly Lamb"},{"title":"Material","value":"Leather"}]', note: 'JSON array format' },
                             { field: 'sizes', example: 'S:0.9,M:1,L:1.1:10,XL:1.2:15:4499:true', note: 'size:multiplier[:stock[:customPrice[:useCustomPrice]]]' },
                             { field: '  ├ multiplier', example: '0.9 = 90% of base price', note: 'auto-calculated if no custom price' },
                             { field: '  ├ stock', example: '10 = 10 units available', note: 'optional, defaults to 0' },

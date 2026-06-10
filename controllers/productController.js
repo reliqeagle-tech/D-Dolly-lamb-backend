@@ -273,9 +273,22 @@ const addProduct = async (req, res) => {
 
         }
 
+        const normalizedSku = sku.trim().toUpperCase();
+
+        const existingSku = await productModel.findOne({
+            sku: normalizedSku
+        });
+
+        if (existingSku) {
+            return res.json({
+                success: false,
+                message: "SKU already exists"
+            });
+        }
+
 
         const productData = {
-            sku,
+            sku: normalizedSku,
             name,
             description,
             detailedDescription,
@@ -584,12 +597,32 @@ const updateProduct = async (req, res) => {
         }
 
         const {
-            name, description, detailedDescription, itemDetails,
+            sku, name, description, detailedDescription, itemDetails,
             price, discountPrice, category, subCategory,
             sizes, color, bestseller,
             existingImages  // ✅ Frontend se existing images aa rahi hain
         } = req.body;
 
+        const normalizedSku = sku
+            ? sku.trim().toUpperCase()
+            : product.sku;
+
+        if (
+            normalizedSku &&
+            normalizedSku !== product.sku
+        ) {
+            const exists = await productModel.findOne({
+                sku: normalizedSku,
+                _id: { $ne: productId }
+            });
+
+            if (exists) {
+                return res.json({
+                    success: false,
+                    message: "SKU already exists"
+                });
+            }
+        }
         // ══════════════════════════════════
         // ✅ IMAGE HANDLING - DELETE + ADD
         // ══════════════════════════════════
@@ -673,6 +706,7 @@ const updateProduct = async (req, res) => {
         // UPDATE
         // ══════════════════════════════════
         const updatedData = {
+            sku: normalizedSku,
             name: name ?? product.name,
             description: description ?? product.description,
             detailedDescription: detailedDescription ?? product.detailedDescription,
@@ -835,18 +869,35 @@ const bulkUploadProducts = async (req, res) => {
                 }
             }
 
-            const parsedSizes =
-                parseBulkSizes(item.sizes);
+            const parsedSizes = parseBulkSizes(item.sizes);
+
+            let parsedItemDetails = [];
+
+            try {
+
+                parsedItemDetails = item.itemDetails
+                    ? JSON.parse(item.itemDetails)
+                        .filter(
+                            d =>
+                                d.title?.trim() &&
+                                d.value?.trim()
+                        )
+                    : [];
+
+            } catch (e) {
+
+                console.log(
+                    `Invalid itemDetails for SKU ${item.sku}`
+                );
+
+            }
 
             const productData = {
                 sku: item.sku.trim().toUpperCase(),
-
                 name: item.name,
                 description: item.description,
-
-                detailedDescription:
-                    item.detailedDescription || "",
-
+                detailedDescription: item.detailedDescription || "",
+                itemDetails: parsedItemDetails,
                 price: Number(item.price),
 
                 discountPrice:
@@ -879,7 +930,7 @@ const bulkUploadProducts = async (req, res) => {
 
             const existing =
                 await productModel.findOne({
-                    sku: item.sku.trim(),
+                    sku: item.sku.trim().toUpperCase(),
                 });
 
             if (existing && uploadedImages.length === 0) {
@@ -890,7 +941,7 @@ const bulkUploadProducts = async (req, res) => {
 
                 await productModel.updateOne(
                     {
-                        sku: item.sku.trim(),
+                        sku: item.sku.trim().toUpperCase(),
                     },
                     {
                         $set: productData,
@@ -930,80 +981,292 @@ const bulkUploadProducts = async (req, res) => {
 };
 
 
-// BULK UPLOAD WITH ZIP
+// // BULK UPLOAD WITH ZIP
+// const bulkUploadZipProducts = async (req, res) => {
+//     try {
+//         if (!req.files || !req.files.csv || !req.files.images) {
+//             return res.json({ success: false, message: "CSV and ZIP are required" })
+//         }
+
+//         const csvPath = req.files.csv[0].path
+//         const zipPath = req.files.images[0].path
+//         const extractDir = "temp/images"
+
+//         await fs.ensureDir(extractDir)
+//         await fs
+//             .createReadStream(zipPath)
+//             .pipe(unzipper.Extract({ path: extractDir }))
+//             .promise()
+
+//         const products = await csv().fromFile(csvPath)
+//         const finalProducts = []
+
+//         for (let item of products) {
+//             let imageFilenames = item.image ? item.image.split(",") : []
+//             let uploadedImages = []
+
+//             for (let filename of imageFilenames) {
+//                 filename = filename.trim()
+//                 const localPath = path.join(extractDir, filename)
+
+//                 if (fs.existsSync(localPath)) {
+//                     try {
+//                         const uploaded = await cloudinary.uploader.upload(localPath, {
+//                             resource_type: "image",
+//                             folder: "bulk_upload",
+//                         })
+//                         uploadedImages.push(uploaded.secure_url)
+//                     } catch (err) {
+//                         console.log("Upload failed:", filename, err.message)
+//                     }
+//                 }
+//             }
+
+//             const parsedSizes = parseBulkSizes(item.sizes)
+
+//             finalProducts.push({
+//                 name: item.name,
+//                 description: item.description,
+//                 detailedDescription: item.detailedDescription || "",
+//                 price: Number(item.price),
+//                 discountPrice: item.discountPrice ? Number(item.discountPrice) : 0,
+//                 discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
+//                 category: item.category,
+//                 subCategory: item.subCategory,
+//                 bestseller: item.bestseller === "true",
+//                 sizes: parsedSizes, // ✅ WITH MULTIPLIERS
+//                 color: normalizeColorInput(item.color),
+//                 image: uploadedImages,
+//                 date: Date.now(),
+//             })
+//         }
+
+//         await productModel.insertMany(finalProducts)
+//         fs.unlinkSync(csvPath)
+//         fs.unlinkSync(zipPath)
+//         await fs.remove(extractDir)
+
+//         res.json({
+//             success: true,
+//             message: `${finalProducts.length} products uploaded successfully`,
+//         })
+//     } catch (err) {
+//         console.log(err)
+//         res.json({ success: false, message: err.message })
+//     }
+// }
+
+
 const bulkUploadZipProducts = async (req, res) => {
     try {
+
         if (!req.files || !req.files.csv || !req.files.images) {
-            return res.json({ success: false, message: "CSV and ZIP are required" })
+            return res.json({
+                success: false,
+                message: "CSV and ZIP are required"
+            });
         }
 
-        const csvPath = req.files.csv[0].path
-        const zipPath = req.files.images[0].path
-        const extractDir = "temp/images"
+        const csvPath = req.files.csv[0].path;
+        const zipPath = req.files.images[0].path;
 
-        await fs.ensureDir(extractDir)
+        const extractDir = "temp/images";
+
+        await fs.ensureDir(extractDir);
+
         await fs
             .createReadStream(zipPath)
-            .pipe(unzipper.Extract({ path: extractDir }))
-            .promise()
+            .pipe(
+                unzipper.Extract({
+                    path: extractDir
+                })
+            )
+            .promise();
 
-        const products = await csv().fromFile(csvPath)
-        const finalProducts = []
+        const products = await csv().fromFile(csvPath);
 
-        for (let item of products) {
-            let imageFilenames = item.image ? item.image.split(",") : []
-            let uploadedImages = []
+        let inserted = 0;
+        let updated = 0;
+
+        for (const item of products) {
+
+            if (!item.sku) {
+                console.log(`SKU missing for ${item.name}`);
+                continue;
+            }
+
+            let uploadedImages = [];
+
+            const imageFilenames = item.image
+                ? item.image.split(",")
+                : [];
 
             for (let filename of imageFilenames) {
-                filename = filename.trim()
-                const localPath = path.join(extractDir, filename)
+
+                filename = filename.trim();
+
+                const localPath = path.join(
+                    extractDir,
+                    filename
+                );
 
                 if (fs.existsSync(localPath)) {
+
                     try {
-                        const uploaded = await cloudinary.uploader.upload(localPath, {
-                            resource_type: "image",
-                            folder: "bulk_upload",
-                        })
-                        uploadedImages.push(uploaded.secure_url)
+
+                        const uploaded =
+                            await cloudinary.uploader.upload(
+                                localPath,
+                                {
+                                    resource_type: "image",
+                                    folder: "bulk_upload"
+                                }
+                            );
+
+                        uploadedImages.push(
+                            uploaded.secure_url
+                        );
+
                     } catch (err) {
-                        console.log("Upload failed:", filename, err.message)
+
+                        console.log(
+                            "Upload failed:",
+                            filename,
+                            err.message
+                        );
+
                     }
                 }
             }
 
-            const parsedSizes = parseBulkSizes(item.sizes)
+            const parsedSizes =
+                parseBulkSizes(item.sizes);
 
-            finalProducts.push({
+            let parsedItemDetails = [];
+
+            try {
+
+                parsedItemDetails = item.itemDetails
+                    ? JSON.parse(item.itemDetails)
+                        .filter(
+                            d =>
+                                d.title?.trim() &&
+                                d.value?.trim()
+                        )
+                    : [];
+
+            } catch (e) {
+
+                console.log(
+                    `Invalid itemDetails for SKU ${item.sku}`
+                );
+
+            }
+
+            const productData = {
+
+                sku: item.sku.trim().toUpperCase(),
+
                 name: item.name,
+
                 description: item.description,
-                detailedDescription: item.detailedDescription || "",
+
+                detailedDescription:
+                    item.detailedDescription || "",
+
+                itemDetails: parsedItemDetails,
+
                 price: Number(item.price),
-                discountPrice: item.discountPrice ? Number(item.discountPrice) : 0,
-                discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
+
+                discountPrice:
+                    item.discountPrice
+                        ? Number(item.discountPrice)
+                        : 0,
+
+                discountActive:
+                    item.discountPrice &&
+                        Number(item.discountPrice) > 0
+                        ? true
+                        : false,
+
                 category: item.category,
+
                 subCategory: item.subCategory,
-                bestseller: item.bestseller === "true",
-                sizes: parsedSizes, // ✅ WITH MULTIPLIERS
-                color: normalizeColorInput(item.color),
+
+                bestseller:
+                    String(item.bestseller)
+                        .toLowerCase() === "true",
+
+                sizes: parsedSizes,
+
+                color:
+                    normalizeColorInput(
+                        item.color
+                    ),
+
                 image: uploadedImages,
+
                 date: Date.now(),
-            })
+            };
+
+            const existing =
+                await productModel.findOne({
+                    sku: productData.sku
+                });
+
+            if (existing) {
+
+                // image preserve
+                if (
+                    uploadedImages.length === 0
+                ) {
+                    productData.image =
+                        existing.image;
+                }
+
+                await productModel.updateOne(
+                    {
+                        sku: productData.sku
+                    },
+                    {
+                        $set: productData
+                    }
+                );
+
+                updated++;
+
+            } else {
+
+                await productModel.create(
+                    productData
+                );
+
+                inserted++;
+            }
         }
 
-        await productModel.insertMany(finalProducts)
-        fs.unlinkSync(csvPath)
-        fs.unlinkSync(zipPath)
-        await fs.remove(extractDir)
+        fs.unlinkSync(csvPath);
+        fs.unlinkSync(zipPath);
 
-        res.json({
+        await fs.remove(extractDir);
+
+        return res.json({
             success: true,
-            message: `${finalProducts.length} products uploaded successfully`,
-        })
+            message: `${inserted} new products added, ${updated} products updated`,
+            inserted,
+            updated
+        });
+
     } catch (err) {
-        console.log(err)
-        res.json({ success: false, message: err.message })
+
+        console.log(err);
+
+        return res.json({
+            success: false,
+            message: err.message
+        });
     }
-}
+};
 
 export { listProducts, addProduct, removeProduct, singleProduct, updateProduct, bulkUploadProducts, bulkUploadZipProducts }
 
