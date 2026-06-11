@@ -2910,10 +2910,10 @@ const Add = ({ token }) => {
     };
 
     const resetForm = () => {
-        setName(''); setDesc(''); setDD(''); setPrice(''); setDiscPrice('');
+        setSku(''); setName(''); setDesc(''); setDD(''); setPrice(''); setDiscPrice('');
         setColors([]); setEnabled([]); setStdSizes(INIT_SIZES); setInchSizes([]);
         setImages(Array(10).fill(null)); setSizeType('standard');
-        setCategory('Men'); setSubCat(CATEGORY_DEFAULT_SUB['Men']);
+        setCategory("Men's"); setSubCat(CATEGORY_DEFAULT_SUB["Men's"]);
         setBestseller(false); setValErrs([]); setSizeErr(false); setShowDraftPage(false);
         setItemDetails([{ title: "", value: "" }]); setPricingMode("custom");
     };

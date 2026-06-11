@@ -704,10 +704,10 @@ const Sidebar = () => {
                     {/* CATALOG */}
                     <SectionLabel label="Catalog" />
 
-                    <SidebarGroup icon={<FaRegImage />} label="Home Slides" index={1} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
+                    {/* <SidebarGroup icon={<FaRegImage />} label="Home Slides" index={1} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
                         <SubItem to="/homeSlider/list" label="Banner Slides List" />
                         <SubItem label="Add Banner Slide" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add Home Slide' })} />
-                    </SidebarGroup>
+                    </SidebarGroup> */}
 
                     <SidebarGroup icon={<RiProductHuntLine />} label="Products" index={3} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
                         <SubItem to="/products" label="Product List" />
@@ -716,12 +716,12 @@ const Sidebar = () => {
                         <SubItem to="/reviews" label="Reviews & Ratings" />
                     </SidebarGroup>
 
-                    <SidebarGroup icon={<TbCategory />} label="Category" index={4} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
+                    {/* <SidebarGroup icon={<TbCategory />} label="Category" index={4} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
                         <SubItem to="/category/list" label="Category List" />
                         <SubItem label="Add Category" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add New Category' })} />
                         <SubItem to="/subCategory/list" label="Sub Category List" />
                         <SubItem label="Add Sub Category" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add New Sub Category' })} />
-                    </SidebarGroup>
+                    </SidebarGroup> */}
 
                     {/* SALES */}
                     <SectionLabel label="Sales" />

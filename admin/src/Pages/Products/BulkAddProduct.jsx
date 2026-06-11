@@ -947,15 +947,14 @@ const SAMPLE_ROWS = [
 const validateRow = (row, idx) => {
     const errors = [];
     if (!row.sku?.toString().trim()) errors.push('SKU is required');
-    const skuPattern = /^DDL-[A-Z]{2,3}-\d{4}$/;
+    // const skuPattern = /^DDL-[A-Z]{2,3}-\d{4}$/;
+    const skuPattern = /^[A-Za-z0-9\-()]+$/;
 
     if (
         row.sku &&
         !skuPattern.test(row.sku.toString().trim().toUpperCase())
     ) {
-        errors.push(
-            "SKU format must be like DDL-MJ-0001"
-        );
+        errors.push("SKU can contain letters, numbers, hyphens (-) and brackets ()");
     }
     if (!row.name?.toString().trim()) errors.push('Name is required');
     if (!row.price || isNaN(+row.price) || +row.price <= 0) errors.push('Valid price required');
@@ -1025,9 +1024,7 @@ const BulkUpload = ({ token }) => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Products');
         const instructions = [
-            {
-                Field: 'sku', Required: 'YES', Description: 'Unique SKU. Example: DDL-MJ-0001'
-            },
+            { Field: 'sku', Required: 'YES', Description: 'Unique SKU. Example: DDL-MJ-0001' },
             { Field: 'name', Required: 'YES', Description: 'Product name' },
             { Field: 'description', Required: 'YES', Description: 'Short product description' },
             { Field: 'detailedDescription', Required: 'no', Description: 'Long HTML description (optional)' },
@@ -1361,8 +1358,8 @@ const BulkUpload = ({ token }) => {
                             {previewOpen && (
                                 <div style={{ padding: '0 0 4px' }}>
                                     {/* Column headers */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 120px 1fr 90px 80px 100px 90px 50px', gap: 0, padding: '10px 18px', background: B.surface, borderBottom: `1px solid ${B.border}` }}>
-                                        {['', '#', 'SKU', 'Name', 'Price', 'Discount', 'Category', 'Sizes', 'Del'].map((h, i) => (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 120px 90px 90px 80px 100px 90px 50px', gap: 0, padding: '10px 18px', background: B.surface, borderBottom: `1px solid ${B.border}` }}>
+                                        {['', '#', 'Name', 'SKU', 'Price', 'Discount', 'Category', 'Sizes', 'Del'].map((h, i) => (
                                             <span key={i} style={{ color: B.navyGhost, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.6px' }}>{h}</span>
                                         ))}
                                     </div>

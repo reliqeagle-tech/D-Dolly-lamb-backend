@@ -1134,7 +1134,7 @@ const ProductsList = ({ token }) => {
   /* ── filter + sort ── */
   const filtered = list.filter(p => {
     const q = search.toLowerCase()
-    const matchS = !q || p.name?.toLowerCase().includes(q) || p.category?.toLowerCase().includes(q) || p.subCategory?.toLowerCase().includes(q)
+    const matchS = !q || p.name?.toLowerCase().includes(q) || p.category?.toLowerCase().includes(q) || p.subCategory?.toLowerCase().includes(q) || (p.sku && p.sku.toLowerCase().includes(q))
     const matchC = catFilter === 'all' || p.category === catFilter
     const matchSub = subCatFilter === 'all' || p.subCategory === subCatFilter
     const st = getStock(p.sizes)
@@ -1264,7 +1264,7 @@ const ProductsList = ({ token }) => {
                         onMouseLeave={e => e.currentTarget.style.color = B.navy}>
                         {item.name}
                       </div>
-                      <div style={{ fontSize: 10.5, color: B.navyGhost, fontFamily: 'monospace', marginTop: 2 }}>{formatId(item._id)}</div>
+                      <div style={{ fontSize: 10.5, color: B.navyGhost, fontFamily: 'monospace', marginTop: 2, }}>SKU: {item.sku}</div>
                       {item.bestseller && (
                         <span style={{ display: 'inline-block', marginTop: 3, fontSize: 9, fontWeight: 700, color: B.gold, background: B.goldBg, border: `1px solid ${B.goldBdr}`, padding: '1px 6px', borderRadius: 99 }}>
                           ♛ Bestseller
@@ -1312,7 +1312,7 @@ const ProductsList = ({ token }) => {
                 {/* Sizes */}
                 <td style={tdStyle}>
                   {sizes.length > 0 ? (
-                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', width: 120 }}>
                       {sizes.slice(0, 4).map((s, i) => (
                         <span key={i} style={{ background: B.surface, color: B.navyMid, border: `1px solid ${B.border}`, borderRadius: 6, padding: '2px 6px', fontSize: 10, fontWeight: 700 }}>
                           {typeof s === 'object' ? (s.size || '?') : s}
@@ -1514,7 +1514,7 @@ const ProductsList = ({ token }) => {
         {/* Search */}
         <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
           <HiOutlineSearch size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: B.navyGhost, pointerEvents: 'none' }} />
-          <input type="text" placeholder="Search by name, category…" value={search} onChange={e => setSearch(e.target.value)}
+          <input type="text" placeholder="Search by Name, Category, SKU..." value={search} onChange={e => setSearch(e.target.value)}
             style={{ width: '100%', paddingLeft: 36, paddingRight: search ? 36 : 14, paddingTop: 9, paddingBottom: 9, borderRadius: 9, border: `1px solid ${B.border}`, background: B.surfaceCard, color: B.navy, fontSize: 13, outline: 'none', transition: 'border-color .2s', boxSizing: 'border-box', fontFamily: 'inherit' }}
             onFocus={e => e.target.style.borderColor = B.greenBdr}
             onBlur={e => e.target.style.borderColor = B.border}
