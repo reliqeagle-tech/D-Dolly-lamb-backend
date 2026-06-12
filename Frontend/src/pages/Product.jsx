@@ -1596,10 +1596,23 @@ const Product = () => {
   };
 
   useEffect(() => { fetchProductData(); }, [productId, products]);
+  // useEffect(() => {
+  //   if (productData?.color?.length) {
+  //     const firstColor = productData.color[0];
+  //     setSelectedColor(typeof firstColor === 'string' ? firstColor : firstColor?.name || 'Unknown');
+  //   }
+  // }, [productData]);
   useEffect(() => {
-    if (productData?.color?.length) {
+    if (productData?.color?.length > 0) {
       const firstColor = productData.color[0];
-      setSelectedColor(typeof firstColor === 'string' ? firstColor : firstColor?.name || 'Unknown');
+
+      setSelectedColor(
+        typeof firstColor === 'string'
+          ? firstColor
+          : firstColor?.name || ''
+      );
+    } else {
+      setSelectedColor('');
     }
   }, [productData]);
   useEffect(() => { if (productData) setDisplayPrice(productData.price); }, [productData]);
@@ -1951,7 +1964,7 @@ const Product = () => {
               </div>
 
               {/* Color selector */}
-              <div style={{ marginBottom: 16 }}>
+              {/* <div style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                   <span className="pp-slabel">Colour</span>
                   <span style={{ fontSize: 11, color: C.textNav, fontWeight: 600, textTransform: 'capitalize' }}>
@@ -1969,6 +1982,49 @@ const Product = () => {
                         onClick={() => setSelectedColor(colorName)}
                         style={{ background: colorHex, outline: colorHex === '#FFFFFF' ? `1.5px solid ${C.border}` : 'none' }}
                         title={colorName} />
+                    );
+                  })}
+                </div>
+              </div> */}
+
+              {/* Color selector */}
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                  <span className="pp-slabel">Colour</span>
+                  <span style={{ fontSize: 11, color: C.textNav, fontWeight: 600, textTransform: 'capitalize' }}>
+                    — {selectedColor}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {productData.color?.map((colorObj, index) => {
+                    let colorName, colorHex;
+                    if (typeof colorObj === 'string') {
+                      colorName = colorObj;
+                      colorHex = colorMap[colorObj.toLowerCase()] || null; // ← '#888' → null
+                    } else if (colorObj?.name) {
+                      colorName = colorObj.name;
+                      // colorHex = colorObj.hex || null;
+                      const hex = colorObj.hex;
+                      colorHex = (hex && hex !== '#000000' && hex.trim() !== '') ? hex : null;// ← '#888' → null
+                    } else {
+                      colorName = 'Unknown';
+                      colorHex = null;
+                    }
+
+                    return colorHex ? (
+                      // ── Hex available → color swatch button ──
+                      <button key={index}
+                        className={`pp-clr${selectedColor === colorName ? ' active' : ''}`}
+                        onClick={() => setSelectedColor(colorName)}
+                        style={{
+                          background: colorHex,
+                          outline: colorHex === '#FFFFFF' ? `1.5px solid ${C.border}` : 'none'
+                        }}
+                        title={colorName}
+                      />
+                    ) : (
+                      // ── No hex → text pill button ──
+                      null
                     );
                   })}
                 </div>

@@ -203,6 +203,31 @@ const parseBulkSizes = (sizesValue = '') => {
         .filter(Boolean)
 }
 
+const parseItemDetailsField = (value = "") => {
+    if (!value) return [];
+
+    try {
+        return JSON.parse(value)
+            .filter(item => item.title?.trim() && item.value?.trim());
+    } catch (e) {
+
+        return value
+            .split("::")
+            .map(item => {
+                const [title, val] = item.split(":");
+
+                return {
+                    title: title?.trim(),
+                    value: val?.trim()
+                };
+            })
+            .filter(item =>
+                item.title &&
+                item.value
+            );
+    }
+};
+
 // function for add product
 const addProduct = async (req, res) => {
     try {
@@ -871,26 +896,29 @@ const bulkUploadProducts = async (req, res) => {
 
             const parsedSizes = parseBulkSizes(item.sizes);
 
-            let parsedItemDetails = [];
+            // let parsedItemDetails = [];
 
-            try {
+            // try {
 
-                parsedItemDetails = item.itemDetails
-                    ? JSON.parse(item.itemDetails)
-                        .filter(
-                            d =>
-                                d.title?.trim() &&
-                                d.value?.trim()
-                        )
-                    : [];
+            //     parsedItemDetails = item.itemDetails
+            //         ? JSON.parse(item.itemDetails)
+            //             .filter(
+            //                 d =>
+            //                     d.title?.trim() &&
+            //                     d.value?.trim()
+            //             )
+            //         : [];
 
-            } catch (e) {
+            // } catch (e) {
 
-                console.log(
-                    `Invalid itemDetails for SKU ${item.sku}`
-                );
+            //     console.log(
+            //         `Invalid itemDetails for SKU ${item.sku}`
+            //     );
 
-            }
+            // }
+
+            const parsedItemDetails =
+                parseItemDetailsField(item.itemDetails);
 
             const productData = {
                 sku: item.sku.trim().toUpperCase(),
@@ -1142,26 +1170,29 @@ const bulkUploadZipProducts = async (req, res) => {
             const parsedSizes =
                 parseBulkSizes(item.sizes);
 
-            let parsedItemDetails = [];
+            // let parsedItemDetails = [];
 
-            try {
+            // try {
 
-                parsedItemDetails = item.itemDetails
-                    ? JSON.parse(item.itemDetails)
-                        .filter(
-                            d =>
-                                d.title?.trim() &&
-                                d.value?.trim()
-                        )
-                    : [];
+            //     parsedItemDetails = item.itemDetails
+            //         ? JSON.parse(item.itemDetails)
+            //             .filter(
+            //                 d =>
+            //                     d.title?.trim() &&
+            //                     d.value?.trim()
+            //             )
+            //         : [];
 
-            } catch (e) {
+            // } catch (e) {
 
-                console.log(
-                    `Invalid itemDetails for SKU ${item.sku}`
-                );
+            //     console.log(
+            //         `Invalid itemDetails for SKU ${item.sku}`
+            //     );
 
-            }
+            // }
+
+            const parsedItemDetails =
+                parseItemDetailsField(item.itemDetails);
 
             const productData = {
 

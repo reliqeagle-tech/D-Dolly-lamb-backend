@@ -835,7 +835,8 @@
 import React, { useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import * as XLSX from 'xlsx';
+// import * as XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 
 import {
     TbUpload, TbFileSpreadsheet, TbX, TbCheck, TbAlertTriangle,
@@ -916,30 +917,31 @@ const cardStyle = (extra = {}) => ({
 const REQUIRED_COLS = ['sku', 'name', 'description', 'price', 'category', 'subCategory', 'sizes'];
 const ALL_COLS = [...REQUIRED_COLS, 'detailedDescription', 'itemDetails', 'discountPrice', 'bestseller', 'color', 'image'];
 
+
 const SAMPLE_ROWS = [
     {
-        sku: 'DDL-MJ-0001',
-        name: 'Classic Lambskin Leather Jacket',
-        description: 'Premium quality lambskin leather jacket with quilted lining',
-        detailedDescription: 'Handcrafted from genuine lambskin leather. Features YKK zippers, two side pockets, and one inner pocket. Dry clean only.',
-        itemDetails: '[{"title":"Brand","value":"D Dolly Lamb"},{"title":"Material","value":"Lamb Leather"}]',
-        price: 1000, discountPrice: 10,
-        category: 'Men', subCategory: 'Jackets', bestseller: 'false',
-        sizes: 'XS:0.9:10,S:1:10,M:1.1:5,L:1.2:2,XL:1.3:0',
-        color: 'Black,Brown,Antique Brown:#8A5A44',
-        image: 'https://m.media-amazon.com/images/I/71rgZMIZJhL._AC_SX425_.jpg',
+        SKU: 'WHITE-BEAR-(SQ)-PK2',
+        Product_Name: 'Classic Lambskin Leather Jacket',
+        Product_Summary: 'Premium quality lambskin leather jacket with quilted lining',
+        Detailed_Description: 'Handcrafted from genuine lambskin leather. Features YKK zippers, two side pockets, and one inner pocket. Dry clean only.',
+        Product_Details: 'Brand: D Dolly Lamb::Material: Lamb Leather',
+        Price: 1000, "Discount_(In_%)": 10,
+        Category: "Men's", Sub_Category: 'Bomber Jacket', Bestseller: 'false',
+        Size_Name: 'XS:0.9:10,S:1:10,M:1.1:5,L:1.2:2,XL:1.3:0',
+        Color_Name: 'Black,Brown,Antique Brown:#8A5A44',
+        Image_Link: 'https://m.media-amazon.com/images/I/71rgZMIZJhL._AC_SX425_.jpg',
     },
     {
-        sku: 'DDL-WJ-0002',
-        name: 'Women Biker Leather Jacket',
-        description: 'Edgy moto-inspired jacket for women in genuine cowhide',
-        detailedDescription: 'Asymmetric front zip, epaulettes, and belt detail. Soft microfiber lining.',
-        itemDetails: '[{"title":"Brand","value":"D Dolly Lamb"},{"title":"Material","value":"Cowhide Leather"}]',
-        price: 1000, discountPrice: 5,
-        category: 'Women', subCategory: 'Moto Biker Jacket', bestseller: 'true',
-        sizes: 'XS:1000:10,S:1100:5,M:1200:2,L:1300:0,',
-        color: 'Black,Red,Navy Blue',
-        image: 'https://m.media-amazon.com/images/I/81XkXgk6QXL._AC_SY445_.jpg',
+        SKU: 'BLACK-BEAR-(AQ)-PK2',
+        Product_Name: 'Women Biker Leather Jacket',
+        Product_Summary: 'Edgy moto-inspired jacket for women in genuine cowhide',
+        Detailed_Description: 'Asymmetric front zip, epaulettes, and belt detail. Soft microfiber lining.',
+        Product_Details: 'Brand: D Dolly Lamb::Material: Cowhide Leather',
+        Price: 1000, "Discount_(In_%)": 5,
+        Category: 'Women', Sub_Category: 'Moto Biker Jacket', Bestseller: 'true',
+        Size_Name: 'XS:1000:10,S:1100:5,M:1200:2,L:1300:0',
+        Color_Name: 'Black,Red,Navy Blue',
+        Image_Link: 'https://m.media-amazon.com/images/I/81XkXgk6QXL._AC_SY445_.jpg',
     },
 ];
 
@@ -963,6 +965,13 @@ const validateRow = (row, idx) => {
     if (!row.sizes?.toString().trim()) errors.push('Sizes required (format: S:0.9:10,M:1:5)');
     if (!row.description?.toString().trim()) errors.push('Description required');
     if (row.discountPrice && +row.discountPrice >= +row.price) errors.push('Discount must be less than price');
+    // if (
+    //     row["Discount_(In_%)"] &&
+    //     (Number(row["Discount_(In_%)"]) < 0 ||
+    //         Number(row["Discount_(In_%)"]) > 100)
+    // ) {
+    //     errors.push("Discount percentage must be between 0 and 100");
+    // }
 
     if (row.sizes) {
         const bad = row.sizes.toString().split(',').some(s => {
@@ -980,6 +989,36 @@ const validateRow = (row, idx) => {
             return false;
         });
         if (bad) errors.push('Sizes format wrong — S:0.9:10 or S:2499:10:custom');
+    }
+    // if (row.itemDetails) {
+    //     const valid = row.itemDetails
+    //         .toString()
+    //         .split('|')
+    //         .every(item => item.includes('='));
+
+    //     if (!valid) {
+    //         errors.push(
+    //             'Product Details format should be Brand=D Dolly Lamb|Material=Leather'
+    //         );
+    //     }
+    // }
+
+    if (row.itemDetails) {
+        const valid = row.itemDetails
+            .toString()
+            .split('::')
+            .every(item => {
+                const parts = item.split(':');
+                return parts.length >= 2 &&
+                    parts[0].trim() &&
+                    parts[1].trim();
+            });
+
+        if (!valid) {
+            errors.push(
+                'Product Details format should be Brand: Dolly::Material: Leather::Pattern: Printed'
+            );
+        }
     }
 
     return { ...row, _idx: idx + 1, _errors: errors, _valid: errors.length === 0, _id: `row_${idx}` };
@@ -1019,28 +1058,149 @@ const BulkUpload = ({ token }) => {
 
     /* ── Download Excel template ── */
     const downloadTemplate = () => {
-        const ws = XLSX.utils.json_to_sheet(SAMPLE_ROWS, { header: ALL_COLS });
-        ws['!cols'] = ALL_COLS.map(col => ({ wch: col === 'detailedDescription' ? 50 : col === 'image' ? 40 : col === 'sizes' ? 30 : 20 }));
+        // const ws = XLSX.utils.json_to_sheet(SAMPLE_ROWS, { header: ALL_COLS });
+        // ws['!cols'] = ALL_COLS.map(col => ({ wch: col === 'detailedDescription' ? 50 : col === 'image' ? 40 : col === 'sizes' ? 30 : 20 }));
         const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(
+            SAMPLE_ROWS,
+            {
+                header: [
+                    'SKU',
+                    'Product_Name',
+                    'Product_Summary',
+                    'Detailed_Description',
+                    'Product_Details',
+                    'Price',
+                    'Discount_(In_%)',
+                    'Category',
+                    'Sub_Category',
+                    'Bestseller',
+                    'Size_Name',
+                    'Color_Name',
+                    'Image_Link'
+                ]
+            }
+        );
+        ws['!cols'] = [
+            { wch: 22 }, // SKU
+            { wch: 35 }, // Product_Name
+            { wch: 45 }, // Product_Summary
+            { wch: 60 }, // Detailed_Description
+            { wch: 40 }, // Product_Details
+            { wch: 12 }, // Price
+            { wch: 15 }, // Discount
+            { wch: 22 }, // Category
+            { wch: 25 }, // Sub_Category
+            { wch: 12 }, // Bestseller
+            { wch: 40 }, // Size_Name
+            { wch: 30 }, // Color_Name
+            { wch: 60 }  // Image_Link
+        ];
         XLSX.utils.book_append_sheet(wb, ws, 'Products');
         const instructions = [
-            { Field: 'sku', Required: 'YES', Description: 'Unique SKU. Example: DDL-MJ-0001' },
-            { Field: 'name', Required: 'YES', Description: 'Product name' },
-            { Field: 'description', Required: 'YES', Description: 'Short product description' },
-            { Field: 'detailedDescription', Required: 'no', Description: 'Long HTML description (optional)' },
-            { Field: 'price', Required: 'YES', Description: 'Base price in ₹ (number)' },
-            { Field: 'discountPrice', Required: 'no', Description: 'Sale price (must be < price)' },
-            { Field: 'category', Required: 'YES', Description: 'Men / Women / Others / Leather Pillow Cover / Sofa Headrest / Leather Desk Pad / Men Leather Apron' },
-            { Field: 'subCategory', Required: 'YES', Description: 'Jackets / Bomber Biker Jacket / Moto Biker Jacket / etc.' },
-            { Field: 'bestseller', Required: 'no', Description: 'true or false' },
-            { Field: 'sizes', Required: 'YES', Description: 'S:0.9:10 (multiplier mode) or S:2499:10:custom (custom price mode)' },
-            { Field: 'color', Required: 'no', Description: 'Comma separated. Black,Brown or White:#F6F6FC,Brown:#8A5A44' },
-            { Field: 'image', Required: 'no', Description: 'Comma separated public image URLs. For ZIP mode, use filenames: img1.jpg,img2.jpg' },
+            { Field: 'SKU', Required: 'YES', Description: 'Unique SKU. Example: WHITE-BEAR-(SQ)-PK2' },
+            { Field: 'Product_Name', Required: 'YES', Description: 'Product name' },
+            { Field: 'Product_Summary', Required: 'YES', Description: 'Short product description' },
+            { Field: 'Detailed_Description', Required: 'no', Description: 'Long HTML description (optional)' },
+            { Field: 'Price', Required: 'YES', Description: 'Base price in ₹ (number)' },
+            { Field: 'Discount_Price', Required: 'no', Description: 'Sale price (must be < price)' },
+            { Field: 'Category', Required: 'YES', Description: 'Men / Women / Others / Leather Pillow Cover / Sofa Headrest / Leather Desk Pad / Men Leather Apron' },
+            { Field: 'Sub_Category', Required: 'YES', Description: 'Jackets / Bomber Biker Jacket / Moto Biker Jacket / etc.' },
+            { Field: 'Bestseller', Required: 'no', Description: 'true or false' },
+            { Field: 'Size_Name', Required: 'YES', Description: 'S:0.9:10 (multiplier mode) or S:2499:10:custom (custom price mode)' },
+            { Field: 'Color_Name', Required: 'no', Description: 'Comma separated. Black,Brown or White:#F6F6FC,Brown:#8A5A44' },
+            { Field: 'Image_Link', Required: 'no', Description: 'Comma separated public image URLs. For ZIP mode, use filenames: img1.jpg,img2.jpg' },
         ];
-        const ws2 = XLSX.utils.json_to_sheet(instructions);
-        ws2['!cols'] = [{ wch: 22 }, { wch: 10 }, { wch: 60 }];
-        XLSX.utils.book_append_sheet(wb, ws2, 'Instructions');
+
+        const categoryRows = [
+            ['Category', 'Sub Category'],
+            ['Apron', 'Leather Aprons'],
+            ['Desk Pads', 'Leather Mouse Pad'],
+            ['Pillow Covers', 'Round Cushion'],
+            ['', 'Square Cushion'],
+            ['', 'Rectangle Cushion'],
+            ['', 'Cylindrical Cushion'],
+            ['', 'Ear Hole Cushion'],
+            ["Men's", 'Bomber Jacket'],
+            ['', 'Moto Biker Jacket'],
+            ['', 'Coats'],
+            ["Women's", 'Bomber Jacket'],
+            ['', 'Moto Biker Jacket'],
+            ['', 'Coats'],
+            ['', 'Blazer'],
+            ['', 'Jackets'],
+            ['', 'Nightsuits'],
+            ['', 'Top'],
+            ['', 'Skirts'],
+            ['Recliner Slipcover', 'Headrest']
+        ];
+        const wsInstructions = XLSX.utils.json_to_sheet(instructions);
+
+        wsInstructions['!cols'] = [
+            { wch: 25 }, // A
+            { wch: 12 }, // B
+            { wch: 55 }, // C
+            { wch: 20 }, // D
+            { wch: 20 }, // E
+            { wch: 28 }, // F Category
+            { wch: 40 }  // G Sub Category
+        ];
+
+        XLSX.utils.sheet_add_aoa(wsInstructions, categoryRows, {
+            origin: 'F1'
+        });
+
+        // wsInstructions['E1'].s = {
+        //     font: { bold: true },
+        //     fill: { fgColor: { rgb: 'D9D9D9' } }
+        // };
+
+        for (let row = 1; row <= categoryRows.length; row++) {
+            ['F', 'G'].forEach(col => {
+                const cell = wsInstructions[`${col}${row}`];
+
+                if (!cell) return;
+
+                cell.s = {
+                    font: {
+                        bold: row === 1,
+                        color: { rgb: row === 1 ? 'FFFFFF' : '1C2B3A' }
+                    },
+
+                    fill: {
+                        fgColor: {
+                            rgb: row === 1 ? '1A7A4A' : 'FFFFFF'
+                        }
+                    },
+
+                    alignment: {
+                        vertical: 'center',
+                        horizontal: 'left'
+                    },
+
+                    border: {
+                        top: { style: 'thin', color: { rgb: '808080' } },
+                        bottom: { style: 'thin', color: { rgb: '808080' } },
+                        left: { style: 'thin', color: { rgb: '808080' } },
+                        right: { style: 'thin', color: { rgb: '808080' } }
+                    }
+                };
+            });
+        }
+
+        // wsInstructions['F1'].s = {
+        //     font: { bold: true },
+        //     fill: { fgColor: { rgb: 'D9D9D9' } }
+        // };
+
+        XLSX.utils.book_append_sheet(wb, wsInstructions, 'Instructions');
+
         XLSX.writeFile(wb, 'dolly_lamb_bulk_template.xlsx');
+
+        // const ws2 = XLSX.utils.json_to_sheet(instructions);
+        // ws2['!cols'] = [{ wch: 22 }, { wch: 10 }, { wch: 60 }];
+        // XLSX.utils.book_append_sheet(wb, ws2, 'Instructions');
+        // XLSX.writeFile(wb, 'dolly_lamb_bulk_template.xlsx');
         toast.success('📥 Template downloaded!');
     };
 
@@ -1057,8 +1217,38 @@ const BulkUpload = ({ token }) => {
                     const wb = XLSX.read(e.target.result, { type: 'binary' });
                     data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
                 }
-                if (!data.length) { toast.error('File is empty'); return; }
-                const validated = data.map((row, i) => validateRow(row, i));
+                // if (!data.length) { toast.error('File is empty'); return; }
+                // const validated = data.map((row, i) => validateRow(row, i));
+                if (!data.length) {
+                    toast.error('File is empty');
+                    return;
+                }
+
+                const normalizedData = data.map(row => ({
+                    sku: row.SKU || '',
+                    name: row.Product_Name || '',
+                    description: row.Product_Summary || '',
+                    detailedDescription: row.Detailed_Description || '',
+                    itemDetails: row.Product_Details || '',
+                    price: row.Price || '',
+                    discountPrice: row["Discount_(In_%)"] || '',
+                    category: row.Category || '',
+                    subCategory: row.Sub_Category || '',
+                    sizes: row.Size_Name || '',
+                    bestseller: row.Bestseller || 'false',
+                    color: row.Color_Name || '',
+                    image: row.Image_Link || ''
+                }));
+
+                const validated = normalizedData.map((row, i) =>
+                    validateRow(row, i)
+                );
+
+                console.log("Excel Row:", data[0]);
+                console.log("Normalized:", normalizedData[0]);
+                console.log("Raw Excel Data:", data);
+                console.log("Total Rows:", data.length);
+
                 setRows(validated); setResult(null); setExpandedRows(new Set()); setPreviewOpen(true);
                 const valid = validated.filter(r => r._valid).length;
                 toast.success(`Parsed ${data.length} rows — ${valid} valid, ${data.length - valid} with errors`);
@@ -1206,7 +1396,7 @@ const BulkUpload = ({ token }) => {
                 </div>
             )}
 
-            <div style={{ padding: '20px 24px', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16, alignItems: 'start' }}>
+            <div style={{ padding: '20px 24px', maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 320px', gap: 16, alignItems: 'start' }}>
 
                 {/* ══ MAIN COLUMN ══ */}
                 <div>
@@ -1355,33 +1545,33 @@ const BulkUpload = ({ token }) => {
                                 </button>
                             </div>
 
-                            {previewOpen && (
-                                <div style={{ padding: '0 0 4px' }}>
+                            {/* {previewOpen && (
+                                <div style={{ padding: '0 0 4px', overflowX: 'auto', width: '100%', display: 'block' }}>
                                     {/* Column headers */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 120px 90px 90px 80px 100px 90px 50px', gap: 0, padding: '10px 18px', background: B.surface, borderBottom: `1px solid ${B.border}` }}>
+                            {/* <div style={{ display: 'grid', gridTemplateColumns: '36px 32px 160px 130px 100px 90px 120px 130px 50px', minWidth: '960px', gap: '0 8px', padding: '10px 20px', background: B.surface, borderBottom: `1px solid ${B.border}` }}>
                                         {['', '#', 'Name', 'SKU', 'Price', 'Discount', 'Category', 'Sizes', 'Del'].map((h, i) => (
                                             <span key={i} style={{ color: B.navyGhost, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.6px' }}>{h}</span>
                                         ))}
-                                    </div>
+                                    </div> */}
 
-                                    {rows.map((row) => {
+                            {/* {rows.map((row) => {
                                         const exp = expandedRows.has(row._id);
                                         return (
                                             <div key={row._id} className="bu-row" style={{ borderBottom: `1px solid ${B.border}`, background: row._valid ? 'transparent' : '#FEF9F9' }}>
                                                 {/* Row summary */}
-                                                <div style={{ display: 'grid', gridTemplateColumns: '36px 28px 120px 1fr 90px 80px 100px 90px 50px', gap: 0, padding: '11px 18px', alignItems: 'center', cursor: 'pointer', transition: 'background .12s' }}
+                            {/* <div style={{ display: 'grid', gridTemplateColumns: '36px 32px 160px 130px 100px 90px 120px 130px 50px', minWidth: '960px', gap: '0 8px', padding: '13px 20px', alignItems: 'center', cursor: 'pointer', transition: 'background .12s' }}
                                                     onClick={() => toggleRow(row._id)}
                                                     onMouseEnter={e => e.currentTarget.style.background = B.surface}
                                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                                     {/* Status dot */}
-                                                    <div>
+                            {/* <div>
                                                         {row._valid
                                                             ? <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.emerald.dot }} />
                                                             : <div style={{ width: 8, height: 8, borderRadius: '50%', background: B.red.dot }} />
                                                         }
                                                     </div>
                                                     <span style={{ color: B.navyGhost, fontSize: 11.5 }}>{row._idx}</span>
-                                                    <span style={{ color: B.navy, fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 10 }}>
+                                                    <span style={{ color: B.navy, fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 16 }}>
                                                         {row.name || <span style={{ color: B.red.text, fontStyle: 'italic', fontSize: 12 }}>Missing</span>}
                                                     </span>
                                                     <span
@@ -1412,7 +1602,7 @@ const BulkUpload = ({ token }) => {
                                                 </div>
 
                                                 {/* Expanded details */}
-                                                {exp && (
+                            {/* {exp && (
                                                     <div style={{ padding: '0 18px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                                                         {row._errors.length > 0 && (
                                                             <div style={{ background: B.red.bg, border: `1px solid ${B.red.border}`, borderRadius: 10, padding: '10px 14px' }}>
@@ -1433,6 +1623,92 @@ const BulkUpload = ({ token }) => {
                                             </div>
                                         );
                                     })}
+                                </div>
+                            )} */}
+
+                            {previewOpen && (
+                                <div style={{ overflowX: 'auto', width: '100%', }}>
+                                    <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 900, }}>
+                                        <thead>
+                                            <tr style={{ background: B.surface, borderBottom: `1px solid ${B.border}` }}>
+                                                {['', '#', 'SKU', 'Name', 'Price', 'Discount', 'Category', 'Sizes', 'Del'].map((h, i) => (
+                                                    <th key={i} style={{
+                                                        padding: '10px 14px', textAlign: 'left',
+                                                        color: B.navyGhost, fontSize: 10, fontWeight: 700,
+                                                        textTransform: 'uppercase', letterSpacing: '.6px',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>{h}</th>
+                                                ))}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {rows.map((row) => {
+                                                const exp = expandedRows.has(row._id);
+                                                return (
+                                                    <React.Fragment key={row._id}>
+                                                        <tr
+                                                            className="bu-row"
+                                                            onClick={() => {
+                                                                console.log("Row Object:", row);
+                                                                console.log("Row ID:", row._id);
+                                                                toggleRow(row._id)
+                                                            }}
+                                                            style={{ borderBottom: `1px solid ${B.border}`, background: row._valid ? 'transparent' : '#FEF9F9', cursor: 'pointer', }}
+                                                            onMouseEnter={e => e.currentTarget.style.background = B.surface}
+                                                            onMouseLeave={e => e.currentTarget.style.background = row._valid ? 'transparent' : '#FEF9F9'}
+                                                        >
+                                                            <td style={{ padding: '13px 14px', width: 36 }}>
+                                                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: row._valid ? B.emerald.dot : B.red.dot }} />
+                                                            </td>
+                                                            <td style={{ padding: '13px 14px', color: B.navyGhost, fontSize: 11.5, whiteSpace: 'nowrap' }}>{row._idx}</td>
+                                                            <td style={{ padding: '13px 14px', color: B.navyMid, fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap' }}>{row.sku}</td>
+                                                            <td style={{ padding: '13px 14px', color: B.navy, fontSize: 13, fontWeight: 600, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                                {row.name || <span style={{ color: B.red.text, fontStyle: 'italic' }}>Missing</span>}
+                                                            </td>
+                                                            <td style={{ padding: '13px 14px', color: B.green, fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                                                                {row.price ? `₹${row.price}` : <span style={{ color: B.red.text }}>—</span>}
+                                                            </td>
+                                                            <td style={{ padding: '13px 14px', color: row.discountPrice ? B.emerald.text : B.navyGhost, fontSize: 12, whiteSpace: 'nowrap' }}>
+                                                                {row.discountPrice ? `₹${row.discountPrice}` : '—'}
+                                                            </td>
+                                                            <td style={{ padding: '13px 14px', color: B.navySoft, fontSize: 12, whiteSpace: 'nowrap' }}>{row.category || '—'}</td>
+                                                            <td style={{ padding: '13px 14px', color: B.navyMid, fontSize: 11.5, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                                {row.sizes || <span style={{ color: B.red.text }}>Missing</span>}
+                                                            </td>
+                                                            <td style={{ padding: '13px 14px' }}>
+                                                                <button type="button" onClick={e => { e.stopPropagation(); removeRow(row._id); }}
+                                                                    style={{ width: 26, height: 26, borderRadius: 7, background: B.red.bg, border: `1px solid ${B.red.border}`, color: B.red.text, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                                                    <TbX size={11} />
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {
+                                                            exp && (
+                                                                <tr>
+                                                                    <td colSpan={9} style={{ padding: '14px' }}>
+                                                                        {row._errors.length > 0 && (
+                                                                            <div style={{ background: B.red.bg, border: `1px solid ${B.red.border}`, borderRadius: 10, padding: '10px 14px', marginBottom: 8 }}>
+                                                                                <p style={{ color: B.red.text, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>⚠ Errors in this row:</p>
+                                                                                {row._errors.map((e, i) => <p key={i} style={{ color: B.red.text, fontSize: 12.5, margin: '0 0 2px' }}>• {e}</p>)}
+                                                                            </div>
+                                                                        )}
+                                                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+                                                                            {ALL_COLS.filter(c => row[c] !== undefined && row[c] !== '').map(col => (
+                                                                                <div key={col} style={{ background: B.surface, border: `1px solid ${B.border}`, borderRadius: 9, padding: '8px 12px' }}>
+                                                                                    <p style={{ color: B.navyGhost, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', margin: '0 0 3px' }}>{col}</p>
+                                                                                    <p style={{ color: B.navyMid, fontSize: 12.5, margin: 0, wordBreak: 'break-all' }}>{row[col]?.toString() || '—'}</p>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        }
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
                                 </div>
                             )}
                         </div>
@@ -1544,8 +1820,8 @@ const BulkUpload = ({ token }) => {
                             <p style={{ color: B.navy, fontSize: 13, fontWeight: 700, margin: 0 }}>Format Guide</p>
                         </div>
                         {[
-                            { field: 'sku', example: 'DDL-MJ-0001', note: 'Brand-Category-Number format' },
-                            { field: 'itemDetails', example: '[{"title":"Brand","value":"D Dolly Lamb"},{"title":"Material","value":"Leather"}]', note: 'JSON array format' },
+                            { field: 'sku', example: 'WHITE-BEAR-(SQ)-PK2', note: 'Brand-Category-Number format' },
+                            { field: 'itemDetails', example: 'Brand: Dolly::Material: Leather::Pattern: Printed', note: 'Amazon style format' },
                             { field: 'sizes', example: 'S:0.9,M:1,L:1.1:10,XL:1.2:15:4499:true', note: 'size:multiplier[:stock[:customPrice[:useCustomPrice]]]' },
                             { field: '  ├ multiplier', example: '0.9 = 90% of base price', note: 'auto-calculated if no custom price' },
                             { field: '  ├ stock', example: '10 = 10 units available', note: 'optional, defaults to 0' },
@@ -1592,7 +1868,7 @@ const BulkUpload = ({ token }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -1264,7 +1264,7 @@ const ProductsList = ({ token }) => {
                         onMouseLeave={e => e.currentTarget.style.color = B.navy}>
                         {item.name}
                       </div>
-                      <div style={{ fontSize: 10.5, color: B.navyGhost, fontFamily: 'monospace', marginTop: 2, }}>SKU: {item.sku}</div>
+                      <div style={{ fontSize: 10.5, color: B.navyGhost, fontFamily: 'monospace', marginTop: 2 }}>SKU: {item.sku}</div>
                       {item.bestseller && (
                         <span style={{ display: 'inline-block', marginTop: 3, fontSize: 9, fontWeight: 700, color: B.gold, background: B.goldBg, border: `1px solid ${B.goldBdr}`, padding: '1px 6px', borderRadius: 99 }}>
                           ♛ Bestseller
