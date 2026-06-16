@@ -2473,13 +2473,13 @@ const INIT_SIZES = {
     "3XL": { multiplier: 1.5, stock: 0, customPrice: "", useCustomPrice: false },
 };
 
-const CATEGORY_DEFAULT_SUB = {
-    "Men's": "Bomber Jacket", "Women's": "Bomber Jacket",
-    "Pillow Covers": "Round Cushion",
-    "Recliner Slipcover": "Headrest",
-    "Desk Pads": "Leather Mouse Pad",
-    "Apron": "Leather Aprons",
-};
+// const CATEGORY_DEFAULT_SUB = {
+//     "Men's": "Bomber Jacket", "Women's": "Bomber Jacket",
+//     "Pillow Covers": "Round Cushion",
+//     "Recliner Slipcover": "Headrest",
+//     "Desk Pads": "Leather Mouse Pad",
+//     "Apron": "Leather Aprons",
+// };
 
 /* ════════════════════════════════════════════════════════════════
    LIGHTBOX
@@ -2669,8 +2669,8 @@ const Add = ({ token }) => {
     const [description, setDesc] = useState('');
     const [price, setPrice] = useState('');
     const [discountPrice, setDiscPrice] = useState('');
-    const [category, setCategory] = useState("Men's");
-    const [subCategory, setSubCat] = useState(CATEGORY_DEFAULT_SUB["Men's"]);
+    const [category, setCategory] = useState('');
+    const [subCategory, setSubCat] = useState('');
     const [bestseller, setBestseller] = useState(false);
     const [detailedDescription, setDD] = useState('');
     const [colors, setColors] = useState([]);
@@ -2701,6 +2701,7 @@ const Add = ({ token }) => {
     const [itemDetails, setItemDetails] = useState([{ title: "", value: "" }]);
     const [pricingMode, setPricingMode] = useState("custom");
     const [sku, setSku] = useState('');
+    const [categories, setCategories] = useState([]);
 
     const dzRef = useRef(null);
     const sizeRef = useRef(null);
@@ -2734,8 +2735,10 @@ const Add = ({ token }) => {
             const d = JSON.parse(localStorage.getItem('ap_draft') || '{}');
             if (d.name) {
                 setName(d.name || ''); setDesc(d.description || ''); setPrice(d.price || ''); setDiscPrice(d.discountPrice || '');
-                const sc = d.category || 'Men'; setCategory(sc);
-                setSubCat(d.subCategory && d.subCategory.trim() ? d.subCategory : CATEGORY_DEFAULT_SUB[sc] || '');
+                // const sc = d.category || 'Men'; setCategory(sc);
+                // setSubCat(d.subCategory && d.subCategory.trim() ? d.subCategory : CATEGORY_DEFAULT_SUB[sc] || '');
+                setCategory(d.category || '');
+                setSubCat(d.subCategory || '');
                 setBestseller(d.bestseller || false); setDD(d.detailedDescription || '');
                 toast.info('💾 Draft restored', { autoClose: 2500 });
             }
@@ -2759,6 +2762,34 @@ const Add = ({ token }) => {
         }
         if (minP && minP > 0 && minP.toString() !== price) setPrice(minP.toString());
     }, [sizeType, enabledSizes, stdSizes, inchSizes]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get(
+                    `${backendUrl}/api/category/list`
+                );
+
+                if (res.data.success) {
+                    setCategories(res.data.categories);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        if (categories.length > 0) {
+            setCategory(categories[0].categoryName);
+
+            setSubCat(
+                categories[0].subCategories?.[0] || ""
+            );
+        }
+    }, [categories]);
 
     /* ── Image handlers ── */
     const setImg = (i, f) => setImages(p => { const n = [...p]; n[i] = f; return n; });
@@ -2913,7 +2944,9 @@ const Add = ({ token }) => {
         setSku(''); setName(''); setDesc(''); setDD(''); setPrice(''); setDiscPrice('');
         setColors([]); setEnabled([]); setStdSizes(INIT_SIZES); setInchSizes([]);
         setImages(Array(10).fill(null)); setSizeType('standard');
-        setCategory("Men's"); setSubCat(CATEGORY_DEFAULT_SUB["Men's"]);
+        // setCategory("Men's"); setSubCat(CATEGORY_DEFAULT_SUB["Men's"]);
+        setCategory(categories?.[0]?.categoryName || "");
+        setSubCat(categories?.[0]?.subCategories?.[0] || "");
         setBestseller(false); setValErrs([]); setSizeErr(false); setShowDraftPage(false);
         setItemDetails([{ title: "", value: "" }]); setPricingMode("custom");
     };
@@ -3053,25 +3086,63 @@ const Add = ({ token }) => {
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
                                 <Field label="Category">
-                                    <select style={selectStyle} value={category}
+                                    {/* <select style={selectStyle} value={category}
                                         onChange={e => { setCategory(e.target.value); setSubCat(CATEGORY_DEFAULT_SUB[e.target.value] || ''); }}
                                         onFocus={focusGreen} onBlur={blurBorder()}>
                                         {["Men's", "Women's", 'Pillow Covers', 'Recliner Slipcover', 'Desk Pads', 'Apron'].map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select> */}
+                                    <select
+                                        style={selectStyle}
+                                        value={category}
+                                        onChange={(e) => {
+                                            const selected = categories.find(
+                                                (c) => c.categoryName === e.target.value
+                                            );
+
+                                            setCategory(e.target.value);
+
+                                            if (selected?.subCategories?.length) {
+                                                setSubCat(selected.subCategories[0]);
+                                            }
+                                        }}
+                                    >
+                                        {categories.map((cat) => (
+                                            <option
+                                                key={cat._id}
+                                                value={cat.categoryName}
+                                            >
+                                                {cat.categoryName}
+                                            </option>
+                                        ))}
                                     </select>
                                 </Field>
                                 <Field label="Sub Category">
-                                    <select style={selectStyle} value={subCategory} onChange={e => setSubCat(e.target.value)} onFocus={focusGreen} onBlur={blurBorder()}>
+                                    {/* <select style={selectStyle} value={subCategory} onChange={e => setSubCat(e.target.value)} onFocus={focusGreen} onBlur={blurBorder()}>
                                         {category === "Men's" && <><option>Bomber Jacket</option><option>Moto Biker Jacket</option><option>Coats</option></>}
                                         {category === "Women's" && <><option>Bomber Jacket</option><option>Moto Biker Jacket</option><option>Coats</option><option>Blazer</option><option>Jackets</option><option>Nightsuits</option><option>Top</option><option>Skirts</option></>}
-                                        {/* {category === 'Others' && <><option>Pillow</option><option>Cushion Cover</option><option>Aprons</option><option>Desk Mat</option><option>Chair Cover</	option></>} */}
                                         {category === "Pillow Covers" && <><option>Round Cushion</option><option>Square Cushion</option><option>Rectangle Cushion</option><option>Cylindrical Cushion</option><option>Ear Hole Cushion</option></>}
                                         {category === "Recliner Slipcover" && <option>Headrest</option>}
                                         {category === "Desk Pads" && <option>Leather Mouse Pad</option>}
                                         {category === "Apron" && <option>Leather Aprons</option>}
+                                    </select> */}
+                                    <select
+                                        value={subCategory}
+                                        style={selectStyle}
+                                        onChange={(e) => setSubCat(e.target.value)}
+                                    >
+                                        {categories
+                                            .find(
+                                                (c) => c.categoryName === category
+                                            )
+                                            ?.subCategories?.map((sub) => (
+                                                <option key={sub} value={sub}>
+                                                    {sub}
+                                                </option>
+                                            ))}
                                     </select>
                                 </Field>
-                                <Field label="SKU / Code" hint="Mandatory for inventory management. E.g. DDL-ML-005">
-                                    <input value={sku} onChange={e => setSku(e.target.value)} style={inputStyle()} type="text" placeholder="DDL-ML-001" onFocus={focusGreen} onBlur={blurBorder()} />
+                                <Field label="SKU / Code" hint={<>Mandatory for inventory management. <br /> E.g. WHITE-BEAR-(SQ)-PK2</>}>
+                                    <input value={sku} onChange={e => setSku(e.target.value)} style={inputStyle()} type="text" placeholder="WHITE-BEAR-(SQ)-PK2" onFocus={focusGreen} onBlur={blurBorder()} />
                                 </Field>
                             </div>
 

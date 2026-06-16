@@ -93,6 +93,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import wishlistRouter from './routes/wishlistRoute.js';
 import reviewRouter from './routes/reviewRoute.js';
+import categoryRouter from './routes/categoryRoute.js';
 
 process.on('uncaughtException', (err) => {
   console.error('❌ ERROR:', err.message)
@@ -150,6 +151,7 @@ app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/wishlist', wishlistRouter);
 app.use('/api/review', reviewRouter);
+app.use('/api/category', categoryRouter);
 
 // Log environment
 console.log("STARTING APP, NODE_ENV =", process.env.NODE_ENV);

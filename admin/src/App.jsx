@@ -407,7 +407,6 @@ import { IoIosClose } from "react-icons/io";
 import Slide from '@mui/material/Slide';
 import HomeSliderBanners from './Pages/HomeSliderBanners/HomeSliderBanners'
 import AddHomeSlide from './Pages/HomeSliderBanners/AddHomeSlide'
-import CategoryList from './Pages/Category/CategoryList'
 import AddCategory from './Pages/Category/AddCategory'
 import SubCategoryList from './Pages/Category/SubCategoryList'
 import AddSubCategory from './Pages/Category/AddSubCategory'
@@ -427,6 +426,7 @@ import { ThemeProvider } from './Context/ThemeContext'
 import Review from './Pages/review/review'
 import UnderConstruction from './Components/Underconstruction/Underconstruction'
 import BulkUpload from './Pages/Products/BulkAddProduct'
+import CategoryManagement from './Pages/Category/CategoryManagement'
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
 export const currency = '$'
@@ -569,10 +569,11 @@ const App = () => {
       )
     },
     {
-      path: "/category/list",
+      path: "/category-management",
       element: (
         <Layout isSidebarOpen={isSidebarOpen}>
-          <CategoryList />
+          {/* <CategoryList /> */}
+          <CategoryManagement token={token} />
         </Layout>
       )
     },
@@ -580,7 +581,7 @@ const App = () => {
       path: "/subCategory/list",
       element: (
         <Layout isSidebarOpen={isSidebarOpen}>
-          <SubCategoryList />
+          <SubCategoryList token={token} />
         </Layout>
       )
     },

@@ -716,12 +716,12 @@ const Sidebar = () => {
                         <SubItem to="/reviews" label="Reviews & Ratings" />
                     </SidebarGroup>
 
-                    {/* <SidebarGroup icon={<TbCategory />} label="Category" index={4} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
-                        <SubItem to="/category/list" label="Category List" />
-                        <SubItem label="Add Category" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add New Category' })} />
+                    <SidebarGroup icon={<TbCategory />} label="Category" index={4} submenuIndex={submenuIndex} setSubmenuIndex={setSubmenuIndex}>
+                        <SubItem to="/category-management" label="Category Management" />
+                        {/* <SubItem label="Add Category" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add New Category' })} />
                         <SubItem to="/subCategory/list" label="Sub Category List" />
-                        <SubItem label="Add Sub Category" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add New Sub Category' })} />
-                    </SidebarGroup> */}
+                        <SubItem label="Add Sub Category" onClick={() => context.setIsOpenFullScreenPanel({ open: true, modal: 'Add New Sub Category' })} /> */}
+                    </SidebarGroup>
 
                     {/* SALES */}
                     <SectionLabel label="Sales" />

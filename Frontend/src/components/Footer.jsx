@@ -731,7 +731,8 @@
 
 
 
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 /* ── Premium SVG Social Icons ─────────────────── */
@@ -864,12 +865,33 @@ const ColHeading = ({ children }) => (
 
 const Footer = () => {
   const isDevelopment = import.meta.env.MODE === 'development';
-  const backendUrl = isDevelopment
-    ? import.meta.env.VITE_BACKEND_URL_D
-    : import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = isDevelopment
+  //   ? import.meta.env.VITE_BACKEND_URL_D
+  //   : import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get(`${backendUrl}/api/category/list`);
+
+        if (res.data.success) {
+          setCategories(res.data.categories || []);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCategories();
+  }, [backendUrl]);
+
+  const buildUrl = (categoryName, subCategory) =>
+    `/collection?category=${encodeURIComponent(categoryName)}&sub=${encodeURIComponent(subCategory)}`;
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -1028,7 +1050,8 @@ const Footer = () => {
 
       {/* ── MAIN LINK GRID ── */}
       <div style={{ width: "95%", margin: "0 auto", padding: "56px 16px" }}>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10">
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16"> */}
 
           {/* INFO */}
           <div className="ft-anim-1">
@@ -1045,41 +1068,72 @@ const Footer = () => {
           </div>
 
           {/* WOMEN */}
-          <div className="ft-anim-2">
+          {/* <div className="ft-anim-2">
             <ColHeading>Women's</ColHeading>
             <ul className="space-y-2.5 list-none p-0 m-0">
-              <li><FooterLink to="/collection?category=Women&sub=Bomber%20Biker%20Jacket">Bomber Biker Jacket</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Moto%20Biker%20Jacket">Moto Biker Jacket</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Racing%20Coat">Racing Coat</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Women%20Winter%20Wear">Women Winter Wear</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Women%20Night%20Dress">Women Night Dress</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Leather%20Pencil%20Skirt">Leather Pencil Skirt</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Leather%20Full%20Skirt">Leather Full Skirt</FooterLink></li>
-              <li><FooterLink to="/collection?category=Women&sub=Slim%20Bodycon%20Skirt">Slim Bodycon Skirt</FooterLink></li>
+              {categories
+                .find((c) => c.categoryName === "Women's")
+                ?.subCategories?.map((sub) => (
+                  <li key={sub}>
+                    <FooterLink
+                      to={buildUrl("Women's", sub)}
+                    >
+                      {sub}
+                    </FooterLink>
+                  </li>
+                ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* MEN */}
-          <div className="ft-anim-3">
+          {/* <div className="ft-anim-3">
             <ColHeading>Men's</ColHeading>
             <ul className="space-y-2.5 list-none p-0 m-0">
-              <li><FooterLink to="/collection?category=Men&sub=Biker%20Jacket">Biker Jacket</FooterLink></li>
-              <li><FooterLink to="/collection?category=Men&sub=Bomber%20Biker%20Jacket">Bomber Biker Jacket</FooterLink></li>
-              <li><FooterLink to="/collection?category=Men&sub=Moto%20Biker%20Jacket">Moto Biker Jacket</FooterLink></li>
+              {categories
+                .find((c) => c.categoryName === "Men's")
+                ?.subCategories?.map((sub) => (
+                  <li key={sub}>
+                    <FooterLink
+                      to={buildUrl("Men's", sub)}
+                    >
+                      {sub}
+                    </FooterLink>
+                  </li>
+                ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* OTHERS */}
-          <div className="ft-anim-4">
-            <ColHeading>Others</ColHeading>
+          {/* <div className="ft-anim-4">
+            <ColHeading>Pillow Covers</ColHeading>
             <ul className="space-y-2.5 list-none p-0 m-0">
-              <li><FooterLink to="/collection?category=Others&sub=Pillow">Pillow Covers</FooterLink></li>
-              <li><FooterLink to="/collection?category=Others&sub=Cushion Cover">Cushion Cover</FooterLink></li>
-              <li><FooterLink to="/collection?category=Others&sub=Aprons">Aprons</FooterLink></li>
-              <li><FooterLink to="/collection?category=Others&sub=Desk Mat">Desk Mat</FooterLink></li>
-              <li><FooterLink to="/collection?category=Others&sub=Chair Cover">Chair Cover</FooterLink></li>
+              {categories.find((c) => c.categoryName === "Pillow Covers")?.subCategories?.map((sub) => (
+                <li key={sub}>
+                  <FooterLink to={buildUrl("Pillow Covers", sub)}>
+                    {sub}
+                  </FooterLink>
+                </li>
+              ))}
             </ul>
-          </div>
+          </div> */}
+
+          {categories.map((category) => (
+            <div key={category._id}>
+              <ColHeading>{category.categoryName}</ColHeading>
+
+              <ul className="space-y-2.5 list-none p-0 m-0">
+                {category.subCategories?.map((sub) => (
+                  <li key={sub}>
+                    <FooterLink
+                      to={buildUrl(category.categoryName, sub)}
+                    >
+                      {sub}
+                    </FooterLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           {/* NEW ARRIVALS */}
           <div className="ft-anim-5">
@@ -1234,7 +1288,7 @@ const Footer = () => {
       {/* ── SHIMMER BOTTOM LINE — bookend with top shimmer ── */}
       <div className="ft-shimmer-bar" style={{ height: "1.5px" }} />
 
-    </footer>
+    </footer >
   );
 };
 

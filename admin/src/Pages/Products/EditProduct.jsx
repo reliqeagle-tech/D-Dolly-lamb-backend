@@ -1479,44 +1479,44 @@ const INIT_STD = {
 //     "Men Leather Apron": ["Apron"],
 // };
 
-const SUB_CATEGORIES = {
-    "Apron": [
-        "Leather Aprons"
-    ],
+// const SUB_CATEGORIES = {
+//     "Apron": [
+//         "Leather Aprons"
+//     ],
 
-    "Desk Pads": [
-        "Leather Mouse Pad"
-    ],
+//     "Desk Pads": [
+//         "Leather Mouse Pad"
+//     ],
 
-    "Pillow Covers": [
-        "Round Cushion",
-        "Square Cushion",
-        "Rectangle Cushion",
-        "Cylindrical Cushion",
-        "Ear Hole Cushion"
-    ],
+//     "Pillow Covers": [
+//         "Round Cushion",
+//         "Square Cushion",
+//         "Rectangle Cushion",
+//         "Cylindrical Cushion",
+//         "Ear Hole Cushion"
+//     ],
 
-    "Men's": [
-        "Bomber Jacket",
-        "Moto Biker Jacket",
-        "Coats"
-    ],
+//     "Men's": [
+//         "Bomber Jacket",
+//         "Moto Biker Jacket",
+//         "Coats"
+//     ],
 
-    "Women's": [
-        "Bomber Jacket",
-        "Moto Biker Jacket",
-        "Coats",
-        "Blazer",
-        "Jackets",
-        "Nightsuits",
-        "Top",
-        "Skirts"
-    ],
+//     "Women's": [
+//         "Bomber Jacket",
+//         "Moto Biker Jacket",
+//         "Coats",
+//         "Blazer",
+//         "Jackets",
+//         "Nightsuits",
+//         "Top",
+//         "Skirts"
+//     ],
 
-    "Recliner Slipcover": [
-        "Headrest"
-    ]
-};
+//     "Recliner Slipcover": [
+//         "Headrest"
+//     ]
+// };
 
 // const CAT_DEFAULT = {
 //     Men: "Jackets", Women: "Jackets", Others: "Pillow",
@@ -1526,14 +1526,14 @@ const SUB_CATEGORIES = {
 //     "Men Leather Apron": "Apron",
 // };
 
-const CAT_DEFAULT = {
-    "Apron": "Leather Aprons",
-    "Desk Pads": "Leather Mouse Pad",
-    "Pillow Covers": "Round Cushion",
-    "Men's": "Bomber Jacket",
-    "Women's": "Bomber Jacket",
-    "Recliner Slipcover": "Headrest"
-};
+// const CAT_DEFAULT = {
+//     "Apron": "Leather Aprons",
+//     "Desk Pads": "Leather Mouse Pad",
+//     "Pillow Covers": "Round Cushion",
+//     "Men's": "Bomber Jacket",
+//     "Women's": "Bomber Jacket",
+//     "Recliner Slipcover": "Headrest"
+// };
 
 /* ════════════════════════════════════════════════════════════════
    LIGHTBOX
@@ -1682,10 +1682,11 @@ const UpdateProduct = ({ token }) => {
     const [detDesc, setDetDesc] = useState('');
     const [price, setPrice] = useState('');
     const [discPrice, setDiscPrice] = useState('');
-    const [category, setCat] = useState('Men');
-    const [subCategory, setSubCat] = useState(CAT_DEFAULT['Men']);
+    const [category, setCat] = useState('');
+    const [subCategory, setSubCat] = useState('');
     const [bestseller, setBest] = useState(false);
     const [sku, setSku] = useState('');
+    const [categories, setCategories] = useState([]);
 
     /* ── Item Details ── */
     const [itemDetails, setItemDetails] = useState([{ title: "", value: "" }]);
@@ -1742,11 +1743,14 @@ const UpdateProduct = ({ token }) => {
                     setDiscPrice(String(p.discountPrice || ''));
                     setBest(p.bestseller || false);
 
-                    const cat = p.category || 'Men';
-                    setCat(cat);
-                    const validSubs = SUB_CATEGORIES[cat] || [];
-                    const savedSub = (p.subCategory || '').trim();
-                    setSubCat(validSubs.some(s => s.toLowerCase() === savedSub.toLowerCase()) ? savedSub : (CAT_DEFAULT[cat] || validSubs[0] || ''));
+                    // const cat = p.category || 'Men';
+                    // setCat(cat);
+                    // const validSubs = SUB_CATEGORIES[cat] || [];
+                    // const savedSub = (p.subCategory || '').trim();
+                    // setSubCat(validSubs.some(s => s.toLowerCase() === savedSub.toLowerCase()) ? savedSub : (CAT_DEFAULT[cat] || validSubs[0] || ''));
+
+                    setCat(p.category || '');
+                    setSubCat(p.subCategory || '');
 
                     /* Images */
                     const existingImgs = Array.isArray(p.image) ? p.image.filter(Boolean) : [p.image].filter(Boolean);
@@ -1823,6 +1827,24 @@ const UpdateProduct = ({ token }) => {
         if (detDesc) s += 10;
         setProgress(Math.min(100, s));
     }, [name, description, price, totalImages, colors, hasSizes, detDesc]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get(
+                    `${backendUrl}/api/category/list`
+                );
+
+                if (res.data.success) {
+                    setCategories(res.data.categories || []);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     /* ════════════════════════════════════════════════════════
        IMAGE HANDLERS
@@ -2083,14 +2105,40 @@ const UpdateProduct = ({ token }) => {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
                                 <Field label="Category">
                                     <select style={selSt} value={category}
-                                        onChange={e => { setCat(e.target.value); setSubCat(CAT_DEFAULT[e.target.value] || SUB_CATEGORIES[e.target.value]?.[0] || ''); }}
+                                        // onChange={e => { setCat(e.target.value); setSubCat(CAT_DEFAULT[e.target.value] || SUB_CATEGORIES[e.target.value]?.[0] || ''); }}
+                                        onChange={e => {
+                                            const selected = categories.find(
+                                                c => c.categoryName === e.target.value
+                                            );
+
+                                            setCat(e.target.value);
+
+                                            setSubCat(
+                                                selected?.subCategories?.[0] || ''
+                                            );
+                                        }}
                                         onFocus={focG} onBlur={blrB()}>
-                                        {Object.keys(SUB_CATEGORIES).map(c => <option key={c} value={c}>{c}</option>)}
+                                        {/* {Object.keys(SUB_CATEGORIES).map(c => <option key={c} value={c}>{c}</option>)} */}
+                                        {categories.map(cat => (
+                                            <option
+                                                key={cat._id}
+                                                value={cat.categoryName}
+                                            >
+                                                {cat.categoryName}
+                                            </option>
+                                        ))}
                                     </select>
                                 </Field>
                                 <Field label="Sub Category">
                                     <select style={selSt} value={subCategory} onChange={e => setSubCat(e.target.value)} onFocus={focG} onBlur={blrB()}>
-                                        {(SUB_CATEGORIES[category] || []).map(s => <option key={s} value={s}>{s}</option>)}
+                                        {/* {(SUB_CATEGORIES[category] || []).map(s => <option key={s} value={s}>{s}</option>)} */}
+                                        {categories
+                                            .find(c => c.categoryName === category)
+                                            ?.subCategories?.map(sub => (
+                                                <option key={sub} value={sub}>
+                                                    {sub}
+                                                </option>
+                                            ))}
                                     </select>
                                 </Field>
                                 <Field label="SKU / Code" hint="Auto-generated if blank">
