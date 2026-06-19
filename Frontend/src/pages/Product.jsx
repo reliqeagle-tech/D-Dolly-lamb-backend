@@ -1450,6 +1450,10 @@ import { toast } from 'react-toastify';
 import { FaRegStar, FaStar, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { BsShieldCheck, BsBagCheck } from 'react-icons/bs';
 import CartDrawer from '../components/CartDrawer';
+import axios from 'axios';
+import { slugifyPart } from '../utils/slugify';
+
+
 
 /*
   ═══════════════════════════════════════════════
@@ -1509,9 +1513,9 @@ const colorMap = {
 };
 
 const Product = () => {
-  const { productId } = useParams();
+  const { productId, category, subCategory, productName, sku } = useParams();
   const { products, currency, addToCart } = useContext(ShopContext);
-  const { wishlist, toggleWishlistItem } = useContext(ShopContext);
+  const { wishlist, toggleWishlistItem, backendUrl } = useContext(ShopContext);
   const { submitReview, getProductReviews, token, deleteReview, userId } = useContext(ShopContext);
   const { getSingleProduct } = useContext(ShopContext);
 
@@ -1538,24 +1542,75 @@ const Product = () => {
   const thumbListRef = useRef(null);
   const mainImgRef = useRef(null);
 
-  const isWishlisted = Array.isArray(wishlist)
-    ? wishlist.some(item => item.productId === productId) : false;
+  // const isWishlisted = Array.isArray(wishlist)
+  //   ? wishlist.some(item => item.productId === productId) : false;
+  // ✅ FIX - productData._id use karo (but productData null check bhi chahiye)
+  const isWishlisted = Array.isArray(wishlist) && productData
+    ? wishlist.some(item => item.productId === productData._id) : false;
 
-  const fetchProductData = async () => {
-    const item = await getSingleProduct(productId);
-    if (item) {
-      setProductData(item);
-      setImage(item.image[0]);
-      setSelectedIndex(0);
-      setDisplayPrice(item.price);
-      setSizeMultiplier(1);
-    }
-  };
+  // const fetchProductData = async () => {
+  //   const item = await getSingleProduct(productId);
+  //   if (item) {
+  //     setProductData(item);
+  //     setImage(item.image[0]);
+  //     setSelectedIndex(0);
+  //     setDisplayPrice(item.price);
+  //     setSizeMultiplier(1);
+  //   }
+  // };
+
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      // Slug-based route
+      // if (sku) {
+      //   const res = await axios.get(
+      //     `${backendUrl}/api/product/${category}/${subCategory}/${name}/${sku}`
+      //   );
+      //   setProductData(res.data.product);
+      // }
+      if (sku) {
+        const res = await axios.get(
+          `${backendUrl}/api/product/sku/${sku}`
+        );
+
+        if (res.data.success) {
+          setProductData(res.data.product);
+          setImage(res.data.product.image?.[0] || "");
+        }
+      }
+      // Old ID-based route (backward compatible)
+      else if (productId) {
+        const res = await axios.post(
+          `${backendUrl}/api/product/single`,
+          { productId }
+        );
+        setProductData(res.data.product);
+      }
+    };
+    fetchProduct();
+  }, [sku]);
+
+
+  // const loadReviews = async () => {
+  //   const data = await getProductReviews(productId);
+  //   setReviews(data);
+  // };
 
   const loadReviews = async () => {
-    const data = await getProductReviews(productId);
+    if (!productData?._id) return;
+    const data = await getProductReviews(productData._id);
     setReviews(data);
   };
+  useEffect(() => {
+    if (productData?._id) loadReviews();
+  }, [productData?._id]);
+
+  useEffect(() => {
+    if (productData?.image?.length) {
+      setImage(productData.image[0]);
+    }
+  }, [productData]);
 
   const openCartDrawer = () => setDrawerOpen(true);
   const closeCartDrawer = () => setDrawerOpen(false);
@@ -1595,7 +1650,7 @@ const Product = () => {
     setZoomPos({ x, y });
   };
 
-  useEffect(() => { fetchProductData(); }, [productId, products]);
+  // useEffect(() => { fetchProductData(); }, [productId, products]);
   // useEffect(() => {
   //   if (productData?.color?.length) {
   //     const firstColor = productData.color[0];
@@ -1616,7 +1671,7 @@ const Product = () => {
     }
   }, [productData]);
   useEffect(() => { if (productData) setDisplayPrice(productData.price); }, [productData]);
-  useEffect(() => { if (productId) loadReviews(); }, [productId]);
+  // useEffect(() => { if (productId) loadReviews(); }, [productId]);
   useEffect(() => {
     if (!productData?.price) return;
     const selectedSizeObj = productData.sizes?.find(s => s.size === size);
@@ -1639,7 +1694,8 @@ const Product = () => {
   const handleReviewSubmit = async () => {
     if (!token) return toast.error('Please login first');
     if (!rating || !comment.trim()) return toast.error('Please add rating and comment');
-    const success = await submitReview(productId, rating, comment);
+    // const success = await submitReview(productId, rating, comment);
+    const success = await submitReview(productData._id, rating, comment);
     if (success) { setComment(''); setRating(5); loadReviews(); }
   };
 
@@ -1876,7 +1932,8 @@ const Product = () => {
                 <div className="pp-corner pp-corner-tl" /><div className="pp-corner pp-corner-tr" />
                 <div className="pp-corner pp-corner-bl" /><div className="pp-corner pp-corner-br" />
                 <button className={`pp-img-wish${isWishlisted ? ' active' : ''}`}
-                  onClick={() => toggleWishlistItem(productId)}>
+                  // onClick={() => toggleWishlistItem(productId)}>
+                  onClick={() => toggleWishlistItem(productData._id)}>
                   {isWishlisted
                     ? <FaHeart size={14} style={{ color: C.accent }} />
                     : <FaRegHeart size={14} style={{ color: C.accentMid }} />}
@@ -2407,7 +2464,7 @@ const Product = () => {
             <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };

@@ -1,5 +1,5 @@
 import express from 'express'
-import { listProducts, addProduct, removeProduct, singleProduct, updateProduct, bulkUploadProducts, bulkUploadZipProducts } from '../controllers/productController.js'
+import { listProducts, addProduct, removeProduct, singleProduct, updateProduct, bulkUploadProducts, bulkUploadZipProducts, getProductBySlug, getProductBySku } from '../controllers/productController.js'
 import upload from '../middleware/multer.js';
 import adminAuth from '../middleware/adminAuth.js';
 import uploadFile from '../middleware/multerFiles.js';
@@ -15,6 +15,9 @@ productRouter.post('/single', singleProduct);
 productRouter.get('/list', listProducts);
 productRouter.post('/bulk-upload', adminAuth, uploadFile.single('file'), bulkUploadProducts)
 productRouter.post('/bulk-upload-zip', adminAuth, uploadZip.fields([{ name: "csv", maxCount: 1 }, { name: "images", maxCount: 1 }]), bulkUploadZipProducts);
+// productRouter.get('/:category/:subCategory/:name/:sku', getProductBySlug);
+// productRouter.get('/slug/:slug', getProductBySlug);
+productRouter.get('/sku/:sku', getProductBySku);
 
 export default productRouter
 

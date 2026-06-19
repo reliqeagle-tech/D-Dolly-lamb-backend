@@ -109,6 +109,14 @@ const productSchema = new mongoose.Schema({
         unique: true,
         index: true
     },
+    slug: {
+        type: String,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        index: true
+        // Stores: "men-tshirts-nike-air-max-nk001" (flat, no slashes)
+    },
     bestseller: { type: Boolean, default: false, index: true }, // Default + index
     date: { type: Date, default: Date.now, required: true }, // Changed to Date; auto-now
     isDeleted: { type: Boolean, default: false } // Soft delete

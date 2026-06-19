@@ -1992,6 +1992,15 @@ const UpdateProduct = ({ token }) => {
             const res = await axios.post(backendUrl + '/api/product/update', fd, { headers: { token } });
             if (res.data.success) {
                 toast.success('✅ Product updated!');
+                const slugifyPart = (str = '') =>
+                    String(str).toLowerCase().trim()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/[\s_]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+
+                const newSlugUrl = `/product/${slugifyPart(category)}/${slugifyPart(subCategory)}/${slugifyPart(name)}/${sku.trim().toUpperCase().toLowerCase()}`;
+
+                console.log('New product URL:', newSlugUrl); // ← test ke liye
                 navigate(-1);
             } else {
                 toast.error(res.data.message);

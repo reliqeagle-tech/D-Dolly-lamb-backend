@@ -4,6 +4,8 @@ import csvtojson from 'csvtojson'   // npm install csvtojson
 import fs from 'fs-extra'
 import path from 'path'
 import unzipper from 'unzipper'
+import { generateSeoSlug } from "../utils/slugify.js"
+import mongoose from "mongoose";
 
 const csv = () => csvtojson()
 
@@ -55,11 +57,6 @@ const parseColorToken = (token = '') => {
     const raw = String(token).trim()
     if (!raw) return null
 
-    // Supported custom color formats:
-    // 1) White:#F6F6FC
-    // 2) White|#F6F6FC
-    // 3) White#F6F6FC
-    // 4) White(#F6F6FC)
     let name = raw
     let hexCandidate = ''
 
@@ -133,13 +130,6 @@ const parseBulkSizes = (sizesValue = '') => {
         .map((entry) => entry.trim())
         .filter(Boolean)
         .map((entry) => {
-            // Supported formats:
-            // 1) size:multiplier
-            // 2) size:multiplier:stock
-            // 3) size:multiplier:stock:customPrice
-            // 4) size:multiplier:stock:customPrice:useCustomPrice
-            // 5) size:customPrice:stock:custom
-            // 6) size:custom:customPrice:stock
             const parts = entry.split(':').map((p) => p.trim())
             const size = parts[0]
             if (!size) return null
@@ -314,6 +304,7 @@ const addProduct = async (req, res) => {
 
         const productData = {
             sku: normalizedSku,
+            slug: generateSeoSlug(name, category, subCategory, normalizedSku), // ✅
             name,
             description,
             detailedDescription,
@@ -371,148 +362,43 @@ const removeProduct = async (req, res) => {
 }
 
 // function for single product info
-const singleProduct = async (req, res) => {
-    try {
-
-        const { productId } = req.body
-        const product = await productModel.findById(productId)
-        if (!product) {
-            return res.json({ success: false, message: "Product not found" })
-        }
-
-        // ✅ Convert to plain object
-        const productObj = product.toObject()
-
-        // ✅ IMPORTANT: Ensure sizes are objects (not strings)
-        if (productObj.sizes && productObj.sizes.length > 0) {
-            productObj.sizes = productObj.sizes.map(sizeItem => {
-                // If it's already an object with size property, return it
-                if (typeof sizeItem === 'object' && sizeItem.size) {
-                    return {
-                        size: sizeItem.size,
-                        priceMultiplier: sizeItem.priceMultiplier || 1,
-                        stock: sizeItem.stock || 0,
-                        customPrice: sizeItem.customPrice ?? 0,        // ✅ Add
-                        useCustomPrice: sizeItem.useCustomPrice ?? false // ✅ Add
-                    }
-                }
-                // If it's a string (old format), convert it
-                if (typeof sizeItem === 'string') {
-                    return {
-                        size: sizeItem,
-                        priceMultiplier: 1,
-                        stock: 0
-                    }
-                }
-                return sizeItem
-            })
-        }
-        res.json({ success: true, product: productObj })
-
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
-}
-
-
-// UPDATE PRODUCT
-// const updateProduct = async (req, res) => {
+// const singleProduct = async (req, res) => {
 //     try {
+
 //         const { productId } = req.body
 //         const product = await productModel.findById(productId)
-
 //         if (!product) {
 //             return res.json({ success: false, message: "Product not found" })
 //         }
 
-//         const {
-//             name,
-//             description,
-//             detailedDescription,
-//             price,
-//             category,
-//             discountPrice,
-//             subCategory,
-//             sizes,
-//             color,
-//             bestseller
-//         } = req.body
+//         // ✅ Convert to plain object
+//         const productObj = product.toObject()
 
-//         // Handle images
-//         // const newImagesRaw = [
-//         //   req.files?.image1?.[0],
-//         //   req.files?.image2?.[0],
-//         //   req.files?.image3?.[0],
-//         //   req.files?.image4?.[0],
-//         //   req.files?.image5?.[0]
-//         // ].filter(Boolean)
-
-//         // let newImageUrls = []
-
-//         const newImagesRaw = req.files || [];
-
-//         if (newImagesRaw.length > 0) {
-//             newImageUrls = await Promise.all(
-//                 newImagesRaw.map(async (img) => {
-//                     const uploaded = await cloudinary.uploader.upload(img.path, {
-//                         resource_type: "image",
-//                     })
-//                     return uploaded.secure_url
-//                 })
-//             )
+//         // ✅ IMPORTANT: Ensure sizes are objects (not strings)
+//         if (productObj.sizes && productObj.sizes.length > 0) {
+//             productObj.sizes = productObj.sizes.map(sizeItem => {
+//                 // If it's already an object with size property, return it
+//                 if (typeof sizeItem === 'object' && sizeItem.size) {
+//                     return {
+//                         size: sizeItem.size,
+//                         priceMultiplier: sizeItem.priceMultiplier || 1,
+//                         stock: sizeItem.stock || 0,
+//                         customPrice: sizeItem.customPrice ?? 0,        // ✅ Add
+//                         useCustomPrice: sizeItem.useCustomPrice ?? false // ✅ Add
+//                     }
+//                 }
+//                 // If it's a string (old format), convert it
+//                 if (typeof sizeItem === 'string') {
+//                     return {
+//                         size: sizeItem,
+//                         priceMultiplier: 1,
+//                         stock: 0
+//                     }
+//                 }
+//                 return sizeItem
+//             })
 //         }
-
-//         const updatedImages = newImagesRaw.length > 0 ? newImageUrls : product.image
-
-//         // Handle discount
-//         const numericDiscount =
-//             discountPrice !== undefined && discountPrice !== ""
-//                 ? Number(discountPrice)
-//                 : null
-
-//         const finalDiscountPrice =
-//             numericDiscount !== null ? numericDiscount : product.discountPrice
-
-//         const finalDiscountActive =
-//             numericDiscount !== null
-//                 ? numericDiscount > 0
-//                 : product.discountActive
-
-//         // ✅ PARSE SIZES WITH MULTIPLIERS
-//         let parsedSizes = product.sizes
-//         if (sizes) {
-//             try {
-//                 parsedSizes = JSON.parse(sizes)
-//                 parsedSizes = parsedSizes.map(sizeObj => ({
-//                     size: sizeObj.size,
-//                     priceMultiplier: sizeObj.priceMultiplier || 1,
-//                     stock: sizeObj.stock || 0
-//                 }))
-//             } catch (e) {
-//                 return res.json({ success: false, message: "Invalid sizes format" })
-//             }
-//         }
-
-//         const updatedData = {
-//             name: name ?? product.name,
-//             description: description ?? product.description,
-//             detailedDescription: detailedDescription ?? product.detailedDescription,
-//             price: price ? Number(price) : product.price,
-//             discountPrice: finalDiscountPrice,
-//             discountActive: finalDiscountActive,
-//             category: category ?? product.category,
-//             subCategory: subCategory ?? product.subCategory,
-//             bestseller: bestseller !== undefined ? bestseller === "true" : product.bestseller,
-//             image: updatedImages,
-//             sizes: parsedSizes, // ✅ UPDATE SIZES WITH MULTIPLIERS
-//             color: color ? JSON.parse(color) : product.color,
-//             updatedAt: Date.now(),
-//         }
-
-//         await productModel.findByIdAndUpdate(productId, updatedData, { new: true })
-
-//         res.json({ success: true, message: "Product updated successfully" })
+//         res.json({ success: true, product: productObj })
 
 //     } catch (error) {
 //         console.log(error)
@@ -521,95 +407,41 @@ const singleProduct = async (req, res) => {
 // }
 
 
+const singleProduct = async (req, res) => {
+    try {
 
-// const updateProduct = async (req, res) => {
-//     try {
-//         const { productId } = req.body;
-//         const product = await productModel.findById(productId);
+        const { productId } = req.body;
 
-//         if (!product) {
-//             return res.json({ success: false, message: "Product not found" });
-//         }
+        let product = null;
 
-//         const {
-//             name, description, detailedDescription,
-//             price, discountPrice, category, subCategory,
-//             sizes, color, bestseller
-//         } = req.body;
+        if (mongoose.Types.ObjectId.isValid(productId)) {
+            product = await productModel.findById(productId);
+        } else {
+            product = await productModel.findOne({
+                slug: productId
+            });
+        }
 
-//         // ✅ FIX 1 - newImageUrls properly declare karo
-//         const newImagesRaw = req.files || [];
-//         let newImageUrls = []; // ← ye missing tha!
+        if (!product) {
+            return res.json({
+                success: false,
+                message: "Product not found"
+            });
+        }
 
-//         if (newImagesRaw.length > 0) {
-//             newImageUrls = await Promise.all(
-//                 newImagesRaw.map(async (img) => {
-//                     const uploaded = await cloudinary.uploader.upload(img.path, {
-//                         resource_type: "image",
-//                     });
-//                     return uploaded.secure_url;
-//                 })
-//             );
-//         }
+        res.json({
+            success: true,
+            product
+        });
 
-//         // ✅ FIX 2 - Existing images + new images merge karo
-//         // Agar new images aaye → existing ke saath append karo, replace mat karo
-//         let updatedImages;
-//         if (newImagesRaw.length > 0) {
-//             // Existing images rakho + new images add karo, max 10
-//             updatedImages = [...product.image, ...newImageUrls].slice(0, 10);
-//         } else {
-//             updatedImages = product.image;
-//         }
-
-//         // Discount handle
-//         const numericDiscount = discountPrice !== undefined && discountPrice !== ""
-//             ? Number(discountPrice) : null;
-//         const finalDiscountPrice = numericDiscount !== null ? numericDiscount : product.discountPrice;
-//         const finalDiscountActive = numericDiscount !== null ? numericDiscount > 0 : product.discountActive;
-
-//         // ✅ FIX 3 - parsedSizes me customPrice & useCustomPrice bhi rakho
-//         let parsedSizes = product.sizes;
-//         if (sizes) {
-//             try {
-//                 parsedSizes = JSON.parse(sizes).map(sizeObj => ({
-//                     size: sizeObj.size,
-//                     priceMultiplier: sizeObj.priceMultiplier || 1,
-//                     stock: sizeObj.stock || 0,
-//                     customPrice: sizeObj.useCustomPrice ? Number(sizeObj.customPrice) : 0,
-//                     // customPrice: sizeObj.customPrice || 0,      // ✅ Added
-//                     useCustomPrice: sizeObj.useCustomPrice || false, // ✅ Added
-//                 }));
-//             } catch (e) {
-//                 return res.json({ success: false, message: "Invalid sizes format" });
-//             }
-//         }
-
-//         const updatedData = {
-//             name: name ?? product.name,
-//             description: description ?? product.description,
-//             detailedDescription: detailedDescription ?? product.detailedDescription,
-//             price: price ? Number(price) : product.price,
-//             discountPrice: finalDiscountPrice,
-//             discountActive: finalDiscountActive,
-//             category: category ?? product.category,
-//             subCategory: subCategory ?? product.subCategory,
-//             bestseller: bestseller !== undefined ? bestseller === "true" : product.bestseller,
-//             image: updatedImages,
-//             sizes: parsedSizes,
-//             color: color ? JSON.parse(color) : product.color,
-//             updatedAt: Date.now(),
-//         };
-
-//         await productModel.findByIdAndUpdate(productId, updatedData, { new: true });
-//         res.json({ success: true, message: "Product updated successfully" });
-
-//     } catch (error) {
-//         console.log(error);
-//         res.json({ success: false, message: error.message });
-//     }
-// };
-
+    } catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 
 
 const updateProduct = async (req, res) => {
@@ -727,11 +559,18 @@ const updateProduct = async (req, res) => {
 
         }
 
+        // ✅ ADD THESE 4 LINES before updatedData
+        const finalName = name ?? product.name;
+        const finalCategory = category ?? product.category;
+        const finalSubCategory = subCategory ?? product.subCategory;
+        const slug = generateSeoSlug(finalName, finalCategory, finalSubCategory, normalizedSku);
+
         // ══════════════════════════════════
         // UPDATE
         // ══════════════════════════════════
         const updatedData = {
             sku: normalizedSku,
+            slug,
             name: name ?? product.name,
             description: description ?? product.description,
             detailedDescription: detailedDescription ?? product.detailedDescription,
@@ -757,75 +596,6 @@ const updateProduct = async (req, res) => {
     }
 };
 
-
-// BULK UPLOAD
-// const bulkUploadProducts = async (req, res) => {
-//     try {
-//         if (!req.file) {
-//             return res.json({ success: false, message: "No file uploaded" })
-//         }
-
-//         const filePath = req.file.path
-//         let jsonData = []
-
-//         const isCsv = req.file.mimetype === "text/csv" || req.file.mimetype === "application/vnd.ms-excel" || req.file.originalname.toLowerCase().endsWith('.csv');
-//         if (isCsv) {
-//             jsonData = await csv().fromFile(filePath)
-//         } else {
-//             jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"))
-//         }
-
-//         const formattedProducts = await Promise.all(
-//             jsonData.map(async (item) => {
-//                 let uploadedImages = []
-
-//                 if (item.image) {
-//                     const images = item.image.split(",").map((i) => i.trim())
-
-//                     for (let img of images) {
-//                         try {
-//                             const result = await cloudinary.uploader.upload(img, {
-//                                 resource_type: "image",
-//                             })
-//                             uploadedImages.push(result.secure_url)
-//                         } catch (err) {
-//                             console.log("Error uploading image:", img, err)
-//                         }
-//                     }
-//                 }
-
-//                 const parsedSizes = parseBulkSizes(item.sizes)
-
-//                 return {
-//                     name: item.name,
-//                     description: item.description,
-//                     detailedDescription: item.detailedDescription || "",
-//                     price: Number(item.price),
-//                     discountPrice: item.discountPrice ? Number(item.discountPrice) : 0,
-//                     discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
-//                     category: item.category,
-//                     subCategory: item.subCategory,
-//                     bestseller: item.bestseller === "true",
-//                     sizes: parsedSizes, // ✅ WITH MULTIPLIERS
-//                     color: normalizeColorInput(item.color),
-//                     image: uploadedImages,
-//                     date: Date.now(),
-//                 }
-//             })
-//         )
-
-//         await productModel.insertMany(formattedProducts)
-//         fs.unlinkSync(filePath)
-
-//         res.json({
-//             success: true,
-//             message: `${formattedProducts.length} products uploaded successfully`,
-//         })
-//     } catch (error) {
-//         console.log(error)
-//         res.json({ success: false, message: error.message })
-//     }
-// }
 
 
 const bulkUploadProducts = async (req, res) => {
@@ -917,11 +687,16 @@ const bulkUploadProducts = async (req, res) => {
 
             // }
 
-            const parsedItemDetails =
-                parseItemDetailsField(item.itemDetails);
+            const parsedItemDetails = parseItemDetailsField(item.itemDetails);
 
             const productData = {
                 sku: item.sku.trim().toUpperCase(),
+                slug: generateSeoSlug(        // ✅ ADD THIS
+                    item.name,
+                    item.category,
+                    item.subCategory,
+                    item.sku.trim().toUpperCase()
+                ),
                 name: item.name,
                 description: item.description,
                 detailedDescription: item.detailedDescription || "",
@@ -1009,81 +784,7 @@ const bulkUploadProducts = async (req, res) => {
 };
 
 
-// // BULK UPLOAD WITH ZIP
-// const bulkUploadZipProducts = async (req, res) => {
-//     try {
-//         if (!req.files || !req.files.csv || !req.files.images) {
-//             return res.json({ success: false, message: "CSV and ZIP are required" })
-//         }
-
-//         const csvPath = req.files.csv[0].path
-//         const zipPath = req.files.images[0].path
-//         const extractDir = "temp/images"
-
-//         await fs.ensureDir(extractDir)
-//         await fs
-//             .createReadStream(zipPath)
-//             .pipe(unzipper.Extract({ path: extractDir }))
-//             .promise()
-
-//         const products = await csv().fromFile(csvPath)
-//         const finalProducts = []
-
-//         for (let item of products) {
-//             let imageFilenames = item.image ? item.image.split(",") : []
-//             let uploadedImages = []
-
-//             for (let filename of imageFilenames) {
-//                 filename = filename.trim()
-//                 const localPath = path.join(extractDir, filename)
-
-//                 if (fs.existsSync(localPath)) {
-//                     try {
-//                         const uploaded = await cloudinary.uploader.upload(localPath, {
-//                             resource_type: "image",
-//                             folder: "bulk_upload",
-//                         })
-//                         uploadedImages.push(uploaded.secure_url)
-//                     } catch (err) {
-//                         console.log("Upload failed:", filename, err.message)
-//                     }
-//                 }
-//             }
-
-//             const parsedSizes = parseBulkSizes(item.sizes)
-
-//             finalProducts.push({
-//                 name: item.name,
-//                 description: item.description,
-//                 detailedDescription: item.detailedDescription || "",
-//                 price: Number(item.price),
-//                 discountPrice: item.discountPrice ? Number(item.discountPrice) : 0,
-//                 discountActive: item.discountPrice && Number(item.discountPrice) > 0 ? true : false,
-//                 category: item.category,
-//                 subCategory: item.subCategory,
-//                 bestseller: item.bestseller === "true",
-//                 sizes: parsedSizes, // ✅ WITH MULTIPLIERS
-//                 color: normalizeColorInput(item.color),
-//                 image: uploadedImages,
-//                 date: Date.now(),
-//             })
-//         }
-
-//         await productModel.insertMany(finalProducts)
-//         fs.unlinkSync(csvPath)
-//         fs.unlinkSync(zipPath)
-//         await fs.remove(extractDir)
-
-//         res.json({
-//             success: true,
-//             message: `${finalProducts.length} products uploaded successfully`,
-//         })
-//     } catch (err) {
-//         console.log(err)
-//         res.json({ success: false, message: err.message })
-//     }
-// }
-
+// BULK UPLOAD WITH ZIP
 
 const bulkUploadZipProducts = async (req, res) => {
     try {
@@ -1197,6 +898,12 @@ const bulkUploadZipProducts = async (req, res) => {
             const productData = {
 
                 sku: item.sku.trim().toUpperCase(),
+                slug: generateSeoSlug(        // ✅ ADD THIS
+                    item.name,
+                    item.category,
+                    item.subCategory,
+                    item.sku.trim().toUpperCase()
+                ),
 
                 name: item.name,
 
@@ -1299,6 +1006,65 @@ const bulkUploadZipProducts = async (req, res) => {
     }
 };
 
-export { listProducts, addProduct, removeProduct, singleProduct, updateProduct, bulkUploadProducts, bulkUploadZipProducts }
+
+const getProductBySlug = async (req, res) => {
+    try {
+
+        const { slug } = req.params;
+
+        const product = await productModel.findOne({
+            slug
+        });
+
+        console.log("PRODUCT =", product);
+
+        if (!product) {
+            return res.json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            product
+        });
+
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+const getProductBySku = async (req, res) => {
+    try {
+
+        const product = await productModel.findOne({
+            sku: req.params.sku.toUpperCase()
+        });
+
+        if (!product) {
+            return res.json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            product
+        });
+
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export { listProducts, addProduct, removeProduct, singleProduct, updateProduct, bulkUploadProducts, bulkUploadZipProducts, getProductBySlug, getProductBySku }
 
 
