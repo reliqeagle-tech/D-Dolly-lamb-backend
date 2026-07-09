@@ -246,7 +246,7 @@ import axios from "axios";
 import { getPayPalAccessToken } from "../utils/paypal.js";
 
 const currency = 'inr';
-const deliveryCharge = 10;
+const deliveryCharge = 0;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const razorpayInstance = new razorpay({

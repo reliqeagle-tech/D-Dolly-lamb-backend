@@ -8,7 +8,7 @@ import productModel from "../models/productModel.js";
 export const addReview = async (req, res) => {
     try {
         const { product, rating, comment } = req.body;
-        const user = req.body.userId;
+        const user = req.userId;
 
         if (!product || !rating || !comment) {
             return res.status(400).json({ success: false, message: "All fields are required." });
@@ -74,7 +74,7 @@ export const getReviewsByProduct = async (req, res) => {
 export const deleteReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const user = req.body.userId;
+        const user = req.userId;
 
         const review = await reviewModel.findById(reviewId);
 
