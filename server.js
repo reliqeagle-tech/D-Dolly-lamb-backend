@@ -94,6 +94,7 @@ import { fileURLToPath } from 'url';
 import wishlistRouter from './routes/wishlistRoute.js';
 import reviewRouter from './routes/reviewRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
+import sitemapRouter from "./routes/sitemapRoute.js";
 
 process.on('uncaughtException', (err) => {
   console.error('❌ ERROR:', err.message)
@@ -118,6 +119,7 @@ connectCloudinary();
 
 // ── CORS — added admin.ddollylamb.com ──
 const allowedOrigins = [
+  "http://localhost:4173",
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",         // admin local dev port
@@ -152,6 +154,7 @@ app.use('/api/order', orderRouter);
 app.use('/api/wishlist', wishlistRouter);
 app.use('/api/review', reviewRouter);
 app.use('/api/category', categoryRouter);
+app.use("/", sitemapRouter);
 
 // Log environment
 console.log("STARTING APP, NODE_ENV =", process.env.NODE_ENV);

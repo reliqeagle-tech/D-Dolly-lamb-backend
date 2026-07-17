@@ -100,8 +100,6 @@ const TeamCarousel = () => {
       borderTop: "1px solid rgba(99,102,241,0.1)",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
-
         @keyframes tcFadeUp {
           from { opacity:0; transform:translateY(24px); }
           to   { opacity:1; transform:translateY(0); }

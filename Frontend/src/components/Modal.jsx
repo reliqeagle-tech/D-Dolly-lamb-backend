@@ -49,7 +49,6 @@ const columns = [
 */
 
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
   @keyframes mdUp   {
     from { opacity:0; transform:translateY(24px) scale(0.97); }

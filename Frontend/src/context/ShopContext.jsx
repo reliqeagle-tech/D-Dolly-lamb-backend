@@ -394,7 +394,7 @@
 
 
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useMemo } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
@@ -528,7 +528,18 @@ const ShopContextProvider = (props) => {
     // ─────────────────────────────────────────────
     // CART - COUNT
     // ─────────────────────────────────────────────
-    const getCartCount = () => {
+    // const getCartCount = () => {
+    //     let totalCount = 0;
+    //     for (const items in cartItems) {
+    //         for (const item in cartItems[items]) {
+    //             const itemData = cartItems[items][item];
+    //             totalCount += typeof itemData === 'number' ? itemData : (itemData?.quantity || 0);
+    //         }
+    //     }
+    //     return totalCount;
+    // };
+
+    const getCartCount = useMemo(() => {
         let totalCount = 0;
         for (const items in cartItems) {
             for (const item in cartItems[items]) {
@@ -537,7 +548,7 @@ const ShopContextProvider = (props) => {
             }
         }
         return totalCount;
-    };
+    }, [cartItems]);
 
     // ─────────────────────────────────────────────
     // CART - AMOUNT (with discount%)
@@ -776,7 +787,22 @@ const ShopContextProvider = (props) => {
     // ─────────────────────────────────────────────
     // CONTEXT VALUE
     // ─────────────────────────────────────────────
-    const value = {
+    // const value = {
+    //     products, currency, delivery_fee,
+    //     search, setSearch, showSearch, setShowSearch,
+    //     cartItems, addToCart, setCartItems,
+    //     getCartCount, updateQuantity,
+    //     getCartAmount, getCartDetails, getCartDiscount,
+    //     navigate, backendUrl,
+    //     setToken, token, userId,
+    //     toggleWishlistItem, fetchWishlist, wishlist, setWishlist,
+    //     submitReview, getProductReviews, deleteReview,
+    //     calculateSalePrice, getSingleProduct,
+    //     savedAddress, saveAddress,
+    // }; 
+
+
+    const value = useMemo(() => ({
         products, currency, delivery_fee,
         search, setSearch, showSearch, setShowSearch,
         cartItems, addToCart, setCartItems,
@@ -788,7 +814,12 @@ const ShopContextProvider = (props) => {
         submitReview, getProductReviews, deleteReview,
         calculateSalePrice, getSingleProduct,
         savedAddress, saveAddress,
-    };
+    }), [
+        products, currency, delivery_fee,
+        search, showSearch, cartItems,
+        navigate, backendUrl, token, userId,
+        wishlist, savedAddress,
+    ]);
 
     return (
         <ShopContext.Provider value={value}>

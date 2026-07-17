@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { generateSeoUrlParts } from "../utils/slugify";
 
 const ANIM = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
   @keyframes ddlGlow {
     0%,100% { opacity:1; filter: blur(0px) brightness(1); }
@@ -205,6 +204,15 @@ const ProductItem = ({ id, image, name, price, discountPrice, category, subCateg
   const showPrev = sliding ? displayIdx : null;
   const showCurr = sliding ? imgIndex : displayIdx;
 
+  const optimizeCloudinaryImage = (url, width = 600) => {
+    if (!url || !url.includes("res.cloudinary.com")) return url;
+
+    return url.replace(
+      "/upload/",
+      `/upload/f_auto,q_auto,w_${width}/`
+    );
+  };
+
   return (
     <>
       <style>{ANIM}</style>
@@ -228,18 +236,46 @@ const ProductItem = ({ id, image, name, price, discountPrice, category, subCateg
           style={{ background: "#FFFFFF" }}>
 
           {sliding && showPrev !== null && (
-            <img src={images[showPrev] || images[0]} alt={name}
+            // <img src={images[showPrev] || images[0]} alt={name}
+            //   className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
+            //   style={{ zIndex: 1 }} />
+            <img
+              src={optimizeCloudinaryImage(images[showPrev] || images[0], 600)}
+              alt={name}
               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
-              style={{ zIndex: 1 }} />
+              // loading="lazy"
+              decoding="async"
+              width={600}
+              height={600}
+              style={{ zIndex: 1 }}
+            />
           )}
-          <img src={images[showCurr] || images[0]} alt={name}
+          {/* <img src={images[showCurr] || images[0]} alt={name}
             className={`ddl-slide-img ${sliding ? (slideDir === 1 ? "enter-fwd" : "enter-back") : "active"}`}
             style={{
               zIndex: 2,
               animation: sliding
                 ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
                 : "none",
-            }} />
+            }} /> */}
+          <img
+            src={optimizeCloudinaryImage(images[showCurr] || images[0], 600)}
+            alt={name}
+            className={`ddl-slide-img ${sliding
+              ? (slideDir === 1 ? "enter-fwd" : "enter-back")
+              : "active"
+              }`}
+            loading="lazy"
+            decoding="async"
+            width={600}
+            height={600}
+            style={{
+              zIndex: 2,
+              animation: sliding
+                ? `ddlSlideIn${slideDir === 1 ? "Fwd" : "Back"} .32s cubic-bezier(.4,0,.2,1) forwards`
+                : "none",
+            }}
+          />
 
           {/* Sale badge */}
           {isValid && (

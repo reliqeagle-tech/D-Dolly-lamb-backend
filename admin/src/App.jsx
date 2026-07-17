@@ -38,6 +38,7 @@ import CategoryManagement from './Pages/Category/CategoryManagement'
 import { MyContext } from './Context/MyContext'
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'
+export const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
 export const currency = '$'
 
 const Transition = React.forwardRef(function Transition(props, ref) {

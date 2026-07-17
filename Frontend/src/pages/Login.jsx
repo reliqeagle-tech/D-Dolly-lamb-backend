@@ -54,8 +54,6 @@ const IconCheck = () => (
 );
 
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
-
   @keyframes lgUp   { from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)} }
   @keyframes lgFade { from{opacity:0}to{opacity:1} }
   @keyframes orb1   { 0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.1)} }

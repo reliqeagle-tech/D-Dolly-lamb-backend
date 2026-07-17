@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import CartTotal from "../components/CartTotal";
 import { assets } from "../assets/assets";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 /* ══════════════════════════════════════════
    COLOR SYSTEM — matched to Wishlist.jsx
@@ -288,6 +288,8 @@ const PlaceOrder = () => {
   const [loading, setLoading] = useState(false);
   const [isPayPalReady, setIsPayPalReady] = useState(false);
   const [orderDataForPayPal, setOrderDataForPayPal] = useState(null);
+  const [razorpayReady, setRazorpayReady] = useState(false);
+  const [{ isResolved }, paypalDispatch] = usePayPalScriptReducer();
   const {
     navigate, backendUrl, token, cartItems,
     setCartItems, getCartAmount, delivery_fee, products,
@@ -306,6 +308,17 @@ const PlaceOrder = () => {
     const { name, value } = e.target;
     setFormData(d => ({ ...d, [name]: value }));
   };
+
+  useEffect(() => {
+    if (window.Razorpay) { setRazorpayReady(true); return; }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => setRazorpayReady(true);
+    script.onerror = () => toast.error("Failed to load payment gateway. Please refresh.");
+    document.body.appendChild(script);
+    // cleanup optional — SDK is harmless to leave loaded if user navigates away and back
+  }, []);
 
   const initPay = (order) => {
     const options = {
@@ -425,11 +438,17 @@ const PlaceOrder = () => {
     }
   };
 
+  const handlePaypalSelect = () => {
+    setMethod("paypal");
+    setIsPayPalReady(false);
+    if (!isResolved) {
+      paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+    }
+  };
+
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
         @keyframes poFadeUp {
           from { opacity:0; transform:translateY(16px); }
           to   { opacity:1; transform:translateY(0); }
@@ -627,7 +646,8 @@ const PlaceOrder = () => {
                     label="Razorpay" logo={assets.razorpay_logo} sublabel="UPI / Net Banking" />
                   <PayOption
                     id="paypal" method={method}
-                    setMethod={() => { setMethod("paypal"); setIsPayPalReady(false); }}
+                    // setMethod={() => { setMethod("paypal"); setIsPayPalReady(false); }}
+                    setMethod={handlePaypalSelect}
                     label="PAYPAL" sublabel="Pay via PayPal account"
                   />
                 </div>

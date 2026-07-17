@@ -99,8 +99,6 @@ const STATUS_CFG = {
 const STATUS_STEPS = ["Order Placed", "Packing", "Shipped", "Out for delivery", "Delivered"];
 
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
   @keyframes odUp  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
   @keyframes odIn  { from{opacity:0;transform:translateY(18px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
   @keyframes shimmerIndigo {

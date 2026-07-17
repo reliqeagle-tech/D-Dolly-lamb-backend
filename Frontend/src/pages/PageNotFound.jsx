@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 
 /*
@@ -269,6 +270,16 @@ export default function PageNotFound() {
     return (
         <>
             <style>{GLOBAL_CSS}</style>
+            <Helmet>
+                <title>404 - Page Not Found | D Dolly Lamb</title>
+
+                <meta
+                    name="description"
+                    content="The page you are looking for could not be found. Return to D Dolly Lamb to browse premium lambskin leather jackets, pillow covers and handcrafted leather products."
+                />
+
+                <meta name="robots" content="noindex,follow" />
+            </Helmet>
 
             <div
                 className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden"

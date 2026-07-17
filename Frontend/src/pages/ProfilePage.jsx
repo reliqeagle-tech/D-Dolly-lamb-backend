@@ -77,7 +77,6 @@ const IconVerified = () => (
 );
 
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
   @keyframes maFadeUp {
     from { opacity:0; transform:translateY(14px); }

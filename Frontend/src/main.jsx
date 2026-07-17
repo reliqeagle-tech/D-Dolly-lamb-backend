@@ -21,6 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           currency: "USD",
           intent: "capture"
         }}
+        deferLoading={true}
       >
         <ShopContextProvider>
           <App />

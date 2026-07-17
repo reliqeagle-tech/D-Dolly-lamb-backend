@@ -58,8 +58,6 @@ const IconClose = () => (
 );
 
 const ANIM_STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
   @keyframes megaIn {
     from { opacity:0; transform:translateY(-8px); }
     to   { opacity:1; transform:translateY(0); }
@@ -566,8 +564,19 @@ const Navbar = () => {
                     gap: 20, height: 62,
                 }}>
                     {/* LOGO */}
-                    <Link to="/">
+                    {/* <Link to="/">
                         <img className=" w-[124px]" src={assets.DDL_logo4} alt="" />
+                    </Link> */}
+                    <Link to="/">
+                        <img
+                            className="w-[124px]"
+                            src={assets.DDL_logo4}
+                            alt="D Dolly Lamb"
+                            width={124}
+                            height={40}  // apna actual logo ka aspect ratio ke hisaab se height daalo
+                            loading="eager"
+                            fetchpriority="high"
+                        />
                     </Link>
 
                     {/* CENTER NAV — desktop only */}
@@ -783,7 +792,7 @@ const Navbar = () => {
                                 fontSize: 7.5, fontWeight: 700,
                                 background: C.indigo, color: "#fff",
                                 fontFamily: "Montserrat,sans-serif",
-                            }}>{getCartCount()}</span>
+                            }}>{getCartCount}</span>
                         </Link>
 
                         {isMobile && (

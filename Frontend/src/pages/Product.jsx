@@ -283,7 +283,6 @@ const Product = () => {
     ? `+${currency}${(displayPrice - productData.price).toFixed(2)} customization` : '';
 
   const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     .pp { font-family:'Montserrat',sans-serif; background:${C.bgPage}; min-height:100vh; color:${C.textBody}; }
@@ -478,6 +477,18 @@ const Product = () => {
         />
         <meta property="og:image" content={productData.image?.[0]} />
         <meta property="og:url" content={productUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={productData.name} />
+        <meta
+          name="twitter:description"
+          content={productData.description?.replace(/<[^>]*>/g, '').substring(0, 160)}
+        />
+        <meta name="twitter:image" content={productData.image?.[0]} />
+        <meta name="twitter:url" content={productUrl} />
+        <meta
+          property="og:site_name"
+          content="D Dolly Lamb"
+        />
 
         <script type="application/ld+json">
           {JSON.stringify({
@@ -486,13 +497,45 @@ const Product = () => {
             name: productData.name,
             image: productData.image,
             sku: productData.sku,
-            description: productData.description,
+            // description: productData.description,
+            description: productData.description?.replace(/<[^>]*>/g, ''),
             offers: {
               "@type": "Offer",
-              price: displayPrice,
               priceCurrency: "USD",
-              availability: "https://schema.org/InStock"
-            }
+              price: productData.discountPrice || productData.price,
+              availability:
+                productData.stock > 0
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/OutOfStock",
+              url: productUrl
+            },
+
+            ...(reviews.length > 0 && {
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: parseFloat(avgRating.toFixed(1)),
+                reviewCount: reviews.length,
+                bestRating: 5,
+                worstRating: 1
+              },
+
+              review: reviews.map((review) => ({
+                "@type": "Review",
+                author: {
+                  "@type": "Person",
+                  name: review.username || "Verified Customer"
+                },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: review.rating,
+                  bestRating: 5,
+                  worstRating: 1
+                },
+                reviewBody: review.comment,
+                datePublished: review.createdAt
+              }))
+            })
+
           })}
         </script>
       </Helmet>

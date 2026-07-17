@@ -564,11 +564,88 @@ const Collection = () => {
                     name="description"
                     content="Explore handcrafted leather pillow covers, bomber jackets, biker jackets, aprons, desk pads, recliner slipcovers and premium lambskin leather products from D Dolly Lamb."
                 />
+                <meta property="og:type" content="website" />
+
+                <meta
+                    property="og:title"
+                    content="Leather Collection | D Dolly Lamb"
+                />
+
+                <meta
+                    property="og:description"
+                    content="Browse premium handcrafted lambskin leather jackets, pillow covers, recliner slipcovers, aprons and desk pads."
+                />
+
+                <meta
+                    property="og:url"
+                    content="https://ddollylamb.com/collection"
+                />
+
+                <meta
+                    property="og:image"
+                    content="https://ddollylamb.com/DDL_logo4.png"
+                />
+                <meta name="twitter:card" content="summary_large_image" />
+
+                <meta
+                    name="twitter:title"
+                    content="Leather Collection | D Dolly Lamb"
+                />
+
+                <meta
+                    name="twitter:description"
+                    content="Browse handcrafted premium lambskin leather products."
+                />
+
+                <meta
+                    name="twitter:image"
+                    content="https://ddollylamb.com/DDL_logo4.png"
+                />
 
                 <link
                     rel="canonical"
                     href="https://ddollylamb.com/collection"
                 />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "CollectionPage",
+                        name: "D Dolly Lamb Collection",
+                        url: "https://ddollylamb.com/collection",
+                        description: "Browse premium leather jackets, pillow covers and handcrafted leather products."
+                    })}
+                </script>
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ItemList",
+                        itemListElement: filterProducts.slice(0, 20).map((p, index) => ({
+                            "@type": "ListItem",
+                            position: index + 1,
+                            url: `https://ddollylamb.com/product/${p.slug}`
+                        }))
+                    })}
+                </script>
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ddollylamb.com/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Collection",
+                                "item": "https://ddollylamb.com/collection"
+                            }
+                        ]
+                    })}
+                </script>
             </Helmet>
 
             <style>{`

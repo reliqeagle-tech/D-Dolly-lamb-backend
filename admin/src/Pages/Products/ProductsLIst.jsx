@@ -2,12 +2,16 @@ import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { backendUrl, currency, MyContext } from '../../App'
+import { backendUrl, currency, frontendUrl, MyContext } from '../../App'
 import { HiOutlineSearch, HiOutlineRefresh } from 'react-icons/hi'
 import { MdOutlineGridView, MdOutlineTableRows, MdOutlineInventory2 } from 'react-icons/md'
 import { TbEdit, TbTrash, TbEye, TbChartBar, TbPackage, TbStar, TbAlertTriangle, TbPlus, TbX, TbFileExport } from 'react-icons/tb'
 import { FiChevronUp, FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { BsBoxSeam } from 'react-icons/bs'
+import { getProductUrl } from '../../utils/slugify'
+import XLSX from "xlsx-js-style";
+import { saveAs } from "file-saver";
+
 
 /* ════════════════════════════════════════════════════════════════
    D DOLLY LAMB — PRODUCT LIST  |  Light Luxury Theme
@@ -269,6 +273,36 @@ const ConfirmModal = ({ title, desc, onConfirm, onCancel }) => (
   </div>
 )
 
+const formatSizes = (sizes = []) =>
+  sizes
+    .map(s => {
+      if (s.customPrice) {
+        return `${s.size}:${s.customPrice}:${s.stock}:custom`;
+      }
+      return `${s.size}:${s.multiplier}:${s.stock}`;
+    })
+    .join(",");
+
+const formatColors = (colors = []) => colors.map(c => c.hex ? `${c.name}:${c.hex}` : c.name).join(",");
+
+const formatImages = (images = []) => images.join(",");
+
+const stripHtml = (html) => {
+  if (typeof html !== "string") {
+    return "";
+  }
+
+  return html.replace(/<[^>]+>/g, "");
+};
+
+const formatItemDetails = (details = []) => {
+  if (!Array.isArray(details)) return "";
+
+  return details
+    .map(item => `${item.title}:${item.value}`)
+    .join("::");
+};
+
 /* ══════════════════════════════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════════ */
@@ -319,15 +353,134 @@ const ProductsList = ({ token }) => {
   const removeBulk = async () => { for (const id of [...selected]) await removeProduct(id); setSelected([]) }
 
   /* ── export ── */
-  const exportCSV = () => {
-    const rows = [['ID', 'Name', 'Category', 'Sub-Category', 'Price', 'Discount Price', 'Stock', 'Bestseller']]
-    filtered.forEach(p => rows.push([p._id, `"${(p.name || '').replace(/"/g, '""')}"`, p.category || '', p.subCategory || '', p.price || 0, p.discountPrice || '', getStock(p.sizes), p.bestseller ? 'Yes' : 'No']))
-    const csv = rows.map(r => r.join(',')).join('\n')
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url; a.download = `products_${new Date().toISOString().slice(0, 10)}.csv`; a.click()
-    URL.revokeObjectURL(url); toast.success('Products exported!')
+  const exportExcel = () => {
+    // const rows = [['SKU', 'Product_Name', 'Product_Summary', 'Detailed_Description', 'Product_Details', 'Price', 'Discount_(In_%)', 'Category', 'Sub_Category', 'Bestseller', 'Size_Name', 'Color_Name', 'Image_Link']]
+    // filtered.forEach(p => rows.push([p.sku, `"${(p.name || '').replace(/"/g, '""')}"`, p.description || '', p.detailedDescription || '', p.itemDetails || '', p.price || '', p.discountPrice || '', p.category || '', p.subCategory || '', p.bestseller ? 'Yes' : 'No', p.sizes || '', p.color || '', p.imageLink || '']))
+    // const csv = rows.map(r => r.join(',')).join('\n')
+    // const blob = new Blob([csv], { type: 'text/csv' })
+    // const url = URL.createObjectURL(blob)
+    // const a = document.createElement('a')
+    // a.href = url; a.download = `products_${new Date().toISOString().slice(0, 10)}.csv`; a.click()
+    // URL.revokeObjectURL(url); toast.success('Products exported!')
+
+    if (!filtered.length) {
+      toast.warning("No products available to export.");
+      return;
+    }
+
+
+    const data = filtered.map(p => ({
+      SKU: p.sku || "",
+      Product_Name: p.name || "",
+      Product_Summary: stripHtml(p.description),
+      Detailed_Description: stripHtml(p.detailedDescription),
+      Product_Details: formatItemDetails(p.itemDetails),
+
+      Price: p.price,
+
+      "Discount_(In_%)": p.discountPrice || "",
+
+      Category: p.category,
+
+      Sub_Category: p.subCategory,
+
+      Bestseller: p.bestseller ? "Yes" : "No",
+
+      Size_Name: formatSizes(p.sizes),
+
+      Color_Name: formatColors(p.color),
+
+      Image_Link: formatImages(p.image)
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      wb,
+      ws,
+      "Products"
+    );
+
+    const headerStyle = {
+      font: {
+        bold: true,
+        color: { rgb: "FFFFFF" }
+      },
+      fill: {
+        fgColor: { rgb: "1A7A4A" }
+      },
+      alignment: {
+        horizontal: "center"
+      }
+    };
+
+    // const range = XLSX.utils.decode_range(ws["!ref"]);
+    if (ws["!ref"]) {
+      const range = XLSX.utils.decode_range(ws["!ref"]);
+
+      for (let C = range.s.c; C <= range.e.c; C++) {
+        const cell = XLSX.utils.encode_cell({
+          r: 0,
+          c: C,
+        });
+
+        if (ws[cell]) {
+          ws[cell].s = headerStyle;
+        }
+      }
+    }
+
+    // for (let C = range.s.c; C <= range.e.c; C++) {
+
+    //   const cell =
+    //     XLSX.utils.encode_cell({
+    //       r: 0,
+    //       c: C
+    //     });
+
+    //   if (ws[cell])
+    //     ws[cell].s = headerStyle;
+    // }
+
+    ws["!cols"] = [
+      { wch: 18 },
+      { wch: 35 },
+      { wch: 40 },
+      { wch: 45 },
+      { wch: 45 },
+      { wch: 12 },
+      { wch: 15 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 35 },
+      { wch: 35 },
+      { wch: 60 }
+    ];
+
+    const excelBuffer = XLSX.write(
+      wb,
+      {
+        bookType: "xlsx",
+        type: "array"
+      }
+    );
+
+    // saveAs(
+    //   new Blob([excelBuffer]),
+    //   `products_${Date.now()}.xlsx`
+    // );
+
+    saveAs(
+      new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+      `products_${Date.now()}.xlsx`
+    );
+
+    toast.success("Products exported successfully!");
   }
 
   useEffect(() => { fetchList() }, [])
@@ -543,7 +696,25 @@ const ProductsList = ({ token }) => {
                 {/* Actions */}
                 <td style={tdStyle}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <IBtn title="Preview" c="view" onClick={() => imgs.length > 0 && setImgModal({ images: imgs, name: item.name, start: 0 })}><TbEye size={14} /></IBtn>
+                    {/* <IBtn title="Preview" c="view" onClick={() => imgs.length > 0 && setImgModal({ images: imgs, name: item.name, start: 0 })}><TbEye size={14} /></IBtn> */}
+                    <IBtn
+                      title="View on Live"
+                      c="view"
+                      onClick={() => {
+                        // const frontendUrl = import.meta.env.VITE_FRONTEND_URL || 'https://ddollylamb.com';
+                        window.open(
+                          `${frontendUrl}${getProductUrl(
+                            item.category,
+                            item.subCategory,
+                            item.name,
+                            item.sku
+                          )}`,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      <TbEye size={14} />
+                    </IBtn>
                     <IBtn title="Edit" c="edit" onClick={() => navigate(`/update-product/${item._id}`)}><TbEdit size={14} /></IBtn>
                     <IBtn title="Delete" c="del" disabled={isDel} onClick={() => setConfirmDelete({ id: item._id, name: item.name })}>
                       {isDel
@@ -649,11 +820,23 @@ const ProductsList = ({ token }) => {
 
               {/* Card Footer */}
               <div style={{ display: 'flex', gap: 7, paddingTop: 10, borderTop: `1px solid ${B.border}` }}>
-                <button onClick={() => imgs.length > 0 && setImgModal({ images: imgs, name: item.name, start: 0 })}
+                <button
+                  // onClick={() => imgs.length > 0 && setImgModal({ images: imgs, name: item.name, start: 0 })}
+                  onClick={() =>
+                    window.open(
+                      `${frontendUrl}${getProductUrl(
+                        item.category,
+                        item.subCategory,
+                        item.name,
+                        item.sku
+                      )}`,
+                      "_blank"
+                    )
+                  }
                   style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '6px 0', borderRadius: 8, background: B.surfaceCard, border: `1px solid ${B.border}`, color: B.navySoft, fontSize: 11.5, fontWeight: 700, cursor: 'pointer', transition: 'all .15s' }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = B.borderStrong; e.currentTarget.style.color = B.navyMid; e.currentTarget.style.background = B.surface }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = B.border; e.currentTarget.style.color = B.navySoft; e.currentTarget.style.background = B.surfaceCard }}>
-                  <TbEye size={12} /> View
+                  <TbEye size={12} /> View Live
                 </button>
                 <button onClick={() => navigate(`/update-product/${item._id}`)}
                   style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '6px 0', borderRadius: 8, background: B.greenBg, border: `1px solid ${B.greenBdr}`, color: B.green, fontSize: 11.5, fontWeight: 700, cursor: 'pointer', transition: 'all .15s' }}
@@ -707,7 +890,7 @@ const ProductsList = ({ token }) => {
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Btn variant="ghost" onClick={exportCSV} size="sm"><TbFileExport size={14} /> Export CSV</Btn>
+          <Btn variant="ghost" onClick={exportExcel} size="sm"><TbFileExport size={14} /> Export Excel</Btn>
           <Btn variant="surface" onClick={fetchList} disabled={loading} size="sm">
             <HiOutlineRefresh size={14} style={{ animation: loading ? 'spin 1s linear infinite' : undefined }} /> Refresh
           </Btn>

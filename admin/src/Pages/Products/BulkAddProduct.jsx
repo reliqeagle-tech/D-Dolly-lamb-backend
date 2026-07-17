@@ -86,7 +86,7 @@ const ALL_COLS = [...REQUIRED_COLS, 'detailedDescription', 'itemDetails', 'disco
 
 const SAMPLE_ROWS = [
     {
-        SKU: 'WHITE-BEAR-(SQ)-PK2',
+        SKU: 'WHITE-BEAR-SQ-PK2',
         Product_Name: 'Classic Lambskin Leather Jacket',
         Product_Summary: 'Premium quality lambskin leather jacket with quilted lining',
         Detailed_Description: 'Handcrafted from genuine lambskin leather. Features YKK zippers, two side pockets, and one inner pocket. Dry clean only.',
@@ -98,7 +98,7 @@ const SAMPLE_ROWS = [
         Image_Link: 'https://m.media-amazon.com/images/I/71rgZMIZJhL._AC_SX425_.jpg',
     },
     {
-        SKU: 'BLACK-BEAR-(AQ)-PK2',
+        SKU: 'BLACK-BEAR-AQ-PK2',
         Product_Name: 'Women Biker Leather Jacket',
         Product_Summary: 'Edgy moto-inspired jacket for women in genuine cowhide',
         Detailed_Description: 'Asymmetric front zip, epaulettes, and belt detail. Soft microfiber lining.',
@@ -264,11 +264,11 @@ const BulkUpload = ({ token }) => {
         ];
         XLSX.utils.book_append_sheet(wb, ws, 'Products');
         const instructions = [
-            { Field: 'SKU', Required: 'YES', Description: 'Unique SKU. Example: WHITE-BEAR-(SQ)-PK2' },
+            { Field: 'SKU', Required: 'YES', Description: 'Unique SKU. Example: WHITE-BEAR-SQ-PK2' },
             { Field: 'Product_Name', Required: 'YES', Description: 'Product name' },
             { Field: 'Product_Summary', Required: 'YES', Description: 'Short product description' },
             { Field: 'Detailed_Description', Required: 'no', Description: 'Long HTML description (optional)' },
-            { Field: 'Price', Required: 'YES', Description: 'Base price in ₹ (number)' },
+            { Field: 'Price', Required: 'YES', Description: 'Base price in $ (number)' },
             { Field: 'Discount_Price', Required: 'no', Description: 'Sale price (must be < price)' },
             { Field: 'Category', Required: 'YES', Description: 'Men / Women / Others / Leather Pillow Cover / Sofa Headrest / Leather Desk Pad / Men Leather Apron' },
             { Field: 'Sub_Category', Required: 'YES', Description: 'Jackets / Bomber Biker Jacket / Moto Biker Jacket / etc.' },
@@ -750,10 +750,10 @@ const BulkUpload = ({ token }) => {
                                                         {row.sku}
                                                     </span>
                                                     <span style={{ color: B.green, fontSize: 13, fontWeight: 700 }}>
-                                                        {row.price ? `₹${row.price}` : <span style={{ color: B.red.text }}>—</span>}
+                                                        {row.price ? `$${row.price}` : <span style={{ color: B.red.text }}>—</span>}
                                                     </span>
                                                     <span style={{ color: row.discountPrice ? B.emerald.text : B.navyGhost, fontSize: 12 }}>
-                                                        {row.discountPrice ? `₹${row.discountPrice}` : '—'}
+                                                        {row.discountPrice ? `$${row.discountPrice}` : '—'}
                                                     </span>
                                                     <span style={{ color: B.navySoft, fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                                         {row.category || '—'}
@@ -832,10 +832,10 @@ const BulkUpload = ({ token }) => {
                                                                 {row.name || <span style={{ color: B.red.text, fontStyle: 'italic' }}>Missing</span>}
                                                             </td>
                                                             <td style={{ padding: '13px 14px', color: B.green, fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                                                                {row.price ? `₹${row.price}` : <span style={{ color: B.red.text }}>—</span>}
+                                                                {row.price ? `$${row.price}` : <span style={{ color: B.red.text }}>—</span>}
                                                             </td>
                                                             <td style={{ padding: '13px 14px', color: row.discountPrice ? B.emerald.text : B.navyGhost, fontSize: 12, whiteSpace: 'nowrap' }}>
-                                                                {row.discountPrice ? `₹${row.discountPrice}` : '—'}
+                                                                {row.discountPrice ? `$${row.discountPrice}` : '—'}
                                                             </td>
                                                             <td style={{ padding: '13px 14px', color: B.navySoft, fontSize: 12, whiteSpace: 'nowrap' }}>{row.category || '—'}</td>
                                                             <td style={{ padding: '13px 14px', color: B.navyMid, fontSize: 11.5, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -986,7 +986,7 @@ const BulkUpload = ({ token }) => {
                             <p style={{ color: B.navy, fontSize: 13, fontWeight: 700, margin: 0 }}>Format Guide</p>
                         </div>
                         {[
-                            { field: 'sku', example: 'WHITE-BEAR-(SQ)-PK2', note: 'Brand-Category-Number format' },
+                            { field: 'sku', example: 'WHITE-BEAR-SQ-PK2', note: 'Brand-Category-Number format' },
                             { field: 'itemDetails', example: 'Brand: Dolly::Material: Leather::Pattern: Printed', note: 'Amazon style format' },
                             { field: 'sizes', example: 'S:0.9,M:1,L:1.1:10,XL:1.2:15:4499:true', note: 'size:multiplier[:stock[:customPrice[:useCustomPrice]]]' },
                             { field: '  ├ multiplier', example: '0.9 = 90% of base price', note: 'auto-calculated if no custom price' },

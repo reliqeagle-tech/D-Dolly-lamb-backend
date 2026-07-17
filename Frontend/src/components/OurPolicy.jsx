@@ -108,7 +108,6 @@ const OurPolicy = () => {
       position: "relative", overflow: "hidden",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
         .op-grid-bg::before {
           content: ''; position: absolute; inset: 0;
           background-image:

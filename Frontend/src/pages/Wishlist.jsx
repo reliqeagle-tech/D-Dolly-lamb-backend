@@ -846,7 +846,6 @@ const C = {
 
 /* ── Styles ─────────────────────────────────── */
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
   /* ── Same keyframes as About.jsx ── */
   @keyframes wlUp   { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }

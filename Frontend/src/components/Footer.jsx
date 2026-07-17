@@ -206,7 +206,6 @@ const Footer = () => {
     }}>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
 
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(14px); }
@@ -550,7 +549,7 @@ const Footer = () => {
             COPYRIGHT © 2025 <span style={{ color: C.goldMid }}>DDOLLYLAMB.COM</span> — ALL RIGHTS RESERVED
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            {["Privacy Policy", "Terms of Use", "Cookies"].map((item, i) => (
+            {/* {["Privacy Policy", "Terms of Use", "Cookies"].map((item, i) => (
               <a
                 key={i}
                 href="#"
@@ -565,6 +564,26 @@ const Footer = () => {
               >
                 {item}
               </a>
+            ))} */}
+            {[
+              { label: "Privacy Policy", to: "/privacy-policy" },
+              { label: "Terms of Use", to: "/terms-and-conditions" },
+              { label: "Cookies", to: "/cookies-policy" },
+            ].map((item, i) => (
+              <Link
+                key={i}
+                to={item.to}
+                style={{
+                  fontSize: 9, color: C.textDim,
+                  letterSpacing: "0.14em", textDecoration: "none",
+                  fontFamily: "Georgia, serif",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = C.goldHi}
+                onMouseLeave={e => e.currentTarget.style.color = C.textDim}
+              >
+                {item.label}
+              </Link>
             ))}
           </div>
         </div>

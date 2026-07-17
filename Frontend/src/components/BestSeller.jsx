@@ -46,7 +46,6 @@ const BestSeller = () => {
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
         @keyframes fadeUp {
           from { opacity:0; transform:translateY(24px); }
