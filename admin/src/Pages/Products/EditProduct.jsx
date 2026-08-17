@@ -710,7 +710,7 @@ const UpdateProduct = ({ token }) => {
                 </div>
             </div>
 
-            {/* Progress bar */}
+            {/* Progress bar hai */}
             <div style={{ height: 3, background: B.surface2 }}>
                 <div style={{ height: '100%', background: B.green, width: `${progress}%`, transition: 'width .5s' }} />
             </div>
