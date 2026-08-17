@@ -60,8 +60,8 @@ import DDL_logo4 from './DDL_logoWebp.webp'
 // import otherPng from './otherPng.png'
 // import otherPng1 from './otherPng1.png'
 import contactImg2 from './contactImgWebp.webp'
-import menPng from './menWebp.webp'
-import womenPng from './womenWebp.webp'
+import menPng from './menWebp1.webp'
+import womenPng from './womenWebp2.webp'
 import otherPng from './otherWebp1.webp'
 
 

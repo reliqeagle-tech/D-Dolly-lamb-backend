@@ -327,9 +327,9 @@ const Collection = () => {
     const [onlyDiscounted, setOnlyDiscounted] = useState(false)
     const [onlyBestseller, setOnlyBestseller] = useState(false)
     const [productSearch, setProductSearch] = useState("")
-    const [visibleCount, setVisibleCount] = useState(12)
+    const [visibleCount, setVisibleCount] = useState(24)
     const [loadingMore, setLoadingMore] = useState(false)
-    const productsPerPage = 12
+    const productsPerPage = 24
     const [searchParams] = useSearchParams()
     const gridRef = useRef(null)
 
@@ -418,7 +418,7 @@ const Collection = () => {
         else if (sortType === 'high-low') copy.sort((a, b) => b.price - a.price)
         else if (sortType === 'newest') { const order = products.map(p => p._id); copy.sort((a, b) => order.indexOf(a._id) - order.indexOf(b._id)) }
         setFilterProducts(copy)
-        setVisibleCount(12)
+        setVisibleCount(24)
     }, [category, subCategory, search, showSearch, products, priceRange, onlyDiscounted, onlyBestseller, productSearch, sortType])
 
     const shownProducts = useMemo(() => filterProducts.slice(0, visibleCount), [filterProducts, visibleCount])
@@ -430,7 +430,7 @@ const Collection = () => {
     }
     const clearAllFilters = () => {
         setCategory([]); setSubCategory([]); setPriceRange([0, maxPrice])
-        setOnlyDiscounted(false); setOnlyBestseller(false); setProductSearch(""); setSortType("relavent"); setVisibleCount(12)
+        setOnlyDiscounted(false); setOnlyBestseller(false); setProductSearch(""); setSortType("relavent"); setVisibleCount(24)
     }
     const activeFilterCount = category.length + subCategory.length + (onlyDiscounted ? 1 : 0) + (onlyBestseller ? 1 : 0) + (priceRange[0] > 0 || priceRange[1] < maxPrice ? 1 : 0)
     const gridClass = gridCols === 4 ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4" : gridCols === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-1"

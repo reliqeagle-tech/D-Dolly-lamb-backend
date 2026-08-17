@@ -50,7 +50,7 @@ const ANIM = `
   }
   .ddl-slide-img {
     width: 100%; height: 100%;
-    object-fit: contain; padding: 12px;
+    object-fit: contain; padding: 8px;
     position: absolute; inset: 0;
     transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1);
     will-change: transform, opacity;
@@ -204,7 +204,7 @@ const ProductItem = ({ id, image, name, price, discountPrice, category, subCateg
   const showPrev = sliding ? displayIdx : null;
   const showCurr = sliding ? imgIndex : displayIdx;
 
-  const optimizeCloudinaryImage = (url, width = 600) => {
+  const optimizeCloudinaryImage = (url, width = 800) => {
     if (!url || !url.includes("res.cloudinary.com")) return url;
 
     return url.replace(
@@ -240,13 +240,13 @@ const ProductItem = ({ id, image, name, price, discountPrice, category, subCateg
             //   className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
             //   style={{ zIndex: 1 }} />
             <img
-              src={optimizeCloudinaryImage(images[showPrev] || images[0], 600)}
+              src={optimizeCloudinaryImage(images[showPrev] || images[0], 800)}
               alt={name}
               className={`ddl-slide-img ${slideDir === 1 ? "exit-fwd" : "exit-back"}`}
               // loading="lazy"
               decoding="async"
-              width={600}
-              height={600}
+              width={800}
+              height={800}
               style={{ zIndex: 1 }}
             />
           )}
@@ -259,7 +259,7 @@ const ProductItem = ({ id, image, name, price, discountPrice, category, subCateg
                 : "none",
             }} /> */}
           <img
-            src={optimizeCloudinaryImage(images[showCurr] || images[0], 600)}
+            src={optimizeCloudinaryImage(images[showCurr] || images[0], 900)}
             alt={name}
             className={`ddl-slide-img ${sliding
               ? (slideDir === 1 ? "enter-fwd" : "enter-back")
@@ -267,8 +267,8 @@ const ProductItem = ({ id, image, name, price, discountPrice, category, subCateg
               }`}
             loading="lazy"
             decoding="async"
-            width={600}
-            height={600}
+            width={800}
+            height={800}
             style={{
               zIndex: 2,
               animation: sliding

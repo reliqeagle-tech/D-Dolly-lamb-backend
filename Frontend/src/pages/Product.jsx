@@ -748,11 +748,11 @@ const Product = () => {
               <div style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   <span className="pp-slabel">Select Size</span>
-                  <button onClick={() => setShowModal(true)}
+                  {/* <button onClick={() => setShowModal(true)}
                     style={{ fontSize: 10, color: C.accent, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Montserrat',sans-serif", display: 'flex', alignItems: 'center', gap: 5 }}>
                     <FaRuler size={10} /> Size Guide
                   </button>
-                  {showModal && <Modal onclose={() => setShowModal(false)} />}
+                  {showModal && <Modal onclose={() => setShowModal(false)} />} */}
                 </div>
                 <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap' }}>
                   {productData.sizes?.length > 0 ? productData.sizes.map((sizeObj, index) => {

@@ -156,6 +156,11 @@ app.use('/api/review', reviewRouter);
 app.use('/api/category', categoryRouter);
 app.use("/", sitemapRouter);
 
+app.use(
+  "/.well-known/acme-challenge",
+  express.static("/home/ddollylamb/public_html/.well-known/acme-challenge")
+);
+
 // Log environment
 console.log("STARTING APP, NODE_ENV =", process.env.NODE_ENV);
 

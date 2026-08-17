@@ -869,23 +869,29 @@ const Contact = () => {
     }}>
       <Helmet>
         <title>Contact Us | D Dolly Lamb</title>
+        <meta name="description" content="Contact D Dolly Lamb for leather jackets, bespoke orders, wholesale enquiries and customer support." />
+        <link rel="canonical" href="https://ddollylamb.com/contact" />
+        <meta name="robots" content="index, follow" />
 
-        <meta
-          name="description"
-          content="Contact D Dolly Lamb for leather jackets, bespoke orders, wholesale enquiries and customer support."
-        />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Contact Us | D Dolly Lamb" />
+        <meta property="og:description" content="Contact D Dolly Lamb for leather jackets, bespoke orders, wholesale enquiries and customer support." />
+        <meta property="og:url" content="https://ddollylamb.com/contact" />
+        <meta property="og:image" content="https://ddollylamb.com/DDL_logo4.png" />
+        <meta property="og:site_name" content="D Dolly Lamb" />
 
-        <link
-          rel="canonical"
-          href="https://ddollylamb.com/contact"
-        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact Us | D Dolly Lamb" />
+        <meta name="twitter:description" content="Contact D Dolly Lamb for leather jackets, bespoke orders, wholesale enquiries and customer support." />
+        <meta name="twitter:image" content="https://ddollylamb.com/DDL_logo4.png" />
+
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "D Dolly Lamb",
             "url": "https://ddollylamb.com",
-            "logo": "https://ddollylamb.com/logo.png",
+            "logo": "https://ddollylamb.com/DDL_logo4.png",
             "contactPoint": [
               {
                 "@type": "ContactPoint",
@@ -930,6 +936,15 @@ const Contact = () => {
                 "item": "https://ddollylamb.com/contact"
               }
             ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact Us | D Dolly Lamb",
+            "url": "https://ddollylamb.com/contact",
+            "description": "Contact D Dolly Lamb for leather jackets, bespoke orders, wholesale enquiries and customer support."
           })}
         </script>
       </Helmet>

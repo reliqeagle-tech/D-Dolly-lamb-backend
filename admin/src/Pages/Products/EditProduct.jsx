@@ -309,8 +309,10 @@ const UpdateProduct = ({ token }) => {
     /* ── Image slots ── */
     const [slots, setSlots] = useState(Array(10).fill(null).map(() => ({ existing: null, newFile: null })));
     const [dragging, setDragging] = useState(false);
+    const [hoveredSlot, setHoveredSlot] = useState(null);
     const [lightbox, setLightbox] = useState(null);
     const dzRef = useRef(null);
+    const fileInputRefs = useRef([]);
 
     /* ── Basic fields ── */
     const [name, setName] = useState('');
@@ -884,14 +886,18 @@ const UpdateProduct = ({ token }) => {
                                     const hasImg = !!displayUrl;
                                     const isNew = !!slot.newFile;
                                     const isExisting = !!slot.existing && !slot.newFile;
+                                    const isHovered = hoveredSlot === i;
                                     return (
-                                        <div key={i} style={{
-                                            position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden',
-                                            border: `2px solid ${hasImg ? (i === 0 ? B.green : isNew ? B.emerald.dot : B.border) : B.border}`,
-                                            background: hasImg ? 'transparent' : B.surface,
-                                            cursor: hasImg ? 'default' : 'pointer',
-                                            boxShadow: i === 0 && hasImg ? `0 0 0 2px ${B.greenBg}` : undefined,
-                                        }}>
+                                        <div key={i}
+                                            onMouseEnter={() => setHoveredSlot(i)}
+                                            onMouseLeave={() => setHoveredSlot(null)}
+                                            style={{
+                                                position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden',
+                                                border: `2px solid ${hasImg ? (i === 0 ? B.green : isNew ? B.emerald.dot : B.border) : B.border}`,
+                                                background: hasImg ? 'transparent' : B.surface,
+                                                cursor: hasImg ? 'default' : 'pointer',
+                                                boxShadow: i === 0 && hasImg ? `0 0 0 2px ${B.greenBg}` : undefined,
+                                            }}>
                                             {hasImg ? (
                                                 <>
                                                     <img src={displayUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -899,12 +905,16 @@ const UpdateProduct = ({ token }) => {
                                                     {isNew && <span style={{ position: 'absolute', bottom: 5, left: 5, background: B.emerald.dot, color: '#FFFFFF', fontSize: 8, fontWeight: 800, padding: '2px 6px', borderRadius: 5, zIndex: 10 }}>NEW</span>}
                                                     {isExisting && <span style={{ position: 'absolute', bottom: 5, left: 5, background: 'rgba(28,43,58,0.7)', color: '#FFFFFF', fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 5, zIndex: 10 }}>SAVED</span>}
                                                     <span style={{ position: 'absolute', top: 5, right: 5, background: 'rgba(28,43,58,0.65)', color: '#fff', fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 5, zIndex: 10 }}>{i + 1}</span>
-                                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(28,43,58,0.60)', opacity: 0, transition: 'opacity .18s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, zIndex: 20 }}
+                                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(28,43,58,0.60)', opacity: isHovered ? 1 : 0, transition: 'opacity .18s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, zIndex: 20 }}
                                                         onMouseEnter={e => e.currentTarget.style.opacity = '1'}
                                                         onMouseLeave={e => e.currentTarget.style.opacity = '0'}>
                                                         <button type="button" style={{ background: B.green, color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 7, border: 'none', cursor: 'pointer' }}
                                                             onMouseDown={e => { e.preventDefault(); e.stopPropagation(); setLightbox({ imgs: allSlotImgs, start: Math.max(0, allSlotImgs.indexOf(displayUrl)) }); }}>
                                                             🔍 View
+                                                        </button>
+                                                        <button type="button" style={{ background: B.blue.dot || '#3B82F6', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 7, border: 'none', cursor: 'pointer' }}
+                                                            onMouseDown={e => { e.preventDefault(); e.stopPropagation(); fileInputRefs.current[i]?.click(); }}>
+                                                            🔄 Replace
                                                         </button>
                                                         {isNew && (
                                                             <button type="button" style={{ background: B.amber.bg, color: B.amber.text, fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 7, border: `1px solid ${B.amber.border}`, cursor: 'pointer' }}
@@ -917,7 +927,7 @@ const UpdateProduct = ({ token }) => {
                                                             ✕ Remove
                                                         </button>
                                                     </div>
-                                                    <input type="file" accept="image/*" style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', fontSize: 0, zIndex: 30 }}
+                                                    <input ref={el => fileInputRefs.current[i] = el} type="file" accept="image/*" style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', fontSize: 0, zIndex: 15 }}
                                                         onChange={e => { if (e.target.files[0]) setSlotFile(i, e.target.files[0]); e.target.value = ''; }} />
                                                 </>
                                             ) : (
